@@ -5,14 +5,11 @@
  */
 package rcaller;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
 import rcaller.exception.RCallerExecutionException;
 
 /**
@@ -106,7 +103,7 @@ public class RCaller {
     }
     
     public File startPlot() throws IOException{
-        File f = File.createTempFile("RPlot","png");
+        File f = File.createTempFile("RPlot",".png");
         addRCode("png(\""+f.toString()+"\")");
         return(f);
     }
@@ -160,6 +157,7 @@ public class RCaller {
         File rSourceFile = createRSourceFile();
         try {
             Process process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
+            process.waitFor();
         } catch (Exception e) {
             throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
         }

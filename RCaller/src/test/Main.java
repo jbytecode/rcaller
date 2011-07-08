@@ -24,11 +24,17 @@ public class Main {
             r.addRCode("ols<-lm(y~x)");
             r.addRCode("a<-ols$residuals");
             
+            double[] tt= new double[100];
+            for (int i=0;i<tt.length;i++)tt[i]=Math.random();
+            r.addDoubleArray("tt", tt);
+            File f = r.startPlot();
+            r.addRCode("pie(tt)");
+            r.endPlot();
             
             r.runAndReturnResult("ols");
             
             System.out.println("Names : "+r.getParser().getNames());
-            
+            r.showPlot(f);
             double[] v = r.getParser().getAsDoubleArray("fitted_values");
             for (int i = 0; i < v.length; i++) {
                 System.out.println(v[i]);

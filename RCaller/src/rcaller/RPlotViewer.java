@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 
 /**
  *
- * @author hako
+ * @author Mehmet Hakan Satman
  */
 public class RPlotViewer extends JFrame{
     

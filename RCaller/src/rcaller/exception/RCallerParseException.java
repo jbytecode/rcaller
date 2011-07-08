@@ -6,7 +6,7 @@ package rcaller.exception;
 
 /**
  *
- * @author hako
+ * @author Mehmet Hakan Satman
  */
 public class RCallerParseException extends Exception {
 
