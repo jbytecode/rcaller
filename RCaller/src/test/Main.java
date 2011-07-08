@@ -20,10 +20,11 @@ public class Main {
         r.addDoubleArray("x", x);
         r.addDoubleArray("y", y);
         r.addRCode("ols<-lm(y~x)");
-        r.addRCode("a<-list(val1=c(1,2,3), b=9)");
+        r.addRCode("a<-list(val1=c(1,2.718,3.141), b=9)");
         try{
             r.runAndReturnResult("a");
-            r.getParser().getAsDoubleArray("b");
+            double[] v=r.getParser().getAsDoubleArray("val1");
+            for (int i=0;i<v.length;i++) System.out.println(v[i]);
         }catch (Exception e){
             System.out.println(e);
         }

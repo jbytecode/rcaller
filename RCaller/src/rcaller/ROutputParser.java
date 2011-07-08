@@ -18,7 +18,7 @@ import rcaller.exception.RCallerParseException;
  * @author Mehmet Hakan Satman
  */
 public class ROutputParser {
-    
+
     File XMLFile;
     DocumentBuilderFactory factory;
     DocumentBuilder builder;
@@ -31,9 +31,7 @@ public class ROutputParser {
     public void setDocument(Document document) {
         this.document = document;
     }
-    
-    
-    
+
     public File getXMLFile() {
         return XMLFile;
     }
@@ -41,51 +39,114 @@ public class ROutputParser {
     public void setXMLFile(File XMLFile) {
         this.XMLFile = XMLFile;
     }
-    
+
     public void parse() throws RCallerParseException {
         factory = DocumentBuilderFactory.newInstance();
-        try{
+        try {
             builder = factory.newDocumentBuilder();
-        }catch (Exception e){
-            throw new RCallerParseException("Can not create parser builder: "+e.toString());
+        } catch (Exception e) {
+            throw new RCallerParseException("Can not create parser builder: " + e.toString());
         }
-        
-        try{
-        document = builder.parse(XMLFile);
-        }catch (Exception e){
-            throw new RCallerParseException("Can not parse the R output: "+e.toString());
+
+        try {
+            document = builder.parse(XMLFile);
+        } catch (Exception e) {
+            throw new RCallerParseException("Can not parse the R output: " + e.toString());
         }
-        
+
         document.getDocumentElement().normalize();
     }
-    
-    
-    public ROutputParser(File XMLFile){
+
+    public ROutputParser(File XMLFile) {
         this.XMLFile = XMLFile;
     }
-    
-    public ROutputParser(){
-        
+
+    public ROutputParser() {
     }
-    
-    public NodeList getValueNodes(String name){
+
+    public NodeList getValueNodes(String name) {
         NodeList nodes = document.getElementsByTagName("variable");
         NodeList content = null;
-        for (int i=0;i<nodes.getLength();i++){
+        for (int i = 0; i < nodes.getLength(); i++) {
             Node node = nodes.item(i);
-            if(node.getAttributes().getNamedItem("name").getNodeValue().equals(name)){
-               content = node.getChildNodes(); 
-               break;
+            if (node.getAttributes().getNamedItem("name").getNodeValue().equals(name)) {
+                content = node.getChildNodes();
+                break;
             }
         }
-        return(content);
+        return (content);
+    }
+
+    public String[] getAsStringArray(String name) throws RCallerParseException {
+        NodeList nodes = getValueNodes(name);
+        if (nodes == null) {
+            throw new RCallerParseException("Variable " + name + " can not parsed while 'getAsDoubleArray'");
+        }
+        ArrayList<String> values = new ArrayList<String>();
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE) {
+                values.add(node.getTextContent());
+            }
+        }
+        String[] result = new String[values.size()];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = values.get(i);
+        }
+        return (result);
+    }
+
+    public double[] getAsDoubleArray(String name) throws RCallerParseException {
+        String[] strResults = getAsStringArray(name);
+        double[] d = new double[strResults.length];
+        for (int i = 0; i < strResults.length; i++) {
+            try {
+                d[i] = Double.parseDouble(strResults[i]);
+            } catch (Exception e) {
+                throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to double");
+            }
+        }
+        return (d);
+    }
+
+    public float[] getAsFloatArray(String name) throws RCallerParseException {
+        String[] strResults = getAsStringArray(name);
+        float[] f = new float[strResults.length];
+        for (int i = 0; i < strResults.length; i++) {
+            try {
+                f[i] = Float.parseFloat(strResults[i]);
+            } catch (Exception e) {
+                throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to float");
+            }
+        }
+        return (f);
     }
     
-    
-    public double[] getAsDoubleArray(String name){
-        System.out.println(getValueNodes(name));        
-        return(null);
+     public int[] getAsIntArray(String name) throws RCallerParseException {
+        String[] strResults = getAsStringArray(name);
+        int[] ints = new int[strResults.length];
+        for (int i = 0; i < strResults.length; i++) {
+            try {
+                ints[i] = Integer.parseInt(strResults[i]);
+            } catch (Exception e) {
+                throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to int");
+            }
+        }
+        return (ints);
     }
-    
+     
+     
+        public long[] getAsLongArray(String name) throws RCallerParseException {
+        String[] strResults = getAsStringArray(name);
+        long[] longs = new long[strResults.length];
+        for (int i = 0; i < strResults.length; i++) {
+            try {
+                longs[i] = Long.parseLong(strResults[i]);
+            } catch (Exception e) {
+                throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to long");
+            }
+        }
+        return (longs);
+        }
     
 }
