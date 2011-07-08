@@ -63,6 +63,16 @@ public class ROutputParser {
 
     public ROutputParser() {
     }
+    
+    public ArrayList<String> getNames(){
+        ArrayList<String> names = new ArrayList<String>();
+        NodeList nodes = document.getElementsByTagName("variable");
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node node = nodes.item(i);
+            names.add(node.getAttributes().getNamedItem("name").getNodeValue());
+        }
+        return (names);
+    }
 
     public NodeList getValueNodes(String name) {
         NodeList nodes = document.getElementsByTagName("variable");
@@ -80,7 +90,7 @@ public class ROutputParser {
     public String[] getAsStringArray(String name) throws RCallerParseException {
         NodeList nodes = getValueNodes(name);
         if (nodes == null) {
-            throw new RCallerParseException("Variable " + name + " can not parsed while 'getAsDoubleArray'");
+            throw new RCallerParseException("Variable " + name + " not found");
         }
         ArrayList<String> values = new ArrayList<String>();
         for (int i = 0; i < nodes.getLength(); i++) {

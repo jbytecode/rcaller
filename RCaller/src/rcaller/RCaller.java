@@ -10,6 +10,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import rcaller.exception.RCallerExecutionException;
 
 /**
@@ -21,6 +24,8 @@ public class RCaller {
     private String RscriptExecutable;
     private StringBuffer RCode;
     private ROutputParser parser;
+    public final static String version = "RCaller 2.0";
+    public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
 
     public ROutputParser getParser() {
         return parser;
@@ -99,6 +104,27 @@ public class RCaller {
         }
         addStringArray(name, s);
     }
+    
+    public File startPlot() throws IOException{
+        File f = File.createTempFile("RPlot","png");
+        addRCode("png(\""+f.toString()+"\")");
+        return(f);
+    }
+    
+    public void endPlot(){
+        addRCode("dev.off()");
+    }
+    
+    public ImageIcon getPlot(File f){
+        ImageIcon img = new ImageIcon(f.toString());
+        return(img);
+    }
+    
+    public void showPlot(File f){
+        ImageIcon plot = getPlot(f);
+        RPlotViewer plotter = new RPlotViewer(plot);
+        plotter.setVisible(true);
+    }
 
     public File createRSourceFile() throws rcaller.exception.RCallerExecutionException {
         File f = null;
@@ -155,7 +181,7 @@ public class RCaller {
             throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
         }
         
-        RCode.append("cat(makexml(").append(var).append("), file=\"").append(outputFile.toString()).append("\")\n");
+        RCode.append("cat(makexml(obj=").append(var).append(", name=\""+var+"\"), file=\"").append(outputFile.toString()).append("\")\n");
         rSourceFile = createRSourceFile();
         System.out.println(rSourceFile);
         
