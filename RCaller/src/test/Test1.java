@@ -18,7 +18,9 @@ public class Test1 {
     }
     
     /*
-     * Test for simple plots
+     * Test for simple plots.
+     * This class simply plots a time series array using plot.ts()
+     * function of R.
      */
     public Test1(){
         try{

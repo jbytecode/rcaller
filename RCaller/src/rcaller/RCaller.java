@@ -32,7 +32,6 @@ public class RCaller {
         this.parser = parser;
     }
 
-    
     public StringBuffer getRCode() {
         return RCode;
     }
@@ -101,23 +100,23 @@ public class RCaller {
         }
         addStringArray(name, s);
     }
-    
-    public File startPlot() throws IOException{
-        File f = File.createTempFile("RPlot",".png");
-        addRCode("png(\""+f.toString()+"\")");
-        return(f);
+
+    public File startPlot() throws IOException {
+        File f = File.createTempFile("RPlot", ".png");
+        addRCode("png(\"" + f.toString() + "\")");
+        return (f);
     }
-    
-    public void endPlot(){
+
+    public void endPlot() {
         addRCode("dev.off()");
     }
-    
-    public ImageIcon getPlot(File f){
+
+    public ImageIcon getPlot(File f) {
         ImageIcon img = new ImageIcon(f.toString());
-        return(img);
+        return (img);
     }
-    
-    public void showPlot(File f){
+
+    public void showPlot(File f) {
         ImageIcon plot = getPlot(f);
         RPlotViewer plotter = new RPlotViewer(plot);
         plotter.setVisible(true);
@@ -167,36 +166,41 @@ public class RCaller {
         String commandline = null;
         String result = null;
         File rSourceFile, outputFile;
-        
+
         if (this.RscriptExecutable == null) {
             throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
         }
-        
-        
+
+
         try {
             outputFile = File.createTempFile("Routput", "");
         } catch (Exception e) {
             throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
         }
-        
-        RCode.append("cat(makexml(obj=").append(var).append(", name=\""+var+"\"), file=\"").append(outputFile.toString()).append("\")\n");
+
+        RCode.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString()).append("\")\n");
         rSourceFile = createRSourceFile();
         System.out.println(rSourceFile);
-        
+
         try {
-            commandline = RscriptExecutable + " " + rSourceFile.toString() + " > "+outputFile.toString();
+            commandline = RscriptExecutable + " " + rSourceFile.toString() + " > " + outputFile.toString();
             Process process = Runtime.getRuntime().exec(commandline);
             process.waitFor();
         } catch (Exception e) {
             throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
         }
-        
-       
+
+
         parser.setXMLFile(outputFile);
-        try{
-        parser.parse();
-        }catch (Exception e){
-            throw new RCallerExecutionException("Can not handle R results due to : "+e.toString());
+        try {
+            parser.parse();
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
         }
     }
+    
+    public void R_require(String pkg){
+        StringBuffer insert = this.RCode.insert(0, "require("+pkg+")\n");
+    }
+    
 }

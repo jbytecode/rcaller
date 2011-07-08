@@ -63,8 +63,8 @@ public class ROutputParser {
 
     public ROutputParser() {
     }
-    
-    public ArrayList<String> getNames(){
+
+    public ArrayList<String> getNames() {
         ArrayList<String> names = new ArrayList<String>();
         NodeList nodes = document.getElementsByTagName("variable");
         for (int i = 0; i < nodes.getLength(); i++) {
@@ -131,8 +131,8 @@ public class ROutputParser {
         }
         return (f);
     }
-    
-     public int[] getAsIntArray(String name) throws RCallerParseException {
+
+    public int[] getAsIntArray(String name) throws RCallerParseException {
         String[] strResults = getAsStringArray(name);
         int[] ints = new int[strResults.length];
         for (int i = 0; i < strResults.length; i++) {
@@ -144,9 +144,8 @@ public class ROutputParser {
         }
         return (ints);
     }
-     
-     
-        public long[] getAsLongArray(String name) throws RCallerParseException {
+
+    public long[] getAsLongArray(String name) throws RCallerParseException {
         String[] strResults = getAsStringArray(name);
         long[] longs = new long[strResults.length];
         for (int i = 0; i < strResults.length; i++) {
@@ -157,6 +156,5 @@ public class ROutputParser {
             }
         }
         return (longs);
-        }
-    
+    }
 }

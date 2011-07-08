@@ -15,7 +15,12 @@ public class Test2 {
     public static void main(String[] args){
         new Test2();
     }
-    
+   
+    /*
+     * Ordinary Least Squares with RCaller
+     * This class runs the lm() function of R
+     * for regression user defined vector y on vector x from java
+     */
     public Test2(){
         try{
             RCaller caller = new RCaller();
