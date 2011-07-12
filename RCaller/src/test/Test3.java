@@ -1,7 +1,6 @@
 package test;
 
 //~--- non-JDK imports --------------------------------------------------------
-
 import rcaller.RCaller;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -70,7 +69,7 @@ public class Test3 {
              * Combining all of them in a single list() object
              */
             caller.addRCode(
-                "my.all<-list(mean=my.mean, variance=my.var, sd=my.sd, min=my.min, max=my.max, std=my.standardized)");
+                    "my.all<-list(mean=my.mean, variance=my.var, sd=my.sd, min=my.min, max=my.max, std=my.standardized)");
 
             /*
              * We want to handle the list 'my.all'

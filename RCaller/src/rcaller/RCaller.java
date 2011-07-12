@@ -21,8 +21,17 @@ public class RCaller {
     private String RscriptExecutable;
     private StringBuffer RCode;
     private ROutputParser parser;
+    private String cranRepos = "http://cran.r-project.org";
     public final static String version = "RCaller 2.0";
     public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
+
+    public String getCranRepos() {
+        return cranRepos;
+    }
+
+    public void setCranRepos(String cranRepos) {
+        this.cranRepos = cranRepos;
+    }
 
     public ROutputParser getParser() {
         return parser;
@@ -58,7 +67,7 @@ public class RCaller {
         this.RCode.setLength(0);
         addRCode("packageExist<-require(Runiversal)");
         addRCode("if(!packageExist){");
-        addRCode("install.packages(\"Runiversal\", repos=\"http://cran.r-project.org\")");
+        addRCode("install.packages(\"Runiversal\", repos=\" " + cranRepos + "\")");
         addRCode("}");
     }
 
@@ -180,7 +189,6 @@ public class RCaller {
 
         RCode.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString()).append("\")\n");
         rSourceFile = createRSourceFile();
-        System.out.println(rSourceFile);
 
         try {
             commandline = RscriptExecutable + " " + rSourceFile.toString() + " > " + outputFile.toString();
@@ -198,9 +206,8 @@ public class RCaller {
             throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
         }
     }
-    
-    public void R_require(String pkg){
-        StringBuffer insert = this.RCode.insert(0, "require("+pkg+")\n");
+
+    public void R_require(String pkg) {
+        StringBuffer insert = this.RCode.insert(0, "require(" + pkg + ")\n");
     }
-    
 }
