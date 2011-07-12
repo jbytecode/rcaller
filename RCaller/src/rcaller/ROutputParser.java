@@ -4,8 +4,12 @@
  */
 package rcaller;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import javax.imageio.IIOException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
@@ -34,6 +38,15 @@ public class ROutputParser {
 
     public File getXMLFile() {
         return XMLFile;
+    }
+    
+    public String getXMLFileAsString() throws IOException{
+        BufferedReader reader = new BufferedReader(new FileReader(XMLFile));
+        long filesize = XMLFile.length();
+        char[] chars = new char[(int)filesize];
+        reader.read(chars);
+        String result = new String(chars);
+        return(result);
     }
 
     public void setXMLFile(File XMLFile) {
