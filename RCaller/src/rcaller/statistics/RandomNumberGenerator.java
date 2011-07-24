@@ -62,7 +62,7 @@ public class RandomNumberGenerator {
         return (generateRandom(code.toString()));
     }
 
-    public double[] randomChisqyare(int n, int df) throws Exception {
+    public double[] randomChisqare(int n, int df) throws Exception {
         StringBuilder code = new StringBuilder();
         code.append("rcaller_data<-rchisq(").append(n).append(",").append(df).append(")");
         return (generateRandom(code.toString()));
