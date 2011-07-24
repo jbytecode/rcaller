@@ -18,10 +18,28 @@ public class Test5 {
 
     public Test5() {
         try {
+            /*
+             * RCaller instant
+             */
             RCaller caller = new RCaller();
+            /*
+             * Rscript executable
+             */
             caller.setRscriptExecutable("/usr/bin/Rscript");
+            /*
+             * Random Number Generator
+             */
             RandomNumberGenerator rng = new RandomNumberGenerator(caller);
-            double[] d = rng.randomNormal(5, 0, 1);
+            
+            /*
+             * Generating random numbers from a normal distribution with 
+             * zero mean and unit standard deviation
+             */
+            double[] d = rng.randomNormal(10, 0, 1);
+            
+            /*
+             * Printing generated content
+             */
             for (int i = 0; i < d.length; i++) {
                 System.out.println(d[i]);
             }
