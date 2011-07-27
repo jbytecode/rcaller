@@ -132,7 +132,7 @@ public class RCaller {
 
     public File startPlot() throws IOException {
         File f = File.createTempFile("RPlot", ".png");
-        addRCode("png(\"" + f.toString() + "\")");
+        addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
         return (f);
     }
 
@@ -207,11 +207,11 @@ public class RCaller {
             throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
         }
 
-        RCode.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString()).append("\")\n");
+        RCode.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
         rSourceFile = createRSourceFile();
-
         try {
-            commandline = RscriptExecutable + " " + rSourceFile.toString() + " > " + outputFile.toString();
+            //commandline = RscriptExecutable + " " + rSourceFile.toString() + " > " + outputFile.toString();
+            commandline = RscriptExecutable + " " + rSourceFile.toString();
             Process process = Runtime.getRuntime().exec(commandline);
             process.waitFor();
         } catch (Exception e) {
