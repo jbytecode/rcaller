@@ -228,6 +228,10 @@ public class RCaller {
     }
 
     public void R_require(String pkg) {
-        StringBuffer insert = this.RCode.insert(0, "require(" + pkg + ")\n");
+        this.RCode = this.RCode.insert(0, "require(" + pkg + ")\n");
+    }
+    
+    public void R_source(String sourceFile){
+        addRCode("source(\""+sourceFile+"\"");
     }
 }
