@@ -232,6 +232,6 @@ public class RCaller {
     }
     
     public void R_source(String sourceFile){
-        addRCode("source(\""+sourceFile+"\"");
+        addRCode("source(\""+sourceFile+"\")\n");
     }
 }
