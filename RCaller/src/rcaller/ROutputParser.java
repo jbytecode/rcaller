@@ -190,4 +190,19 @@ public class ROutputParser {
         }
         return (longs);
     }
+    
+    public double[][] getAsDoubleMatrix(String name, int n, int m) throws RCallerParseException{
+        double[][] result = new double[n][m];
+        double[] arr = this.getAsDoubleArray(name);
+        int c =0;
+        for (int i=0;i<n;i++){
+            for (int j=0;j<m;j++){
+                result[i][j] = arr[c];
+                c++;
+            }
+        }
+        return(result);
+    }
+    
+    
 }
