@@ -88,7 +88,7 @@ public class RCaller {
         addRCode("packageExist<-require(Runiversal)");
         addRCode("if(!packageExist){");
         addRCode("install.packages(\"Runiversal\", repos=\" " + cranRepos + "\")");
-        addRCode("}");
+        addRCode("}\n");
     }
 
     public void addRCode(String code) {
