@@ -38,7 +38,7 @@ import java.util.Random;
  * @since 2.0
  * @version 2.0
  */
-public class Test3 {
+public class Example3 {
 
     /**
      * Standalone test application.
@@ -46,7 +46,7 @@ public class Test3 {
      * from Java.
      *
      */
-    public Test3() {
+    public Example3() {
         try {
 
             /*
@@ -152,7 +152,7 @@ public class Test3 {
     }
 
     public static void main(String[] args) {
-        new Test3();
+        new Example3();
     }
 }
 

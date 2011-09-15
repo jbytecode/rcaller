@@ -33,10 +33,10 @@ import rcaller.RCaller;
  * @version 2.0
  * 
  */
-public class Test2 {
+public class Example2 {
 
     public static void main(String[] args) {
-        new Test2();
+        new Example2();
     }
 
     /**
@@ -45,7 +45,7 @@ public class Test2 {
      * This class runs the lm() function of R
      * for regression user defined vector y on vector x from java
      */
-    public Test2() {
+    public Example2() {
 
         try {
             /*

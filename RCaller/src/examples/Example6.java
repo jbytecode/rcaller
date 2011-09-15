@@ -13,9 +13,9 @@ import rcaller.RCaller;
  * 
  */
 
-public class Test6 {
+public class Example6 {
     
-    public Test6(){
+    public Example6(){
         try{
             RCaller caller = new RCaller();
             caller.setRscriptExecutable("C:\\Program Files\\R\\R-2.13.0\\bin\\Rscript.exe");
@@ -37,6 +37,6 @@ public class Test6 {
     }
     
     public static void main(String[] args){
-        new Test6();
+        new Example6();
     }
 }

@@ -32,13 +32,13 @@ import rcaller.RCaller;
  * @author Mehmet Hakan Satman
  */
 
-public class Test4 {
+public class Example4 {
     
     public static void main (String[] args){
-        new Test4();
+        new Example4();
     }
     
-    public Test4(){
+    public Example4(){
         try{
             /*
              * Creating an instance of RCaller
