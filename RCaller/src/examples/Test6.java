@@ -2,7 +2,7 @@
  * Test for Windows Systems
  */
 
-package test;
+package examples;
 
 import java.io.File;
 import rcaller.RCaller;

@@ -107,27 +107,36 @@ public class RCaller {
   }
 
   public void addDoubleArray(String name, double[] arr) {
-    String[] s = new String[arr.length];
-    for (int i = 0; i < s.length; i++) {
-      s[i] = String.valueOf(arr[i]);
+    this.RCode.append(name).append("<-").append("c(");
+    for (int i = 0; i < arr.length; i++) {
+      this.RCode.append(String.valueOf(arr[i]));
+      if (i < arr.length - 1) {
+        this.RCode.append(", ");
+      }
     }
-    addStringArray(name, s);
+    this.RCode.append(");").append("\n");
   }
 
   public void addFloatArray(String name, float[] arr) {
-    String[] s = new String[arr.length];
-    for (int i = 0; i < s.length; i++) {
-      s[i] = String.valueOf(arr[i]);
+    this.RCode.append(name).append("<-").append("c(");
+    for (int i = 0; i < arr.length; i++) {
+      this.RCode.append(String.valueOf(arr[i]));
+      if (i < arr.length - 1) {
+        this.RCode.append(", ");
+      }
     }
-    addStringArray(name, s);
+    this.RCode.append(");").append("\n");
   }
 
   public void addIntArray(String name, int[] arr) {
-    String[] s = new String[arr.length];
-    for (int i = 0; i < s.length; i++) {
-      s[i] = String.valueOf(arr[i]);
+    this.RCode.append(name).append("<-").append("c(");
+    for (int i = 0; i < arr.length; i++) {
+      this.RCode.append(String.valueOf(arr[i]));
+      if (i < arr.length - 1) {
+        this.RCode.append(", ");
+      }
     }
-    addStringArray(name, s);
+    this.RCode.append(");").append("\n");
   }
 
   public File startPlot() throws IOException {

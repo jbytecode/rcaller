@@ -23,7 +23,7 @@
  *
  */
 
-package test;
+package examples;
 
 //~--- non-JDK imports --------------------------------------------------------
 import rcaller.RCaller;

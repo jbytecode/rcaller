@@ -1,4 +1,4 @@
-package test;
+package examples;
 
 import rcaller.RCaller;
 

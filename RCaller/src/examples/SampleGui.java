@@ -22,7 +22,7 @@
  * Google code projec: http://code.google.com/p/rcaller/
  *
  */
-package test;
+package examples;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
