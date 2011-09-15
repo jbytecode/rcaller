@@ -130,6 +130,36 @@ public class RCallerTest {
   }
 
   @Test
+  public void TestLists2()throws Exception {
+    double delta = 0.0000001;
+    RCaller rcaller = new RCaller();
+    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    rcaller.cleanRCode();
+    rcaller.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
+    rcaller.addRCode("med1 <- median(x)");
+
+    rcaller.addRCode("y <- c(16 ,18, 13.4, 11,12)");
+    rcaller.addRCode("med2 <- median(y)");
+
+    rcaller.addRCode("z <- c(116 ,118, 113.4,111,112)");
+    rcaller.addRCode("med3 <- median(z)");
+
+    rcaller.addRCode("results <- list(m1 = med1, m2 = med2, m3 = med3)");
+    
+    rcaller.runAndReturnResult("results");
+     
+
+    double[] result = rcaller.getParser().getAsDoubleArray("m1");
+    assertEquals(result[0], 3.4, delta);
+
+    result = rcaller.getParser().getAsDoubleArray("m2");
+    assertEquals(result[0], 13.4, delta);
+
+    result = rcaller.getParser().getAsDoubleArray("m3");
+    assertEquals(result[0], 113.4, delta);
+  }
+
+  @Test
   public void testPlot() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
@@ -144,5 +174,21 @@ public class RCallerTest {
     rcaller.endPlot();
     rcaller.runOnly();
     assertFalse(rcaller.getPlot(plot) == null);
+  }
+
+  @Test
+  public void singleResultTest() {
+    double delta = 0.0000001;
+    RCaller rcaller = new RCaller();
+    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    rcaller.cleanRCode();
+    rcaller.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
+    rcaller.addRCode("med <- median(x)");
+
+    rcaller.runAndReturnResult("med");
+
+    double[] result = rcaller.getParser().getAsDoubleArray("med");
+
+    assertEquals(result[0], 3.4, delta);
   }
 }
