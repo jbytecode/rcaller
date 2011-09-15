@@ -4,6 +4,8 @@
  */
 package rcaller;
 
+import java.io.File;
+import javax.swing.ImageIcon;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -68,7 +70,7 @@ public class RCallerTest {
       assertEquals(actual[i], expected[i], delta);
     }
   }
-  
+
   @Test
   public void testFloatArrays() {
     double delta = 0.0000001;
@@ -102,28 +104,45 @@ public class RCallerTest {
       assertEquals(actual[i], expected[i]);
     }
   }
-  
+
   @Test
-  public void testLists(){
+  public void testLists() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
     rcaller.cleanRCode();
     rcaller.addRCode("alist <- list(x=c(1,2,3), y=c('a','b','c'))");
     rcaller.runAndReturnResult("alist");
-    
+
     String[] actual = rcaller.getParser().getAsStringArray("y");
-    String[] expected = new String[]{"a", "b","c"};
+    String[] expected = new String[]{"a", "b", "c"};
     assertEquals(expected.length, actual.length);
     for (int i = 0; i < actual.length; i++) {
       assertEquals(actual[i], expected[i]);
     }
-    
+
     int[] actual_i = rcaller.getParser().getAsIntArray("x");
-    int[] expected_i = new int[]{1,2,3};
+    int[] expected_i = new int[]{1, 2, 3};
     assertEquals(expected_i.length, actual_i.length);
     for (int i = 0; i < actual_i.length; i++) {
       assertEquals(actual_i[i], expected_i[i]);
     }
-    
+
+  }
+
+  @Test
+  public void testPlot() {
+    RCaller rcaller = new RCaller();
+    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    rcaller.cleanRCode();
+    File plot = null;
+    try {
+      plot = rcaller.startPlot();
+    } catch (Exception e) {
+      fail(e.toString());
+    }
+    rcaller.addRCode("hist(rnorm(1000))");
+    rcaller.endPlot();
+    rcaller.runOnly();
+    assertFalse(rcaller.getPlot(plot) == null);
   }
 }
