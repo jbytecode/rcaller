@@ -1,11 +1,6 @@
 
 package rcaller;
 
-import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -35,5 +30,9 @@ public class RunOnlineTest {
     rcaller.addRCode("k<-median(a)");
     rcaller.runAndReturnResultOnline("k");
     assertEquals(rcaller.getParser().getAsDoubleArray("k")[0], 50.0, 0.000001);
+    
+    //Test mean of b is still alive
+    rcaller.runAndReturnResultOnline("m");
+    assertEquals(rcaller.getParser().getAsDoubleArray("m")[0], 5.5, 0.000001);
   }
 }
