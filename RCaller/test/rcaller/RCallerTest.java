@@ -5,7 +5,6 @@
 package rcaller;
 
 import java.io.File;
-import javax.swing.ImageIcon;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -130,7 +129,7 @@ public class RCallerTest {
   }
 
   @Test
-  public void TestLists2()throws Exception {
+  public void TestLists2() throws Exception {
     double delta = 0.0000001;
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
@@ -145,9 +144,9 @@ public class RCallerTest {
     rcaller.addRCode("med3 <- median(z)");
 
     rcaller.addRCode("results <- list(m1 = med1, m2 = med2, m3 = med3)");
-    
+
     rcaller.runAndReturnResult("results");
-     
+
 
     double[] result = rcaller.getParser().getAsDoubleArray("m1");
     assertEquals(result[0], 3.4, delta);
@@ -191,4 +190,6 @@ public class RCallerTest {
 
     assertEquals(result[0], 3.4, delta);
   }
+
+  
 }

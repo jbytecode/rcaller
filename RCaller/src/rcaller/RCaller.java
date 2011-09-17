@@ -28,6 +28,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import javax.swing.ImageIcon;
 import rcaller.exception.RCallerExecutionException;
 
@@ -38,12 +40,58 @@ import rcaller.exception.RCallerExecutionException;
 public class RCaller {
 
   private String RscriptExecutable;
+  private String RExecutable;
   private StringBuffer RCode;
   private ROutputParser parser;
   private String cranRepos = "http://cran.r-project.org";
   public final static String version = "RCaller 2.0";
   public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
   public final static String licence = "LGPL v3.0";
+  private Process process;
+  private InputStream inputStreamToR = null;
+  private OutputStream outputStreamToR = null;
+  private InputStream errorStreamToR = null;
+
+  public InputStream getErrorStreamToR() {
+    return errorStreamToR;
+  }
+
+  public void setErrorStreamToR(InputStream errorStreamToR) {
+    this.errorStreamToR = errorStreamToR;
+  }
+
+  public Process getProcess() {
+    return process;
+  }
+
+  public void setProcess(Process process) {
+    this.process = process;
+  }
+
+  
+  public InputStream getInputStreamToR() {
+    return inputStreamToR;
+  }
+
+  public void setInputStreamToR(InputStream inputStreamToR) {
+    this.inputStreamToR = inputStreamToR;
+  }
+
+  public OutputStream getOutputStreamToR() {
+    return outputStreamToR;
+  }
+
+  public void setOutputStreamToR(OutputStream outputStreamToR) {
+    this.outputStreamToR = outputStreamToR;
+  }
+
+  public String getRExecutable() {
+    return RExecutable;
+  }
+
+  public void setRExecutable(String RExecutable) {
+    this.RExecutable = RExecutable;
+  }
 
   public String getCranRepos() {
     return cranRepos;
@@ -193,6 +241,7 @@ public class RCaller {
     RCode.append("q(").append("\"").append("yes").append("\"").append(")\n");
     File rSourceFile = createRSourceFile();
     try {
+      //this Process object is local to this method. Do not use the public one.
       Process process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
       process.waitFor();
     } catch (Exception e) {
@@ -200,6 +249,80 @@ public class RCaller {
     }
   }
 
+  public void runAndReturnResultOnline(String var) throws rcaller.exception.RCallerExecutionException {
+    String commandline = null;
+    String result = null;
+    File rSourceFile;
+    final File outputFile;
+
+    if (this.RExecutable == null) {
+      throw new RCallerExecutionException("RExecutable is not defined. Please set this variable to full path of R executable binary file.");
+    }
+
+
+    try {
+      outputFile = File.createTempFile("Routput", "");
+    } catch (Exception e) {
+      throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+    }
+
+    RCode.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
+
+    if (outputStreamToR == null || inputStreamToR == null || errorStreamToR == null || process == null) {
+      try {
+        commandline = RExecutable + " --vanilla";
+        process = Runtime.getRuntime().exec(commandline);
+        outputStreamToR = process.getOutputStream();
+        inputStreamToR = process.getInputStream();
+        errorStreamToR = process.getErrorStream();
+      } catch (Exception e) {
+        throw new RCallerExecutionException("Can not run " + RExecutable + ". Reason: " + e.toString());
+      }
+    }
+
+    InputStreamConsumer isConsumer = new InputStreamConsumer(inputStreamToR);
+    InputStreamConsumer errConsumer = new InputStreamConsumer(errorStreamToR);
+    isConsumer.getConsumerThread().start();
+    errConsumer.getConsumerThread().start();
+
+    try {
+      outputStreamToR.write(RCode.toString().getBytes());
+      outputStreamToR.flush();
+    } catch (Exception e) {
+      throw new RCallerExecutionException("Can not send the source code to R file due to: " + e.toString());
+    }
+
+    Thread calcThread = new Thread(new Runnable() {
+      @Override
+      public void run() {
+        while (outputFile.length() < 1) {
+          try {
+            Thread.sleep(1);
+          } catch (Exception e) {
+          }
+        }
+      }
+    });
+    calcThread.start();
+    try {
+      calcThread.join();
+    } catch (Exception e) {
+      //Do nothing here
+    }
+
+    isConsumer.setCloseSignal(true);
+    errConsumer.setCloseSignal(true);
+    
+    parser.setXMLFile(outputFile);
+
+    try {
+      parser.parse();
+    } catch (Exception e) {
+      throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
+    }
+  }
+
+  
   public void runAndReturnResult(String var) throws rcaller.exception.RCallerExecutionException {
     String commandline = null;
     String result = null;
@@ -219,8 +342,8 @@ public class RCaller {
     RCode.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
     rSourceFile = createRSourceFile();
     try {
-      //commandline = RscriptExecutable + " " + rSourceFile.toString() + " > " + outputFile.toString();
       commandline = RscriptExecutable + " " + rSourceFile.toString();
+      //this Process object is local to this method. Do not use the public one.
       Process process = Runtime.getRuntime().exec(commandline);
       process.waitFor();
     } catch (Exception e) {
