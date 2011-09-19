@@ -55,9 +55,10 @@ public class InputStreamConsumer implements Runnable {
 
   @Override
   public void run() {
+    String s;
     while(!closeSignal){
       try{
-        String s = this.reader.readLine();
+        s = this.reader.readLine();
       }catch (Exception e){
         //...
       }
