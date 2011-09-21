@@ -36,6 +36,11 @@ import rcaller.exception.RCallerExecutionException;
 /**
  *
  * @author Mehmet Hakan Satman
+ * mhsatman@yahoo.com
+ * http://stdioe.blogspot.com
+ * http://www.mhsatman.com
+ * http://code.google.com/p/rcaller
+ * 
  */
 public class RCaller {
 

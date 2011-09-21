@@ -5,15 +5,24 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class RunOnlineTest {
+    
+  String RFileWindows = "C:\\Program Files\\R\\R-2.13.0\\bin\\R.exe";
+  String RFileLinux = "/usr/bin/R";
+  String currentRFile = null;
   
   public RunOnlineTest(){
-    
+    String osname = System.getProperty("os.name");
+    if(osname.contains("Windows")){
+        currentRFile = RFileWindows;
+    }else{
+        currentRFile = RFileLinux;
+    }
   }
   
   @Test
-  public void onlineCalculationTest() {
+  public void onlineCalculationTest(){
     RCaller rcaller = new RCaller();
-    rcaller.setRExecutable("/usr/bin/R");
+    rcaller.setRExecutable(currentRFile);
     rcaller.cleanRCode();
     rcaller.addRCode("a<-1:10");
     rcaller.runAndReturnResultOnline("a");
