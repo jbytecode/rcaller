@@ -105,6 +105,23 @@ public class RCallerTest {
   }
 
   @Test
+  public void testLogicalArrays() {
+    boolean[] boolarr = new boolean[]{true, true, false, true, true, true, false};
+    RCaller rcaller = new RCaller();
+    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    rcaller.cleanRCode();
+    rcaller.addLogicalArray("b", boolarr);
+    rcaller.addRCode("result<-xor(b,b)");
+    rcaller.runAndReturnResult("result");
+    boolean[] actual = rcaller.getParser().getAsLogicalArray("result");
+    boolean[] expected = new boolean[]{false, false, false, false, false, false, false};
+    assertEquals(expected.length, actual.length);
+    for (int i = 0; i < actual.length; i++) {
+      assertEquals(actual[i], expected[i]);
+    }
+  }
+
+  @Test
   public void testLists() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
@@ -191,5 +208,4 @@ public class RCallerTest {
     assertEquals(result[0], 3.4, delta);
   }
 
-  
 }

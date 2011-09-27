@@ -73,7 +73,6 @@ public class RCaller {
     this.process = process;
   }
 
-  
   public InputStream getInputStreamToR() {
     return inputStreamToR;
   }
@@ -192,6 +191,22 @@ public class RCaller {
     this.RCode.append(");").append("\n");
   }
 
+  /**
+   * Adds a logical vector with name 'name' to R code.
+   * @param name Name of the variable. This name can be directly used in R
+   * @param arr boolean array. This array will be passed to R with values TRUE and FALSE
+   */
+  public void addLogicalArray(String name, boolean[] arr) {
+    this.RCode.append(name).append("<-").append("c(");
+    for (int i = 0; i < arr.length; i++) {
+      this.RCode.append(String.valueOf(arr[i]).toUpperCase());
+      if (i < arr.length - 1) {
+        this.RCode.append(", ");
+      }
+    }
+    this.RCode.append(");").append("\n");
+  }
+
   public File startPlot() throws IOException {
     File f = File.createTempFile("RPlot", ".png");
     addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
@@ -298,6 +313,7 @@ public class RCaller {
     }
 
     Thread calcThread = new Thread(new Runnable() {
+
       @Override
       public void run() {
         while (outputFile.length() < 1) {
@@ -317,7 +333,7 @@ public class RCaller {
 
     isConsumer.setCloseSignal(true);
     errConsumer.setCloseSignal(true);
-    
+
     parser.setXMLFile(outputFile);
 
     try {
@@ -327,7 +343,6 @@ public class RCaller {
     }
   }
 
-  
   public void runAndReturnResult(String var) throws rcaller.exception.RCallerExecutionException {
     String commandline = null;
     String result = null;
