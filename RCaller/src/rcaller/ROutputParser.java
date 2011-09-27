@@ -190,6 +190,19 @@ public class ROutputParser {
     return (longs);
   }
 
+  public boolean[] getAsLogicalArray(String name) throws RCallerParseException {
+    String[] strResults = getAsStringArray(name);
+    boolean[] bools = new boolean[strResults.length];
+    for (int i = 0; i < strResults.length; i++) {
+      try {
+        bools[i] = Boolean.parseBoolean(strResults[i]);
+      } catch (Exception e) {
+        throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to boolean");
+      }
+    }
+    return (bools);
+  }
+  
   public double[][] getAsDoubleMatrix(String name, int n, int m) throws RCallerParseException {
     double[][] result = new double[n][m];
     double[] arr = this.getAsDoubleArray(name);
@@ -202,4 +215,5 @@ public class ROutputParser {
     }
     return (result);
   }
+  
 }
