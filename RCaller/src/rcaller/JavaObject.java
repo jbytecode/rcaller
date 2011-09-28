@@ -7,15 +7,18 @@ public class JavaObject {
 
   Object object;
   String name;
-  
+
   public JavaObject(String name, Object o) {
     this.object = o;
     this.name = name;
   }
 
   public String produceRCode() throws IllegalAccessException {
-
+    /*
+     * builder should be changed to StringBuilder soon.
+     */
     StringBuilder builder = new StringBuilder();
+    StringBuffer tempbuffer = new StringBuffer();
     String className, varName;
     Object o;
     Field f;
@@ -35,6 +38,30 @@ public class JavaObject {
         builder.append(varName).append("=").append("\"").append(o).append("\"");
       } else if (className.equals("boolean")) {
         builder.append(varName).append("=").append(o.toString().toUpperCase());
+      } else if (className.equals("int[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addIntArray(tempbuffer, varName, (int[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("double[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addDoubleArray(tempbuffer, varName, (double[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("float[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addFloatArray(tempbuffer, varName, (float[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("short[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addShortArray(tempbuffer, varName, (short[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("boolean[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addLogicalArray(tempbuffer, varName, (boolean[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("java.lang.String[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addStringArray(tempbuffer, varName, (java.lang.String[]) o, true);
+        builder.append(tempbuffer.toString());
       } else {
         builder.append(varName).append("=").append("\"").append("Unsupported data type: ").append(className).append(" in JavaObject").append("\"");
       }

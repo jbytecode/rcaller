@@ -148,63 +148,27 @@ public class RCaller {
   }
 
   public void addStringArray(String name, String[] arr) {
-    this.RCode.append(name).append("<-").append("c(");
-    for (int i = 0; i < arr.length; i++) {
-      this.RCode.append("\"").append(arr[i]).append("\"");
-      if (i < arr.length - 1) {
-        this.RCode.append(", ");
-      }
-    }
-    this.RCode.append(");").append("\n");
+    CodeUtils.addStringArray(RCode, name, arr, false);
   }
 
   public void addDoubleArray(String name, double[] arr) {
-    this.RCode.append(name).append("<-").append("c(");
-    for (int i = 0; i < arr.length; i++) {
-      this.RCode.append(String.valueOf(arr[i]));
-      if (i < arr.length - 1) {
-        this.RCode.append(", ");
-      }
-    }
-    this.RCode.append(");").append("\n");
+    CodeUtils.addDoubleArray(RCode, name, arr, false);
   }
 
   public void addFloatArray(String name, float[] arr) {
-    this.RCode.append(name).append("<-").append("c(");
-    for (int i = 0; i < arr.length; i++) {
-      this.RCode.append(String.valueOf(arr[i]));
-      if (i < arr.length - 1) {
-        this.RCode.append(", ");
-      }
-    }
-    this.RCode.append(");").append("\n");
+    CodeUtils.addFloatArray(RCode, name, arr, false);
   }
 
   public void addIntArray(String name, int[] arr) {
-    this.RCode.append(name).append("<-").append("c(");
-    for (int i = 0; i < arr.length; i++) {
-      this.RCode.append(String.valueOf(arr[i]));
-      if (i < arr.length - 1) {
-        this.RCode.append(", ");
-      }
-    }
-    this.RCode.append(");").append("\n");
+    CodeUtils.addIntArray(RCode, name, arr, false);
   }
 
-  /**
-   * Adds a logical vector with name 'name' to R code.
-   * @param name Name of the variable. This name can be directly used in R
-   * @param arr boolean array. This array will be passed to R with values TRUE and FALSE
-   */
+  public void addShortArray(String name, short[] arr) {
+    CodeUtils.addShortArray(RCode, name, arr, false);
+  }
+
   public void addLogicalArray(String name, boolean[] arr) {
-    this.RCode.append(name).append("<-").append("c(");
-    for (int i = 0; i < arr.length; i++) {
-      this.RCode.append(String.valueOf(arr[i]).toUpperCase());
-      if (i < arr.length - 1) {
-        this.RCode.append(", ");
-      }
-    }
-    this.RCode.append(");").append("\n");
+    CodeUtils.addLogicalArray(RCode, name, arr, false);
   }
 
   public File startPlot() throws IOException {
@@ -375,6 +339,7 @@ public class RCaller {
     try {
       parser.parse();
     } catch (Exception e) {
+      System.out.println(RCode.toString());
       throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
     }
   }

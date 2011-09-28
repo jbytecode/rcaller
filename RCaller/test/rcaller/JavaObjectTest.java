@@ -4,6 +4,7 @@
  */
 package rcaller;
 
+import java.io.IOException;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -16,6 +17,8 @@ import static org.junit.Assert.*;
  * @author hako
  */
 public class JavaObjectTest {
+
+  double delta = 0.0000001;
 
   public JavaObjectTest() {
   }
@@ -44,29 +47,60 @@ public class JavaObjectTest {
   }
 
   @Test
-  public void passJavaObjectToR() throws IllegalAccessException{
+  public void passJavaObjectToR() throws IllegalAccessException {
     TestClass tc = new TestClass();
     tc.i = 999;
     tc.f = 2.71828f;
     tc.d = Math.PI;
     JavaObject jo = new JavaObject("myObj", tc);
-    
-    double delta = 0.0000001;
+
+
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
     rcaller.cleanRCode();
-    
+
     rcaller.addRCode(jo.produceRCode());
-    
+
     rcaller.addRCode("myObj$i <- myObj$i + 1");
-    
+
     rcaller.runAndReturnResult("myObj");
-    
+
     int[] result = rcaller.getParser().getAsIntArray("i");
-    
+
     assertEquals(1000, result[0]);
   }
-}
+
+  @Test
+  public void TestClassWithArrays() throws IllegalAccessException, IOException {
+    TestClassWithArrays tcwa = new TestClassWithArrays();
+    JavaObject jo = new JavaObject("tcwa", tcwa);
+
+    RCaller rcaller = new RCaller();
+    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    rcaller.cleanRCode();
+
+    rcaller.addRCode(jo.produceRCode());
+    rcaller.runAndReturnResult("tcwa");
+
+    int[] expectedIntArray = rcaller.getParser().getAsIntArray("ia");
+    for (int i = 0; i < tcwa.ia.length; i++) {
+      assertEquals(expectedIntArray[i], tcwa.ia[i]);
+    }
+
+
+    double[] expectedDoubleArray = rcaller.getParser().getAsDoubleArray("da");
+    for (int i = 0; i < tcwa.da.length; i++) {
+      assertEquals(expectedDoubleArray[i], tcwa.da[i], delta);
+    }
+
+    String[] expectedStringArray = rcaller.getParser().getAsStringArray("sa");
+    for (int i = 0; i < tcwa.sa.length; i++) {
+      assertEquals(expectedStringArray[i], tcwa.sa[i]);
+    }
+
+  }
+}/* end of test class */
+
 
 /**
  * 
@@ -81,4 +115,12 @@ class TestClass {
   public double d = 3.14;
   public boolean b = true;
   public String s = "test";
+}
+
+class TestClassWithArrays extends TestClass {
+
+  public int[] ia = new int[]{1, 2, 3, 4, 5};
+  public double[] da = new double[]{1.0, 2.0, 3.0, 4.0, 9.9, 10.1};
+  public String[] sa = new String[]{"One", "Two", "Three"};
+  public boolean[] ba = new boolean[]{true, true, false};
 }
