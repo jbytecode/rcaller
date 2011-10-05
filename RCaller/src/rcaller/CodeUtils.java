@@ -119,4 +119,11 @@ public class CodeUtils {
       RCode.append(");").append("\n");
     }
   }
+
+  public static void addJavaObject(StringBuffer RCode, String name, Object o, boolean useEquals) throws IllegalAccessException {
+    RCode.append(((rcaller.JavaObject) o).produceRCode(useEquals));
+    if (!useEquals) {
+      RCode.append("\n");
+    }
+  }
 }

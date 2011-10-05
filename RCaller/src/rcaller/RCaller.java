@@ -171,6 +171,10 @@ public class RCaller {
     CodeUtils.addLogicalArray(RCode, name, arr, false);
   }
 
+  public void addJavaObject(String name, Object o) throws IllegalAccessException {
+    CodeUtils.addJavaObject(RCode, name, o, false);
+  }
+
   public File startPlot() throws IOException {
     File f = File.createTempFile("RPlot", ".png");
     addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");

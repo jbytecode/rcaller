@@ -43,7 +43,7 @@ public class JavaObjectTest {
   public void simpleJavaObjectTest() throws IllegalAccessException {
     TestClass tc = new TestClass();
     JavaObject t = new JavaObject("myObj", tc);
-    assertEquals("myObj <- list(i=9, f=10.0, d=3.14, b=TRUE, s=\"test\")\n", t.produceRCode());
+    assertEquals("myObj <- list(i=9, f=10.0, d=3.14, b=TRUE, s=\"test\")\n", t.produceRCode(false));
   }
 
   @Test
@@ -59,7 +59,7 @@ public class JavaObjectTest {
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
     rcaller.cleanRCode();
 
-    rcaller.addRCode(jo.produceRCode());
+    rcaller.addRCode(jo.produceRCode(false));
 
     rcaller.addRCode("myObj$i <- myObj$i + 1");
 
@@ -79,7 +79,7 @@ public class JavaObjectTest {
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
     rcaller.cleanRCode();
 
-    rcaller.addRCode(jo.produceRCode());
+    rcaller.addRCode(jo.produceRCode(false));
     rcaller.runAndReturnResult("tcwa");
 
     int[] expectedIntArray = rcaller.getParser().getAsIntArray("ia");
@@ -123,4 +123,16 @@ class TestClassWithArrays extends TestClass {
   public double[] da = new double[]{1.0, 2.0, 3.0, 4.0, 9.9, 10.1};
   public String[] sa = new String[]{"One", "Two", "Three"};
   public boolean[] ba = new boolean[]{true, true, false};
+}
+
+class OtherClass {
+
+  public String s = "This is a string in OtherClass";
+}
+
+class TestClassWithObject {
+
+  public JavaObject InnerObject = new JavaObject("anObject", new OtherClass());
+  public int[] ia = new int[]{1, 2, 3, 4, 5};
+  public int i = 90;
 }
