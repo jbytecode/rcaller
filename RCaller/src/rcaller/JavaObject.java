@@ -13,7 +13,7 @@ public class JavaObject {
     this.name = name;
   }
 
-  public String produceRCode() throws IllegalAccessException {
+  public String produceRCode(boolean useEquals) throws IllegalAccessException {
     /*
      * builder should be changed to StringBuilder soon.
      */
@@ -24,7 +24,11 @@ public class JavaObject {
     Field f;
 
     Field[] fields = this.object.getClass().getFields();
-    builder.append(this.name).append(" <- list(");
+    if (useEquals) {
+      builder.append(this.name).append(" = list(");
+    } else {
+      builder.append(this.name).append(" <- list(");
+    }
 
     for (int i = 0; i < fields.length; i++) {
       f = fields[i];
@@ -61,6 +65,10 @@ public class JavaObject {
       } else if (className.equals("java.lang.String[]")) {
         tempbuffer.setLength(0);
         CodeUtils.addStringArray(tempbuffer, varName, (java.lang.String[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("rcaller.JavaObject")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addJavaObject(tempbuffer, varName, (rcaller.JavaObject) o, true);
         builder.append(tempbuffer.toString());
       } else {
         builder.append(varName).append("=").append("\"").append("Unsupported data type: ").append(className).append(" in JavaObject").append("\"");
