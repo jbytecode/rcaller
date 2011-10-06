@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package rcaller.statistics;
 
 import rcaller.RCaller;
+import rcaller.RCode;
 
 /**
  *
@@ -33,20 +34,18 @@ import rcaller.RCaller;
 public class RandomNumberGenerator {
 
   RCaller caller;
-  String codeBuffer;
+  RCode code;
 
   public RandomNumberGenerator(RCaller rcaller) {
     this.caller = rcaller;
-    this.codeBuffer = rcaller.getRCode().toString();
+    this.code = new RCode();
   }
 
   private double[] generateRandom(String strcode) throws Exception {
-    caller.cleanRCode();
-    StringBuilder code = new StringBuilder();
-    code.append(strcode);
-    caller.addRCode(code.toString());
+    code.clear();
+    code.getCode().append(strcode).append("\n");
+    caller.setRCode(code);
     caller.runAndReturnResult("rcaller_data");
-    caller.setRCode(new StringBuffer(this.codeBuffer));
     return (caller.getParser().getAsDoubleArray("rcaller_data"));
   }
 

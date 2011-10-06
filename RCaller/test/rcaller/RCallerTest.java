@@ -41,9 +41,13 @@ public class RCallerTest {
   public void testIntArrays() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addIntArray("x_i", new int[]{1, 2, 3, 4, 5, 6});
-    rcaller.addRCode("x_i <- x_i * 2");
+    RCode code = new RCode();
+    
+    code.clear();
+    code.addIntArray("x_i", new int[]{1, 2, 3, 4, 5, 6});
+    code.addRCode("x_i <- x_i * 2");
+    rcaller.setRCode(code);
+    
     rcaller.runAndReturnResult("x_i");
     int[] actual = rcaller.getParser().getAsIntArray("x_i");
     int[] expected = new int[]{2, 4, 6, 8, 10, 12};
@@ -58,9 +62,13 @@ public class RCallerTest {
     double delta = 0.0000001;
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addDoubleArray("x_d", new double[]{1.1, 2.2, 3.3, 4.4, 5.5, 6.6});
-    rcaller.addRCode("x_d <- x_d * 2");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addDoubleArray("x_d", new double[]{1.1, 2.2, 3.3, 4.4, 5.5, 6.6});
+    code.addRCode("x_d <- x_d * 2");
+    rcaller.setRCode(code);
+    
     rcaller.runAndReturnResult("x_d");
     double[] actual = rcaller.getParser().getAsDoubleArray("x_d");
     double[] expected = new double[]{2.2, 4.4, 6.6, 8.8, 11, 13.2};
@@ -75,9 +83,13 @@ public class RCallerTest {
     double delta = 0.0000001;
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addFloatArray("x_f", new float[]{1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f});
-    rcaller.addRCode("x_f <- x_f * 2");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addFloatArray("x_f", new float[]{1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f});
+    code.addRCode("x_f <- x_f * 2");
+    rcaller.setRCode(code);
+    
     rcaller.runAndReturnResult("x_f");
     float[] actual = rcaller.getParser().getAsFloatArray("x_f");
     float[] expected = new float[]{2.2f, 4.4f, 6.6f, 8.8f, 11.0f, 13.2f};
@@ -91,10 +103,14 @@ public class RCallerTest {
   public void testStringArrays() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addStringArray("x_s1", new String[]{"a", "b", "c", "d", "e", "f", "g"});
-    rcaller.addStringArray("x_s2", new String[]{"g", "f", "z", "q", "W", "Z", "%"});
-    rcaller.addRCode("result <- intersect(x_s1, x_s2)");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addStringArray("x_s1", new String[]{"a", "b", "c", "d", "e", "f", "g"});
+    code.addStringArray("x_s2", new String[]{"g", "f", "z", "q", "W", "Z", "%"});
+    code.addRCode("result <- intersect(x_s1, x_s2)");
+    rcaller.setRCode(code);
+    
     rcaller.runAndReturnResult("result");
     String[] actual = rcaller.getParser().getAsStringArray("result");
     String[] expected = new String[]{"f", "g"};
@@ -109,9 +125,14 @@ public class RCallerTest {
     boolean[] boolarr = new boolean[]{true, true, false, true, true, true, false};
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addLogicalArray("b", boolarr);
-    rcaller.addRCode("result<-xor(b,b)");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addLogicalArray("b", boolarr);
+    code.addRCode("result<-xor(b,b)");
+    
+    rcaller.setRCode(code);
+    
     rcaller.runAndReturnResult("result");
     boolean[] actual = rcaller.getParser().getAsLogicalArray("result");
     boolean[] expected = new boolean[]{false, false, false, false, false, false, false};
@@ -125,8 +146,12 @@ public class RCallerTest {
   public void testLists() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addRCode("alist <- list(x=c(1,2,3), y=c('a','b','c'))");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addRCode("alist <- list(x=c(1,2,3), y=c('a','b','c'))");
+    
+    rcaller.setRCode(code);
     rcaller.runAndReturnResult("alist");
 
     String[] actual = rcaller.getParser().getAsStringArray("y");
@@ -150,18 +175,22 @@ public class RCallerTest {
     double delta = 0.0000001;
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
-    rcaller.addRCode("med1 <- median(x)");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
+    code.addRCode("med1 <- median(x)");
 
-    rcaller.addRCode("y <- c(16 ,18, 13.4, 11,12)");
-    rcaller.addRCode("med2 <- median(y)");
+    code.addRCode("y <- c(16 ,18, 13.4, 11,12)");
+    code.addRCode("med2 <- median(y)");
 
-    rcaller.addRCode("z <- c(116 ,118, 113.4,111,112)");
-    rcaller.addRCode("med3 <- median(z)");
+    code.addRCode("z <- c(116 ,118, 113.4,111,112)");
+    code.addRCode("med3 <- median(z)");
 
-    rcaller.addRCode("results <- list(m1 = med1, m2 = med2, m3 = med3)");
+    code.addRCode("results <- list(m1 = med1, m2 = med2, m3 = med3)");
 
+    rcaller.setRCode(code);
+    
     rcaller.runAndReturnResult("results");
 
 
@@ -179,17 +208,23 @@ public class RCallerTest {
   public void testPlot() {
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
+    RCode code = new RCode();
+    code.clear();
+            
     File plot = null;
+    
     try {
-      plot = rcaller.startPlot();
+      plot = code.startPlot();
     } catch (Exception e) {
       fail(e.toString());
     }
-    rcaller.addRCode("hist(rnorm(1000))");
-    rcaller.endPlot();
+    code.addRCode("hist(rnorm(1000))");
+    code.endPlot();
+    
+    rcaller.setRCode(code);
+    
     rcaller.runOnly();
-    assertFalse(rcaller.getPlot(plot) == null);
+    assertFalse(rcaller.getRCode().getPlot(plot) == null);
   }
 
   @Test
@@ -197,10 +232,13 @@ public class RCallerTest {
     double delta = 0.0000001;
     RCaller rcaller = new RCaller();
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
-    rcaller.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
-    rcaller.addRCode("med <- median(x)");
+    
+    RCode code = new RCode();
+    code.clear();
+    code.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
+    code.addRCode("med <- median(x)");
 
+    rcaller.setRCode(code);
     rcaller.runAndReturnResult("med");
 
     double[] result = rcaller.getParser().getAsDoubleArray("med");
