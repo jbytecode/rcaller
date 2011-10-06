@@ -403,10 +403,18 @@ public class RCaller {
     }
   }
 
+  /**
+   * @deprecated Use RCode.R_require instead
+   * @param pkg 
+   */
   public void R_require(String pkg) {
     this.rcode.code = this.rcode.getCode().insert(0, "require(" + pkg + ")\n");
   }
 
+  /**
+   * @deprecated Use RCode.R_source instead
+   * @param sourceFile 
+   */
   public void R_source(String sourceFile) {
     rcode.addRCode("source(\"" + sourceFile + "\")\n");
   }

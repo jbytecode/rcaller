@@ -89,6 +89,14 @@ public class RCode {
     RPlotViewer plotter = new RPlotViewer(plot);
     plotter.setVisible(true);
   }
+  
+  public void R_require(String pkg) {
+    code = code.insert(0, "require(" + pkg + ")\n");
+  }
+
+  public void R_source(String sourceFile) {
+    addRCode("source(\"" + sourceFile + "\")\n");
+  }
 
   @Override
   public String toString() {
