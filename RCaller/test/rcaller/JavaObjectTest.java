@@ -56,13 +56,16 @@ public class JavaObjectTest {
 
 
     RCaller rcaller = new RCaller();
+    RCode code = new RCode();
+
     rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
+    code.clear();
 
-    rcaller.addRCode(jo.produceRCode(false));
+    code.addRCode(jo.produceRCode(false));
 
-    rcaller.addRCode("myObj$i <- myObj$i + 1");
+    code.addRCode("myObj$i <- myObj$i + 1");
 
+    rcaller.setRCode(code);
     rcaller.runAndReturnResult("myObj");
 
     int[] result = rcaller.getParser().getAsIntArray("i");
@@ -76,10 +79,14 @@ public class JavaObjectTest {
     JavaObject jo = new JavaObject("tcwa", tcwa);
 
     RCaller rcaller = new RCaller();
-    rcaller.setRscriptExecutable("/usr/bin/Rscript");
-    rcaller.cleanRCode();
+    RCode code = new RCode();
 
-    rcaller.addRCode(jo.produceRCode(false));
+    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    code.clear();
+
+    code.addRCode(jo.produceRCode(false));
+
+    rcaller.setRCode(code);
     rcaller.runAndReturnResult("tcwa");
 
     int[] expectedIntArray = rcaller.getParser().getAsIntArray("ia");

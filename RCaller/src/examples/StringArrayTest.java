@@ -1,6 +1,7 @@
 package examples;
 
 import rcaller.RCaller;
+import rcaller.RCode;
 
 public class StringArrayTest {
 
@@ -9,16 +10,18 @@ public class StringArrayTest {
       RCaller caller = new RCaller();
       //caller.setRscriptExecutable("C:\\Program Files\\R\\R-2.12.0\\bin\\i386\\Rscript.exe");
       caller.setRscriptExecutable("/usr/bin/Rscript");
-      caller.cleanRCode();
+      RCode code = new RCode();
+      code.clear();
 
       String[] str11 = new String[]{"a", "b", "c", "d", "e", "f", "g", "s", "c"};
       String[] str22 = new String[]{"d", "b", "a", "l", "m", "a", "f", "r", "s"};
 
 
-      caller.addStringArray("x", str11);
-      caller.addStringArray("y", str22);
-      caller.addRCode("result<-intersect(x, y);");
+      code.addStringArray("x", str11);
+      code.addStringArray("y", str22);
+      code.addRCode("result<-intersect(x, y);");
 
+      caller.setRCode(code);
       caller.runAndReturnResult("result");
 
       String[] v = caller.getParser().getAsStringArray("result");
