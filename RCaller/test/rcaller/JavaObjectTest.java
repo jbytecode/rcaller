@@ -58,7 +58,8 @@ public class JavaObjectTest {
     RCaller rcaller = new RCaller();
     RCode code = new RCode();
 
-    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    Globals.detect_current_rscript();
+      rcaller.setRscriptExecutable(Globals.Rscript_current);
     code.clear();
 
     code.addRCode(jo.produceRCode(false));
@@ -81,7 +82,8 @@ public class JavaObjectTest {
     RCaller rcaller = new RCaller();
     RCode code = new RCode();
 
-    rcaller.setRscriptExecutable("/usr/bin/Rscript");
+    Globals.detect_current_rscript();
+      rcaller.setRscriptExecutable(Globals.Rscript_current);
     code.clear();
 
     code.addRCode(jo.produceRCode(false));
