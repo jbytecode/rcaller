@@ -3,6 +3,7 @@
  */
 package examples;
 
+import graphics.BlackTheme;
 import java.io.File;
 import rcaller.Globals;
 import rcaller.RCaller;
@@ -26,8 +27,11 @@ public class Example6 {
       code.addRCode("y<-rnorm(10)");
       code.addRCode("ols<-lm(y~x)");
 
+      caller.setGraphicsTheme(new BlackTheme());
+      
       File plt = code.startPlot();
       code.addRCode("plot(ols$residuals, ols$fitted.values)");
+      code.addRCode("abline(ols$coefficients)");
       code.endPlot();
 
       caller.setRCode(code);
