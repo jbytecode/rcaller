@@ -3,7 +3,7 @@
  */
 package examples;
 
-import graphics.BlackTheme;
+import graphics.*;
 import java.io.File;
 import rcaller.Globals;
 import rcaller.RCaller;
@@ -23,15 +23,17 @@ public class Example6 {
       caller.setRscriptExecutable(Globals.Rscript_current);
       RCode code = new RCode();
       code.clear();
-      code.addRCode("x<-rnorm(10)");
-      code.addRCode("y<-rnorm(10)");
+      code.addRCode("x<-rnorm(30)");
+      code.addRCode("y<-rnorm(30)");
       code.addRCode("ols<-lm(y~x)");
 
-      caller.setGraphicsTheme(new BlackTheme());
+      caller.setGraphicsTheme(new SkyTheme());
       
       File plt = code.startPlot();
-      code.addRCode("plot(ols$residuals, ols$fitted.values)");
-      code.addRCode("abline(ols$coefficients)");
+      code.addRCode("barplot(x,y)");
+      code.addRCode("abline(ols$coefficients[1], ols$coefficients[2])");
+      code.addRCode("abline(mean(y),0)");
+      code.addRCode("abline(v=mean(x))");
       code.endPlot();
 
       caller.setRCode(code);
