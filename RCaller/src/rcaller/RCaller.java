@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package rcaller;
 
+import graphics.GraphicsTheme;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -130,6 +131,10 @@ public class RCaller {
     this.parser = new ROutputParser();
     cleanRCode();
   }
+  
+  public void setGraphicsTheme(GraphicsTheme theme){
+    Globals.theme = theme;
+  }
 
   public void cleanRCode() {
     rcode.clear();
@@ -216,9 +221,7 @@ public class RCaller {
    * @param arr 
    */
   public File startPlot() throws IOException {
-    File f = File.createTempFile("RPlot", ".png");
-    rcode.addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
-    return (f);
+    return(this.rcode.startPlot());
   }
 
     /**
@@ -227,7 +230,7 @@ public class RCaller {
    * @param arr 
    */
   public void endPlot() {
-    rcode.addRCode("dev.off()");
+    rcode.endPlot();
   }
 
     /**
@@ -236,8 +239,7 @@ public class RCaller {
    * @param arr 
    */
   public ImageIcon getPlot(File f) {
-    ImageIcon img = new ImageIcon(f.toString());
-    return (img);
+    return rcode.getPlot(f);
   }
 
     /**
@@ -246,9 +248,7 @@ public class RCaller {
    * @param arr 
    */
   public void showPlot(File f) {
-    ImageIcon plot = getPlot(f);
-    RPlotViewer plotter = new RPlotViewer(plot);
-    plotter.setVisible(true);
+    rcode.showPlot(f);
   }
 
   public File createRSourceFile() throws rcaller.exception.RCallerExecutionException {
