@@ -4,6 +4,7 @@
 package examples;
 
 import java.io.File;
+import rcaller.Globals;
 import rcaller.RCaller;
 import rcaller.RCode;
 
@@ -17,7 +18,8 @@ public class Example6 {
   public Example6() {
     try {
       RCaller caller = new RCaller();
-      caller.setRscriptExecutable("C:\\Program Files\\R\\R-2.13.0\\bin\\Rscript.exe");
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
       RCode code = new RCode();
       code.clear();
       code.addRCode("x<-rnorm(10)");

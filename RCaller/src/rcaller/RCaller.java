@@ -285,7 +285,7 @@ public class RCaller {
     File rSourceFile = createRSourceFile();
     try {
       //this Process object is local to this method. Do not use the public one.
-      Process process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
+      process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
       process.waitFor();
     } catch (Exception e) {
       throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
