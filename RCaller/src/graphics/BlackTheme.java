@@ -12,5 +12,6 @@ public class BlackTheme extends GraphicsTheme {
     subheaderColor = Color.BLUE;
     axisColor = Color.RED;
     pointChar = "*";
+    lwd=3;
   }
 }

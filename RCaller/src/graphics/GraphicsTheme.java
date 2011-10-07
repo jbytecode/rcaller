@@ -11,7 +11,17 @@ public abstract class GraphicsTheme {
   Color headerColor;
   Color subheaderColor;
   String pointChar;
-  
+  int lwd;
+
+   
+  public int getLineWidth() {
+    return lwd;
+  }
+
+  public void setLineWidth(int lwd) {
+    this.lwd = lwd;
+  }
+    
   
   public Color getBackgroundColor() {
     return this.bgColor;
@@ -89,6 +99,7 @@ public abstract class GraphicsTheme {
     buf.append("par(col.sub=").append("\"").append(getStringColor(subheaderColor)).append("\"").append(")").append("\n");
     buf.append("par(col.axis=").append("\"").append(getStringColor(axisColor)).append("\"").append(")").append("\n");
     buf.append("par(pch=").append("\"").append(this.pointChar).append("\"").append(")").append("\n");
+    buf.append("par(lwd=").append(this.lwd).append(")").append("\n");
     return(buf.toString());
   }
 
