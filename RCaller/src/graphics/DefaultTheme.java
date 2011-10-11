@@ -13,6 +13,7 @@ public class DefaultTheme extends GraphicsTheme{
     subheaderColor = Color.BLACK;
     axisColor = Color.BLACK;
     pointChar = "o";
+    lwd=1;
   }
   
 }
