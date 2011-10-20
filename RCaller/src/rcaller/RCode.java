@@ -1,7 +1,6 @@
 
 package rcaller;
 
-import graphics.GraphicsTheme;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
@@ -73,7 +72,6 @@ public class RCode {
   public File startPlot() throws IOException {
     File f = File.createTempFile("RPlot", ".png");
     addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
-    addRCode(Globals.theme.generateRCode());
     return (f);
   }
 
@@ -100,7 +98,7 @@ public class RCode {
     addRCode("source(\"" + sourceFile + "\")\n");
   }
   
-  
+
   @Override
   public String toString() {
     return this.code.toString();
