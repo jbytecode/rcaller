@@ -48,7 +48,6 @@ public class RCallerTest {
 		code.addIntArray("x_i", new int[]{1, 2, 3, 4, 5, 6});
 		code.addRCode("x_i <- x_i * 2");
 		rcaller.setRCode(code);
-
 		rcaller.runAndReturnResult("x_i");
 		int[] actual = rcaller.getParser().getAsIntArray("x_i");
 		int[] expected = new int[]{2, 4, 6, 8, 10, 12};
