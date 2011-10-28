@@ -245,7 +245,6 @@ public class RCallerTest {
 		code.clear();
 		code.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
 		code.addRCode("med <- median(x)");
-
 		rcaller.setRCode(code);
 		rcaller.runAndReturnResult("med");
 
