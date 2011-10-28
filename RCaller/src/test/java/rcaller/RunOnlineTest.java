@@ -31,6 +31,7 @@ public class RunOnlineTest {
     code.clear();
     code.addRCode("a<-1:99");
     code.addRCode("k<-median(a)");
+    
     rcaller.runAndReturnResultOnline("k");
     assertEquals(rcaller.getParser().getAsDoubleArray("k")[0], 50.0, 0.000001);
 

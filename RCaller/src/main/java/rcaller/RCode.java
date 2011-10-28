@@ -98,7 +98,6 @@ public class RCode {
     addRCode("source(\"" + sourceFile + "\")\n");
   }
   
-
   @Override
   public String toString() {
     return this.code.toString();
