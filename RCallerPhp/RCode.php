@@ -27,6 +27,10 @@ class RCode {
     $this->addRCode("}\n");
   }
 
+  public function prependRCode($code){
+    $this->code = $code . $this->code . "\n"; 
+  }
+  
   public function addRCode($code) {
     $this->code .= $code . "\n";
   }

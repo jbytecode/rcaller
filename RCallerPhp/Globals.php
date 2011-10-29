@@ -13,9 +13,9 @@ class Globals {
   //Theme Support did not implemented yet for php version
   //public static $theme = new DefaultTheme();
 
-  public final static $version = "RCaller 2.0";
-  public final static $about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
-  public final static $licence = "LGPL v3.0";
+  public static $version = "RCaller 2.0";
+  public static $about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
+  public static $licence = "LGPL v3.0";
 
   public static function detect_current_rscript() {
     if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") {
