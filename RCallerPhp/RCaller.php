@@ -136,7 +136,7 @@ class RCaller {
    * @param code 
    */
   public function addRCode($code) {
-    $this->rcode->getCode() .= $code."\n";
+    $this->rcode->addRCode($code);
   }
 
   /**
@@ -194,48 +194,23 @@ class RCaller {
     $this->rcode->showPlot($f);
   }
 
+  
+  public function createRSourceFile()  {
+    $f = tmpfile();
+    return ($f);
+  }
+
+  
+  public function runOnly() {
+    if ($this->RscriptExecutable == null) {
+      throw new Exception("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
+    }
+    $this->rcode->addRCode("q("."\""."yes"."\"".")\n");
+    $rSourceFile = $this->createRSourceFile();
+    $process = exec(RscriptExecutable . " " . $rSourceFile);
+  }
+
   /*
-  public File createRSourceFile() throws rcaller.exception.RCallerExecutionException {
-    File f = null;
-    BufferedWriter writer = null;
-
-    try {
-      f = File.createTempFile("rcaller", "");
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not open a tempopary file for storing the R Code: " + e.toString());
-    }
-
-    try {
-      writer = new BufferedWriter(new FileWriter(f));
-      writer.write(this.rcode.toString());
-      writer.flush();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
-    } finally {
-      try {
-        writer.close();
-      } catch (Exception einner) {
-      }
-    }
-
-    return (f);
-  }
-
-  public void runOnly() throws rcaller.exception.RCallerExecutionException {
-    if (this.RscriptExecutable == null) {
-      throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
-    }
-    this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
-    File rSourceFile = createRSourceFile();
-    try {
-      //this Process object is local to this method. Do not use the public one.
-      process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
-      process.waitFor();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
-    }
-  }
-
   public void runAndReturnResultOnline(String var) throws rcaller.exception.RCallerExecutionException {
     String commandline = null;
     String result = null;
@@ -309,55 +284,51 @@ class RCaller {
       throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
     }
   }
-
-  public void runAndReturnResult(String var) throws rcaller.exception.RCallerExecutionException {
-    String commandline = null;
-    String result = null;
-    File rSourceFile, outputFile;
-
-    if (this.RscriptExecutable == null) {
-      throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
-    }
-
-
-    try {
-      outputFile = File.createTempFile("Routput", "");
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
-    }
-
-    rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-    rSourceFile = createRSourceFile();
-    try {
-      commandline = RscriptExecutable + " " + rSourceFile.toString();
-      //this Process object is local to this method. Do not use the public one.
-      Process process = Runtime.getRuntime().exec(commandline);
-      process.waitFor();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
-    }
-
-
-    parser.setXMLFile(outputFile);
-    try {
-      parser.parse();
-    } catch (Exception e) {
-      System.out.println(rcode.toString());
-      throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
-    }
-  }
-
-  public void R_require(String pkg) {
-    this.rcode.code = this.rcode.getCode().insert(0, "require(" + pkg + ")\n");
-  }
-
-  public void R_source(String sourceFile) {
-    rcode.addRCode("source(\"" + sourceFile + "\")\n");
-  }
-}
-   
 */
+
+  public function runAndReturnResult($var)  {
+    $commandline = null;
+    $result = null;
+    $rSourceFile = null;
+    $outputFile = null;
+
+    if ($this->RscriptExecutable == null) {
+      throw new Exception("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
+    }
+
+    $outputFile = tmpfile();
+    
+    $this->rcode->addRCode("cat(makexml(obj=".$var.", name=\"".$var."\"), file=\"".$outputFile."\")\n");
+    $rSourceFile = $this->createRSourceFile();
+    try {
+      $commandline = $this->RscriptExecutable . " " . $rSourceFile;
+      //this Process object is local to this method. Do not use the public one.
+      $process = exec($commandline);
+    } catch (Exception $e) {
+      throw new Exception("Can not run " .  $this->RscriptExecutable . ". Reason: " + $e);
+    }
+
+
+    $this->parser->setXMLFile($outputFile);
+    try {
+      $this->parser->parse();
+    } catch (Exception $e) {
+      print($this->rcode->toString());
+      throw new Exception("Can not handle R results due to : " . $e);
+    }
+  }
+
+  public function R_require($pkg) {
+    $this->rcode->prependRCode ("require(" + pkg + ")");
+  }
+
+  public function R_source($sourceFile) {
+    $this->rcode->addRCode("source(\"" . $sourceFile . "\")");
+  }
   
 }
+
+
+$r = new RCaller();
 
 ?>
