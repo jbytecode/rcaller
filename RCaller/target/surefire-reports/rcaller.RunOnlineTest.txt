@@ -1,4 +1,4 @@
 -------------------------------------------------------------------------------
 Test set: rcaller.RunOnlineTest
 -------------------------------------------------------------------------------
-Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.349 sec
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.358 sec
