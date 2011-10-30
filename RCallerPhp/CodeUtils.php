@@ -1,8 +1,7 @@
 <?php
 
-
 class CodeUtils {
-  
+
   public static function addNumericArray(&$sb, $name, $arr, $useEquals) {
     if ($useEquals) {
       //RCode.append(name).append("=").append("c(");
@@ -14,7 +13,7 @@ class CodeUtils {
     for ($i = 0; $i < count($arr); $i++) {
       //RCode.append(String.valueOf(arr[i]));
       $sb .= $arr[$i];
-      if (i < arr.length - 1) {
+      if (i < arr . length - 1) {
         //RCode.append(", ");
         $sb .= ", ";
       }
@@ -27,10 +26,8 @@ class CodeUtils {
       $sb .= ");" . "\n";
     }
   }
-  
-  
- 
-   public static function addStringArray(&$sb, $name, $arr, $useEquals) {
+
+  public static function addStringArray(&$sb, $name, $arr, $useEquals) {
     if ($useEquals) {
       //RCode.append(name).append("=").append("c(");
       $sb .= $sb . $name . "=" . "c(";
@@ -40,7 +37,7 @@ class CodeUtils {
     }
     for ($i = 0; $i < count($arr); $i++) {
       //RCode.append("\"").append(arr[i]).append("\"");
-      $sb .= "\"". $arr[$i]. "\"";
+      $sb .= "\"" . $arr[$i] . "\"";
       if (i < count($arr) - 1) {
         //RCode.append(", ");
         $sb .= ", ";
@@ -53,6 +50,13 @@ class CodeUtils {
       //RCode.append(");").append("\n");
       $sb .= ");" . "\n";
     }
+  }
+
+  public static function createTempFile($prefix) {
+    $dir = sys_get_temp_dir();
+    //$sep = DIRECTORY_SEPARATOR;
+    $name = tempnam($dir, $prefix);
+    return ($name);
   }
 
 }
