@@ -2,7 +2,7 @@
 
 /*
  *
-  RCaller, A solution for calling R from Java
+  RCallerPhp, A solution for calling R from Php
   Copyright (C) 2010,2011  Mehmet Hakan Satman
 
   This program is free software: you can redistribute it and/or modify
