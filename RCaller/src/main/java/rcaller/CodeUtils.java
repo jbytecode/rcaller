@@ -126,4 +126,27 @@ public class CodeUtils {
       RCode.append("\n");
     }
   }
+
+  public static void addDoubleMatrix(StringBuffer RCode, String name, double[][] matrix, boolean useEquals) {
+    int counter = 0;
+    if (useEquals) {
+      RCode.append(name).append("=").append("matrix(");
+    } else {
+      RCode.append(name).append("<-").append("matrix(");
+    }
+    RCode.append("c(");
+    for (int i = 0; i < matrix.length; i++) {
+      for (int j = 0; j < matrix[0].length; j++) {
+        RCode.append(String.valueOf(matrix[i][j]));
+        counter++;
+        if ( counter < (matrix.length * matrix.length) ) {
+          RCode.append(", ");
+        }
+      }
+    }
+    RCode.append("), byrow=TRUE, nrow=").append(matrix.length).append(", ncol=").append(matrix[0].length).append(")");
+    if (!useEquals) {
+      RCode.append(";\n");
+    }
+  }
 }
