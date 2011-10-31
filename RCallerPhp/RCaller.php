@@ -210,7 +210,7 @@ class RCaller {
     }
     $this->rcode->addRCode("q(" . "\"" . "yes" . "\"" . ")\n");
     $rSourceFile = $this->createRSourceFile();
-    $process = exec(RscriptExecutable . " " . $rSourceFile);
+    $process = exec($this->RscriptExecutable . " " . $rSourceFile);
   }
 
   /*
