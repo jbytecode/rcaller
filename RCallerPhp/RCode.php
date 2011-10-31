@@ -70,13 +70,13 @@ class RCode {
   }
 
   public function startPlot() {
-    $f = tmpfile();
+    $f = CodeUtils::createTempFile("RcallerPlot");
     //addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
     /*
      * File path seperator may be buggy in Windows. Look here again
      */
-    $this->addRCode("png(\"" . f . "\")");
-    return (f);
+    $this->addRCode("png(\"" . $f . "\")");
+    return ($f);
   }
 
   public function endPlot() {
@@ -84,9 +84,11 @@ class RCode {
   }
 
   public function getPlot($f) {
-    //ImageIcon img = new ImageIcon(f.toString());
-    throw new Exception("This is not implemented yet", "RCode.php", "getPlot()");
-    //return (img);
+    //data:image/png;base64
+    $content = file_get_contents($f);
+    $b = base64_encode($content);
+    $html_text = "<img src=\"data:image/png;base64, ".$b."\"/>";
+    return $html_text;
   }
 
   public function showPlot($f) {
