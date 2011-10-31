@@ -68,6 +68,10 @@ public class RCode {
   public void addJavaObject(String name, Object o) throws IllegalAccessException {
     CodeUtils.addJavaObject(code, name, o, false);
   }
+  
+  public void addDoubleMatrix(String name, double[][] matrix){
+    CodeUtils.addDoubleMatrix(code, name, matrix, false);
+  }
 
   public File startPlot() throws IOException {
     File f = File.createTempFile("RPlot", ".png");
