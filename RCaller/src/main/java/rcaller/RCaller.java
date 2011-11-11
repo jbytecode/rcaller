@@ -45,377 +45,387 @@ import rcaller.exception.RCallerExecutionException;
  */
 public class RCaller {
 
-  private String RscriptExecutable;
-  private String RExecutable;
-  private RCode rcode;
-  private ROutputParser parser;
-  private Process process;
-  private InputStream inputStreamToR = null;
-  private OutputStream outputStreamToR = null;
-  private InputStream errorStreamToR = null;
+    private String RscriptExecutable;
+    private String RExecutable;
+    private RCode rcode;
+    private ROutputParser parser;
+    private Process process;
+    private InputStream inputStreamToR = null;
+    private OutputStream outputStreamToR = null;
+    private InputStream errorStreamToR = null;
+    InputStreamConsumer isConsumer;
+    InputStreamConsumer errConsumer;
 
-  public InputStream getErrorStreamToR() {
-    return errorStreamToR;
-  }
-
-  public void setErrorStreamToR(InputStream errorStreamToR) {
-    this.errorStreamToR = errorStreamToR;
-  }
-
-  public Process getProcess() {
-    return process;
-  }
-
-  public void setProcess(Process process) {
-    this.process = process;
-  }
-
-  public InputStream getInputStreamToR() {
-    return inputStreamToR;
-  }
-
-  public void setInputStreamToR(InputStream inputStreamToR) {
-    this.inputStreamToR = inputStreamToR;
-  }
-
-  public OutputStream getOutputStreamToR() {
-    return outputStreamToR;
-  }
-
-  public void setOutputStreamToR(OutputStream outputStreamToR) {
-    this.outputStreamToR = outputStreamToR;
-  }
-
-  public String getRExecutable() {
-    return RExecutable;
-  }
-
-  public void setRExecutable(String RExecutable) {
-    this.RExecutable = RExecutable;
-  }
-
-  public String getCranRepos() {
-    return Globals.cranRepos;
-  }
-
-  public void setCranRepos(String cranRepos) {
-    Globals.cranRepos = cranRepos;
-  }
-
-  public ROutputParser getParser() {
-    return parser;
-  }
-
-  public void setParser(ROutputParser parser) {
-    this.parser = parser;
-  }
-
-  public RCode getRCode() {
-    return rcode;
-  }
-
-  public void setRCode(RCode rcode) {
-    this.rcode = rcode;
-  }
-
-  public String getRscriptExecutable() {
-    return RscriptExecutable;
-  }
-
-  public void setRscriptExecutable(String RscriptExecutable) {
-    this.RscriptExecutable = RscriptExecutable;
-  }
-
-  public RCaller() {
-    this.rcode = new RCode();
-    this.parser = new ROutputParser();
-    cleanRCode();
-  }
-  
-  public void setGraphicsTheme(GraphicsTheme theme){
-    Globals.theme = theme;
-  }
-
-  public void cleanRCode() {
-    rcode.clear();
-    rcode.addRCode("packageExist<-require(Runiversal)");
-    rcode.addRCode("if(!packageExist){");
-    rcode.addRCode("install.packages(\"Runiversal\", repos=\" " + this.getCranRepos() + "\")");
-    rcode.addRCode("}\n");
-  }
-
-  /**
-   * @deprecated Use RCode.addRCode instead
-   * @param code 
-   */
-  public void addRCode(String code) {
-    this.rcode.getCode().append(code).append("\n");
-  }
-
-  /**
-   * @deprecated Use RCode.addStringArray instead
-   * @param name
-   * @param arr 
-   */
-  public void addStringArray(String name, String[] arr) {
-    CodeUtils.addStringArray(rcode.getCode(), name, arr, false);
-  }
-
-  /**
-   * @deprecated Use RCode.addDoubleArray
-   * @param name
-   * @param arr 
-   */
-  public void addDoubleArray(String name, double[] arr) {
-    CodeUtils.addDoubleArray(rcode.getCode(), name, arr, false);
-  }
-
-  /**
-   * @deprecated Use RCode.addFloatArray
-   * @param name
-   * @param arr 
-   */
-  public void addFloatArray(String name, float[] arr) {
-    CodeUtils.addFloatArray(rcode.getCode(), name, arr, false);
-  }
-
-    /**
-   * @deprecated Use RCode.addIntArray
-   * @param name
-   * @param arr 
-   */
-  public void addIntArray(String name, int[] arr) {
-    CodeUtils.addIntArray(rcode.getCode(), name, arr, false);
-  }
-
-    /**
-   * @deprecated Use RCode.addShortArray
-   * @param name
-   * @param arr 
-   */
-  public void addShortArray(String name, short[] arr) {
-    CodeUtils.addShortArray(rcode.getCode(), name, arr, false);
-  }
-
-    /**
-   * @deprecated Use RCode.addLogicalArray
-   * @param name
-   * @param arr 
-   */
-  public void addLogicalArray(String name, boolean[] arr) {
-    CodeUtils.addLogicalArray(rcode.getCode(), name, arr, false);
-  }
-
-    /**
-   * @deprecated Use RCode.addJavaObject
-   * @param name
-   * @param arr 
-   */
-  public void addJavaObject(String name, Object o) throws IllegalAccessException {
-    CodeUtils.addJavaObject(rcode.getCode(), name, o, false);
-  }
-
-    /**
-   * @deprecated Use RCode.startPlot
-   * @param name
-   * @param arr 
-   */
-  public File startPlot() throws IOException {
-    return(this.rcode.startPlot());
-  }
-
-    /**
-   * @deprecated Use RCode.endPlot
-   * @param name
-   * @param arr 
-   */
-  public void endPlot() {
-    rcode.endPlot();
-  }
-
-    /**
-   * @deprecated Use RCode.getPlot
-   * @param name
-   * @param arr 
-   */
-  public ImageIcon getPlot(File f) {
-    return rcode.getPlot(f);
-  }
-
-    /**
-   * @deprecated Use RCode.showPlot
-   * @param name
-   * @param arr 
-   */
-  public void showPlot(File f) {
-    rcode.showPlot(f);
-  }
-
-  public File createRSourceFile() throws rcaller.exception.RCallerExecutionException {
-    File f = null;
-    BufferedWriter writer = null;
-
-    try {
-      f = File.createTempFile("rcaller", "");
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not open a tempopary file for storing the R Code: " + e.toString());
+    public boolean stopStreamConsumers() {
+        isConsumer.setCloseSignal(true);
+        errConsumer.setCloseSignal(true);
+        return isConsumer.getConsumerThread().isAlive()
+                && errConsumer.getConsumerThread().isAlive();
     }
 
-    try {
-      writer = new BufferedWriter(new FileWriter(f));
-      writer.write(this.rcode.toString());
-      writer.flush();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
-    } finally {
-      try {
-        writer.close();
-      } catch (Exception einner) {
-      }
+    public InputStream getErrorStreamToR() {
+        return errorStreamToR;
     }
 
-    return (f);
-  }
-
-  public void runOnly() throws rcaller.exception.RCallerExecutionException {
-    if (this.RscriptExecutable == null) {
-      throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
-    }
-    this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
-    File rSourceFile = createRSourceFile();
-    try {
-      //this Process object is local to this method. Do not use the public one.
-      process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
-      process.waitFor();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
-    }
-  }
-
-  public void runAndReturnResultOnline(String var) throws rcaller.exception.RCallerExecutionException {
-    String commandline = null;
-    String result = null;
-    File rSourceFile;
-    final File outputFile;
-
-    if (this.RExecutable == null) {
-      throw new RCallerExecutionException("RExecutable is not defined. Please set this variable to full path of R executable binary file.");
+    public void setErrorStreamToR(InputStream errorStreamToR) {
+        this.errorStreamToR = errorStreamToR;
     }
 
-
-    try {
-      outputFile = File.createTempFile("Routput", "");
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+    public Process getProcess() {
+        return process;
     }
 
-    this.rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-
-    if (outputStreamToR == null || inputStreamToR == null || errorStreamToR == null || process == null) {
-      try {
-        commandline = RExecutable + " --vanilla";
-        process = Runtime.getRuntime().exec(commandline);
-        outputStreamToR = process.getOutputStream();
-        inputStreamToR = process.getInputStream();
-        errorStreamToR = process.getErrorStream();
-      } catch (Exception e) {
-        throw new RCallerExecutionException("Can not run " + RExecutable + ". Reason: " + e.toString());
-      }
+    public void setProcess(Process process) {
+        this.process = process;
     }
 
-    InputStreamConsumer isConsumer = new InputStreamConsumer(inputStreamToR);
-    InputStreamConsumer errConsumer = new InputStreamConsumer(errorStreamToR);
-    isConsumer.getConsumerThread().start();
-    errConsumer.getConsumerThread().start();
-
-    try {
-      outputStreamToR.write(rcode.toString().getBytes());
-      outputStreamToR.flush();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not send the source code to R file due to: " + e.toString());
+    public InputStream getInputStreamToR() {
+        return inputStreamToR;
     }
 
-    Thread calcThread = new Thread(new Runnable() {
+    public void setInputStreamToR(InputStream inputStreamToR) {
+        this.inputStreamToR = inputStreamToR;
+    }
 
-      @Override
-      public void run() {
-        while (outputFile.length() < 1) {
-          try {
-            Thread.sleep(1);
-          } catch (Exception e) {
-          }
+    public OutputStream getOutputStreamToR() {
+        return outputStreamToR;
+    }
+
+    public void setOutputStreamToR(OutputStream outputStreamToR) {
+        this.outputStreamToR = outputStreamToR;
+    }
+
+    public String getRExecutable() {
+        return RExecutable;
+    }
+
+    public void setRExecutable(String RExecutable) {
+        this.RExecutable = RExecutable;
+    }
+
+    public String getCranRepos() {
+        return Globals.cranRepos;
+    }
+
+    public void setCranRepos(String cranRepos) {
+        Globals.cranRepos = cranRepos;
+    }
+
+    public ROutputParser getParser() {
+        return parser;
+    }
+
+    public void setParser(ROutputParser parser) {
+        this.parser = parser;
+    }
+
+    public RCode getRCode() {
+        return rcode;
+    }
+
+    public void setRCode(RCode rcode) {
+        this.rcode = rcode;
+    }
+
+    public String getRscriptExecutable() {
+        return RscriptExecutable;
+    }
+
+    public void setRscriptExecutable(String RscriptExecutable) {
+        this.RscriptExecutable = RscriptExecutable;
+    }
+
+    public RCaller() {
+        this.rcode = new RCode();
+        this.parser = new ROutputParser();
+        cleanRCode();
+    }
+
+    public void setGraphicsTheme(GraphicsTheme theme) {
+        Globals.theme = theme;
+    }
+
+    public void cleanRCode() {
+        rcode.clear();
+        rcode.addRCode("packageExist<-require(Runiversal)");
+        rcode.addRCode("if(!packageExist){");
+        rcode.addRCode("install.packages(\"Runiversal\", repos=\" " + this.getCranRepos() + "\")");
+        rcode.addRCode("}\n");
+    }
+
+    /**
+     * @deprecated Use RCode.addRCode instead
+     * @param code 
+     */
+    public void addRCode(String code) {
+        this.rcode.getCode().append(code).append("\n");
+    }
+
+    /**
+     * @deprecated Use RCode.addStringArray instead
+     * @param name
+     * @param arr 
+     */
+    public void addStringArray(String name, String[] arr) {
+        CodeUtils.addStringArray(rcode.getCode(), name, arr, false);
+    }
+
+    /**
+     * @deprecated Use RCode.addDoubleArray
+     * @param name
+     * @param arr 
+     */
+    public void addDoubleArray(String name, double[] arr) {
+        CodeUtils.addDoubleArray(rcode.getCode(), name, arr, false);
+    }
+
+    /**
+     * @deprecated Use RCode.addFloatArray
+     * @param name
+     * @param arr 
+     */
+    public void addFloatArray(String name, float[] arr) {
+        CodeUtils.addFloatArray(rcode.getCode(), name, arr, false);
+    }
+
+    /**
+     * @deprecated Use RCode.addIntArray
+     * @param name
+     * @param arr 
+     */
+    public void addIntArray(String name, int[] arr) {
+        CodeUtils.addIntArray(rcode.getCode(), name, arr, false);
+    }
+
+    /**
+     * @deprecated Use RCode.addShortArray
+     * @param name
+     * @param arr 
+     */
+    public void addShortArray(String name, short[] arr) {
+        CodeUtils.addShortArray(rcode.getCode(), name, arr, false);
+    }
+
+    /**
+     * @deprecated Use RCode.addLogicalArray
+     * @param name
+     * @param arr 
+     */
+    public void addLogicalArray(String name, boolean[] arr) {
+        CodeUtils.addLogicalArray(rcode.getCode(), name, arr, false);
+    }
+
+    /**
+     * @deprecated Use RCode.addJavaObject
+     * @param name
+     * @param arr 
+     */
+    public void addJavaObject(String name, Object o) throws IllegalAccessException {
+        CodeUtils.addJavaObject(rcode.getCode(), name, o, false);
+    }
+
+    /**
+     * @deprecated Use RCode.startPlot
+     * @param name
+     * @param arr 
+     */
+    public File startPlot() throws IOException {
+        return (this.rcode.startPlot());
+    }
+
+    /**
+     * @deprecated Use RCode.endPlot
+     * @param name
+     * @param arr 
+     */
+    public void endPlot() {
+        rcode.endPlot();
+    }
+
+    /**
+     * @deprecated Use RCode.getPlot
+     * @param name
+     * @param arr 
+     */
+    public ImageIcon getPlot(File f) {
+        return rcode.getPlot(f);
+    }
+
+    /**
+     * @deprecated Use RCode.showPlot
+     * @param name
+     * @param arr 
+     */
+    public void showPlot(File f) {
+        rcode.showPlot(f);
+    }
+
+    public File createRSourceFile() throws rcaller.exception.RCallerExecutionException {
+        File f = null;
+        BufferedWriter writer = null;
+
+        try {
+            f = File.createTempFile("rcaller", "");
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not open a tempopary file for storing the R Code: " + e.toString());
         }
-      }
-    });
-    calcThread.start();
-    try {
-      calcThread.join();
-    } catch (Exception e) {
-      //Do nothing here
+
+        try {
+            writer = new BufferedWriter(new FileWriter(f));
+            writer.write(this.rcode.toString());
+            writer.flush();
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
+        } finally {
+            try {
+                writer.close();
+            } catch (Exception einner) {
+            }
+        }
+
+        return (f);
     }
 
-    isConsumer.setCloseSignal(true);
-    errConsumer.setCloseSignal(true);
-
-    parser.setXMLFile(outputFile);
-
-    try {
-      parser.parse();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
-    }
-  }
-
-  public void runAndReturnResult(String var) throws rcaller.exception.RCallerExecutionException {
-    String commandline = null;
-    String result = null;
-    File rSourceFile, outputFile;
-
-    if (this.RscriptExecutable == null) {
-      throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
+    public void runOnly() throws rcaller.exception.RCallerExecutionException {
+        if (this.RscriptExecutable == null) {
+            throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
+        }
+        this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
+        File rSourceFile = createRSourceFile();
+        try {
+            //this Process object is local to this method. Do not use the public one.
+            process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
+            process.waitFor();
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+        }
     }
 
+    public void runAndReturnResultOnline(String var) throws rcaller.exception.RCallerExecutionException {
+        String commandline = null;
+        String result = null;
+        File rSourceFile;
+        final File outputFile;
 
-    try {
-      outputFile = File.createTempFile("Routput", "");
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+        if (this.RExecutable == null) {
+            throw new RCallerExecutionException("RExecutable is not defined. Please set this variable to full path of R executable binary file.");
+        }
+
+
+        try {
+            outputFile = File.createTempFile("Routput", "");
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+        }
+
+        this.rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
+
+        if (outputStreamToR == null || inputStreamToR == null || errorStreamToR == null || process == null) {
+            try {
+                commandline = RExecutable + " --vanilla";
+                process = Runtime.getRuntime().exec(commandline);
+                outputStreamToR = process.getOutputStream();
+                inputStreamToR = process.getInputStream();
+                errorStreamToR = process.getErrorStream();
+                isConsumer = new InputStreamConsumer(inputStreamToR, "rInputConsumer");
+                errConsumer = new InputStreamConsumer(errorStreamToR, "rErrorConsumer");
+                isConsumer.getConsumerThread().start();
+                errConsumer.getConsumerThread().start();
+            } catch (Exception e) {
+                throw new RCallerExecutionException("Can not run " + RExecutable + ". Reason: " + e.toString());
+            }
+        }
+
+
+        try {
+            outputStreamToR.write(rcode.toString().getBytes());
+            outputStreamToR.flush();
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not send the source code to R file due to: " + e.toString());
+        }
+
+        Thread calcThread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                while (outputFile.length() < 1) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (Exception e) {
+                    }
+                }
+            }
+        });
+        calcThread.start();
+        try {
+            calcThread.join();
+        } catch (Exception e) {
+            //Do nothing here
+        }
+
+//        isConsumer.setCloseSignal(true);
+//        errConsumer.setCloseSignal(true);
+        //TODO close signal must be sent externally
+
+        parser.setXMLFile(outputFile);
+
+        try {
+            parser.parse();
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
+        }
     }
 
-    rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-    rSourceFile = createRSourceFile();
-    try {
-      commandline = RscriptExecutable + " " + rSourceFile.toString();
-      //this Process object is local to this method. Do not use the public one.
-      Process process = Runtime.getRuntime().exec(commandline);
-      process.waitFor();
-    } catch (Exception e) {
-      throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+    public void runAndReturnResult(String var) throws rcaller.exception.RCallerExecutionException {
+        String commandline = null;
+        String result = null;
+        File rSourceFile, outputFile;
+
+        if (this.RscriptExecutable == null) {
+            throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable to full path of Rscript executable binary file.");
+        }
+
+
+        try {
+            outputFile = File.createTempFile("Routput", "");
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+        }
+
+        rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
+        rSourceFile = createRSourceFile();
+        try {
+            commandline = RscriptExecutable + " " + rSourceFile.toString();
+            //this Process object is local to this method. Do not use the public one.
+            Process process = Runtime.getRuntime().exec(commandline);
+            process.waitFor();
+        } catch (Exception e) {
+            throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+        }
+
+
+        parser.setXMLFile(outputFile);
+        try {
+            parser.parse();
+        } catch (Exception e) {
+            System.out.println(rcode.toString());
+            throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
+        }
     }
 
-
-    parser.setXMLFile(outputFile);
-    try {
-      parser.parse();
-    } catch (Exception e) {
-      System.out.println(rcode.toString());
-      throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
+    /**
+     * @deprecated Use RCode.R_require instead
+     * @param pkg 
+     */
+    public void R_require(String pkg) {
+        this.rcode.code = this.rcode.getCode().insert(0, "require(" + pkg + ")\n");
     }
-  }
 
-  /**
-   * @deprecated Use RCode.R_require instead
-   * @param pkg 
-   */
-  public void R_require(String pkg) {
-    this.rcode.code = this.rcode.getCode().insert(0, "require(" + pkg + ")\n");
-  }
-
-  /**
-   * @deprecated Use RCode.R_source instead
-   * @param sourceFile 
-   */
-  public void R_source(String sourceFile) {
-    rcode.addRCode("source(\"" + sourceFile + "\")\n");
-  }
+    /**
+     * @deprecated Use RCode.R_source instead
+     * @param sourceFile 
+     */
+    public void R_source(String sourceFile) {
+        rcode.addRCode("source(\"" + sourceFile + "\")\n");
+    }
 }
