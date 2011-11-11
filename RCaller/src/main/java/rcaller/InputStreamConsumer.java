@@ -47,10 +47,10 @@ public class InputStreamConsumer implements Runnable {
   }
   
   
-  public InputStreamConsumer(InputStream is){
+  public InputStreamConsumer(InputStream is, String name){
     this.is = is;
     reader = new BufferedReader ( new InputStreamReader(is));
-    consumerThread = new Thread(this);
+    consumerThread = new Thread(this, name);
   }
 
   @Override
