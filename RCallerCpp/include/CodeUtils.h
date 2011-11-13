@@ -28,7 +28,7 @@ public :
     
     static void addLogicalArray(string *RCode, string *name, bool *arr, int length, bool useEquals);
     
-    static void addDoubleMatrix(string *RCode, string *name, double **matrix, int length, bool useEquals);
+    static void addDoubleMatrix(string *RCode, string *name, double **matrix, int rows, int cols, bool useEquals);
     
 };
 
