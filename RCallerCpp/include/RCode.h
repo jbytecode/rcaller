@@ -21,6 +21,7 @@ public:
 
     void clear();
     void addRCode(string *code);
+    void addRCode(const char *str);
     void addStringArray(string *name, string **arr, int length);
     void addDoubleArray(string *name, double *arr, int length);
     void addFloatArray(string *name, float *arr, int length);

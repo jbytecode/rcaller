@@ -10,8 +10,8 @@ void CodeUtils::addDoubleArray(string* RCode, string* name, double* arr, int len
     cout << "addDoubleArray not implemented yet";
 }
 
-void CodeUtils::addDoubleMatrix(string* RCode, string* name, double** matrix, int length, bool useEquals){
-    cout << "addDoubleArray not implemented yet";
+void CodeUtils::addDoubleMatrix(string* RCode, string* name, double** matrix, int rows, int cols, bool useEquals){
+    cout << "addFloatArray not implemented yet";
 }
 
 void CodeUtils::addFloatArray(string* RCode, string* name, float* arr, int length, bool useEquals){
