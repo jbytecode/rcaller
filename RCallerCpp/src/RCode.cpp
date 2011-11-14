@@ -76,7 +76,7 @@ void RCode::addDoubleMatrix(string* name, double** matrix, int rows, int cols) {
     CodeUtils::addDoubleMatrix(code, name, matrix, rows, cols, false);
 }
 
-File *startPlot() {
+char* RCode::startPlot() {
     //File f = File.createTempFile("RPlot", ".png");
     //addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
     //return (f);
@@ -87,7 +87,7 @@ void RCode::endPlot() {
     this->addRCode("dev.off()");
 }
 
-ImageIcon* RCode::getPlot(File* f) {
+ImageIcon* RCode::getPlot(const char* f) {
     //ImageIcon img = new ImageIcon(f.toString());
     //return (img);
     cout << "RCode::getPlot not implemented yet" << endl;
