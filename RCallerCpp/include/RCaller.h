@@ -36,6 +36,10 @@
 #define	RCALLER_H
 
 #include <iostream>
+#include "InputStreamConsumer.h"
+#include "ROutputParser.h"
+#include "RCode.h"
+#include "GraphicsTheme.h"
 
 using namespace std;
 
@@ -43,34 +47,40 @@ class RCaller {
 public:
     RCaller();
     virtual ~RCaller();
-    
-    bool stopStreamConsumers();
-    InputStream getErrorStreamToR();
-    void setErrorStreamToR(InputStream errorStreamToR);
-    Process getProcess();
-     void setProcess(Process process);
-     InputStream getInputStreamToR();
-     void setInputStreamToR(InputStream inputStreamToR);
-     OutputStream getOutputStreamToR();
-     void setOutputStreamToR(OutputStream outputStreamToR);
-     string getRExecutable();
-     void setRExecutable(string RExecutable);
-     string getCranRepos();
-     void setCranRepos(string cranRepos);
-     ROutputParser getParser();
-     void setParser(ROutputParser parser);
-    RCode getRCode();
-     void setRCode(RCode rcode);
-     string getRscriptExecutable();
-     void setRscriptExecutable(string RscriptExecutable);
-     void setGraphicsTheme(GraphicsTheme theme);
-     void cleanRCode();
-     File createRSourceFile();
-     void runOnly();
-     void runAndReturnResultOnline(string var);
-     void runAndReturnResult(string var);
-private:
 
+    bool stopStreamConsumers();
+    istream *getErrorStreamToR();
+    void setErrorStreamToR(istream* errorStreamToR);
+    istream *getInputStreamToR();
+    void setInputStreamToR(istream *inputStreamToR);
+    ostream *getOutputStreamToR();
+    void setOutputStreamToR(ostream *outputStreamToR);
+    string getRExecutable();
+    void setRExecutable(string RExecutable);
+    string getCranRepos();
+    void setCranRepos(string cranRepos);
+    ROutputParser getParser();
+    void setParser(ROutputParser parser);
+    RCode getRCode();
+    void setRCode(RCode rcode);
+    string getRscriptExecutable();
+    void setRscriptExecutable(string RscriptExecutable);
+    void setGraphicsTheme(GraphicsTheme theme);
+    void cleanRCode();
+    char *createRSourceFile();
+    void runOnly();
+    void runAndReturnResultOnline(string var);
+    void runAndReturnResult(string var);
+private:
+    string RscriptExecutable;
+    string RExecutable;
+    RCode *rcode;
+    ROutputParser *parser;
+    istream *inputStreamToR;
+    ostream *outputStreamToR;
+    istream *errorStreamToR;
+    InputStreamConsumer *errConsumer;
+    InputStreamConsumer *isConsumer;
 };
 
 #endif	/* RCALLER_H */

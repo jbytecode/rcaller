@@ -6,7 +6,6 @@
                    projectFiles="true">
       <itemPath>include/CodeUtils.h</itemPath>
       <itemPath>include/DefaultTheme.h</itemPath>
-      <itemPath>include/File.h</itemPath>
       <itemPath>include/Globals.h</itemPath>
       <itemPath>include/GraphicsTheme.h</itemPath>
       <itemPath>include/ImageIcon.h</itemPath>
@@ -24,7 +23,6 @@
                    projectFiles="true">
       <itemPath>src/CodeUtils.cpp</itemPath>
       <itemPath>src/DefaultTheme.cpp</itemPath>
-      <itemPath>src/File.cpp</itemPath>
       <itemPath>src/Globals.cpp</itemPath>
       <itemPath>src/GraphicsTheme.cpp</itemPath>
       <itemPath>src/ImageIcon.cpp</itemPath>

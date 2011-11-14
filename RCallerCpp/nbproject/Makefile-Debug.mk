@@ -35,7 +35,6 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 # Object Files
 OBJECTFILES= \
 	${OBJECTDIR}/src/main.o \
-	${OBJECTDIR}/src/File.o \
 	${OBJECTDIR}/src/Globals.o \
 	${OBJECTDIR}/src/GraphicsTheme.o \
 	${OBJECTDIR}/src/DefaultTheme.o \
@@ -75,11 +74,6 @@ ${OBJECTDIR}/src/main.o: src/main.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/main.o src/main.cpp
-
-${OBJECTDIR}/src/File.o: src/File.cpp 
-	${MKDIR} -p ${OBJECTDIR}/src
-	${RM} $@.d
-	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/File.o src/File.cpp
 
 ${OBJECTDIR}/src/Globals.o: src/Globals.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

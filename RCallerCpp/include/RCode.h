@@ -3,7 +3,6 @@
 #define	RCODE_H
 
 #include <string>
-#include "File.h"
 #include "ImageIcon.h"
 
 using namespace std;
@@ -29,9 +28,9 @@ public:
     void addShortArray(string *name, short *arr, int length);
     void addLogicalArray(string *name, bool *arr, int length);
     void addDoubleMatrix(string *name, double** matrix, int rows, int cols);
-    File *startPlot();
+    char *startPlot();
     void endPlot();
-    ImageIcon *getPlot(File *f);
+    ImageIcon *getPlot(const char *f);
     void R_require(string *pkg);
     void R_source(string *sourceFile);
     string *toString();
