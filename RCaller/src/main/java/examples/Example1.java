@@ -24,7 +24,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
+import graphics.BlackTheme;
+import graphics.SkyTheme;
 import java.io.File;
+import rcaller.EventHandler;
 import rcaller.RCaller;
 import rcaller.RCode;
 
@@ -48,18 +51,33 @@ public class Example1 {
       RCaller caller = new RCaller();
       caller.setRscriptExecutable("/usr/bin/Rscript");
       
+      /*
+       * One of the themes.
+       */
+      caller.setGraphicsTheme(new BlackTheme());
+      
       RCode code = new RCode();
       code.clear();
+      
 
       double[] numbers = new double[]{1, 4, 3, 5, 6, 10};
 
       code.addDoubleArray("x", numbers);
       File file = code.startPlot();
       System.out.println("Plot will be saved to : " + file);
-      code.addRCode("plot.ts(x)");
+      code.addRCode("plot(x)");
       code.endPlot();
-
+      
+      
       caller.setRCode(code);
+      System.out.println(code.getCode().toString());
+      
+      caller.addEventHandler(new EventHandler() {
+
+        public void MessageReceived(String threadName, String msg) {
+          System.out.println(threadName + ": "+ msg);
+        }
+      });
       caller.runOnly();
       code.showPlot(file);
     } catch (Exception e) {

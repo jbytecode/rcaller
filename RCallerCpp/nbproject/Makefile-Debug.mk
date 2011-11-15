@@ -37,6 +37,7 @@ OBJECTFILES= \
 	${OBJECTDIR}/src/main.o \
 	${OBJECTDIR}/src/Globals.o \
 	${OBJECTDIR}/src/GraphicsTheme.o \
+	${OBJECTDIR}/XMLParser.o \
 	${OBJECTDIR}/src/DefaultTheme.o \
 	${OBJECTDIR}/src/RCode.o \
 	${OBJECTDIR}/src/InputStreamConsumer.o \
@@ -84,6 +85,11 @@ ${OBJECTDIR}/src/GraphicsTheme.o: src/GraphicsTheme.cpp
 	${MKDIR} -p ${OBJECTDIR}/src
 	${RM} $@.d
 	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/src/GraphicsTheme.o src/GraphicsTheme.cpp
+
+${OBJECTDIR}/XMLParser.o: XMLParser.cpp 
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} $@.d
+	$(COMPILE.cc) -g -Iinclude -MMD -MP -MF $@.d -o ${OBJECTDIR}/XMLParser.o XMLParser.cpp
 
 ${OBJECTDIR}/src/DefaultTheme.o: src/DefaultTheme.cpp 
 	${MKDIR} -p ${OBJECTDIR}/src

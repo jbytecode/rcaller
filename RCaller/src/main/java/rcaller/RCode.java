@@ -76,6 +76,7 @@ public class RCode {
   public File startPlot() throws IOException {
     File f = File.createTempFile("RPlot", ".png");
     addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
+    addRCode(Globals.theme.generateRCode());
     return (f);
   }
 
