@@ -13,6 +13,7 @@
       <itemPath>include/RCaller.h</itemPath>
       <itemPath>include/RCode.h</itemPath>
       <itemPath>include/ROutputParser.h</itemPath>
+      <itemPath>XMLParser.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -30,6 +31,7 @@
       <itemPath>src/RCaller.cpp</itemPath>
       <itemPath>src/RCode.cpp</itemPath>
       <itemPath>src/ROutputParser.cpp</itemPath>
+      <itemPath>XMLParser.cpp</itemPath>
       <itemPath>src/main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"

@@ -33,9 +33,9 @@ string *RCode::getCode() {
 
 void RCode::clear() {
     this->code->clear();
-    string *s = new string("packageExist<-require(Runiversal)");
-    s->append("if(!packageExist){");
-    s->append("install.packages(\"Runiversal\", repos=\" " + Globals::cranRepos + "\")");
+    string *s = new string("packageExist<-require(Runiversal)\n");
+    s->append("if(!packageExist){\n");
+    s->append("install.packages(\"Runiversal\", repos=\" " + Globals::cranRepos + "\")\n");
     s->append("}\n");
     this->addRCode(s);
 }
@@ -46,6 +46,7 @@ void RCode::addRCode(string *code) {
 
 void RCode::addRCode(const char* str) {
     this->code->append(str);
+    this->code->append("\n");
 }
 
 void RCode::addStringArray(string* name, string** arr, int length) {

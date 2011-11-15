@@ -27,7 +27,7 @@
 
 /* 
  * File:   RCaller.h
- * Author: hako
+ * Author: Mehmet Hakan Satman
  *
  * Created on November 12, 2011, 12:13 AM
  */
@@ -62,18 +62,18 @@ public:
     ROutputParser getParser();
     void setParser(ROutputParser parser);
     RCode getRCode();
-    void setRCode(RCode rcode);
+    void setRCode(RCode *rcode);
     string getRscriptExecutable();
-    void setRscriptExecutable(string RscriptExecutable);
+    void setRscriptExecutable(const char *RscriptExecutable);
     void setGraphicsTheme(GraphicsTheme theme);
     void cleanRCode();
-    char *createRSourceFile();
+    const char *createRSourceFile();
     void runOnly();
     void runAndReturnResultOnline(string var);
     void runAndReturnResult(string var);
 private:
-    string RscriptExecutable;
-    string RExecutable;
+    const char* RscriptExecutable;
+    const char* RExecutable;
     RCode *rcode;
     ROutputParser *parser;
     istream *inputStreamToR;
