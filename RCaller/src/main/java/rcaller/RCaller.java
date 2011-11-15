@@ -81,8 +81,8 @@ public class RCaller {
   public boolean stopStreamConsumers() {
     isConsumer.setCloseSignal(true);
     errConsumer.setCloseSignal(true);
-    return isConsumer.getConsumerThread().isAlive()
-            && errConsumer.getConsumerThread().isAlive();
+    return isConsumer.isAlive()
+            && errConsumer.isAlive();
   }
 
   public InputStream getErrorStreamToR() {
@@ -332,6 +332,10 @@ public class RCaller {
     try {
       //this Process object is local to this method. Do not use the public one.
       process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
+      isConsumer = new InputStreamConsumer(process.getInputStream(), this, "Output");
+      errConsumer = new InputStreamConsumer(process.getErrorStream(), this, "Error");
+      isConsumer.start();
+      errConsumer.start();
       process.waitFor();
     } catch (Exception e) {
       throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
@@ -373,8 +377,8 @@ public class RCaller {
         errorStreamToR = process.getErrorStream();
         isConsumer = new InputStreamConsumer(inputStreamToR, this, "Output");
         errConsumer = new InputStreamConsumer(errorStreamToR, this, "Error");
-        isConsumer.getConsumerThread().start();
-        errConsumer.getConsumerThread().start();
+        isConsumer.start();
+        errConsumer.start();
       } catch (Exception e) {
         throw new RCallerExecutionException("Can not run " + RExecutable + ". Reason: " + e.toString());
       }
@@ -451,6 +455,10 @@ public class RCaller {
       commandline = RscriptExecutable + " " + rSourceFile.toString();
       //this Process object is local to this method. Do not use the public one.
       Process process = Runtime.getRuntime().exec(commandline);
+      isConsumer = new InputStreamConsumer(process.getInputStream(), this, "Output");
+      errConsumer = new InputStreamConsumer(process.getErrorStream(), this, "Error");
+      isConsumer.start();
+      errConsumer.start();
       process.waitFor();
     } catch (Exception e) {
       throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());

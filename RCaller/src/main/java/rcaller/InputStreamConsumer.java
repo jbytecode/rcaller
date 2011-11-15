@@ -11,6 +11,7 @@ public class InputStreamConsumer implements Runnable {
   private Thread consumerThread;
   private boolean closeSignal = false;
   private RCaller rcaller = null;
+  private String name = null;
   
   public boolean isCloseSignal() {
     return closeSignal;
@@ -20,12 +21,19 @@ public class InputStreamConsumer implements Runnable {
     this.closeSignal = closeSignal;
   }
   
-  public Thread getConsumerThread() {
-    return consumerThread;
+  public void start(){
+    closeSignal = false;
+    this.consumerThread = new Thread(this);
+    this.consumerThread.setName(this.name);
+    this.consumerThread.start();
   }
   
-  public void setConsumerThread(Thread consumerThread) {
-    this.consumerThread = consumerThread;
+  public void stop(){
+    closeSignal = true;
+  }
+  
+  public boolean isAlive(){
+    return this.consumerThread.isAlive();
   }
   
   public InputStream getIs() {
@@ -47,6 +55,7 @@ public class InputStreamConsumer implements Runnable {
   public InputStreamConsumer(InputStream is, RCaller rcaller, String name) {
     this.is = is;
     this.rcaller = rcaller;
+    this.name = name;
     reader = new BufferedReader(new InputStreamReader(is));
     consumerThread = new Thread(this, name);
   }

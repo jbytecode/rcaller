@@ -32,6 +32,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import rcaller.EventHandler;
 import rcaller.RCaller;
 import rcaller.RCode;
 
@@ -46,7 +47,8 @@ public class SampleGui extends JFrame implements ActionListener {
   JTextArea textArea;
   JButton button;
   JTextField textField;
-  JTextArea textResult;
+  JTextArea textResult, inputStreamResult, errorStreamResult;
+  
   
   public SampleGui() {
     super("RCaller Sample GUI");
@@ -54,32 +56,43 @@ public class SampleGui extends JFrame implements ActionListener {
     this.setSize(640, 480);
     this.setLayout(null);
     
-    textArea = new JTextArea("myvar<-c(1,2,3,4,5)\nothervar<-runif(10,0,1)");
-    textArea.setSize(350, 400);
+    textArea = new JTextArea("myvar<-c(1,2,3,4,5)\nothervar<-runif(10,0,1)\ncat(\"Hello World!\")\nfor(i in 1:5){\nprint(i)\n}\n");
+    textArea.setSize(350, 200);
     textArea.setLocation(10, 20);
+    textArea.setBorder(new javax.swing.border.TitledBorder("R Code"));
     this.add(textArea);
     
-    JLabel label = new JLabel("Return this variable:");
-    label.setSize(150, 20);
-    label.setLocation(380, 20);
-    this.add(label);
+    inputStreamResult = new JTextArea();
+    inputStreamResult.setSize(350,70);
+    inputStreamResult.setLocation(10, 230);
+    inputStreamResult.setBorder(new javax.swing.border.TitledBorder("Output by R"));
+    this.add(inputStreamResult);
+    
+    errorStreamResult = new JTextArea();
+    errorStreamResult.setSize(350,70);
+    errorStreamResult.setLocation(10, 310);
+    errorStreamResult.setBorder(new javax.swing.border.TitledBorder("Error by R"));
+    this.add(errorStreamResult);
     
     
     textField = new JTextField("othervar");
-    textField.setSize(100, 30);
-    textField.setLocation(380, 40);
+    textField.setSize(200, 50);
+    textField.setLocation(380, 20);
+    textField.setBorder(new javax.swing.border.TitledBorder("Handle this by Java"));
     this.add(textField);
     
     button = new JButton("Run R Code");
     button.setSize(150, 40);
-    button.setLocation(380, 80);
+    button.setLocation(380, 90);
     button.addActionListener(this);
     this.add(button);
     
     textResult = new JTextArea();
     textResult.setSize(200, 250);
-    textResult.setLocation(380, 150);
+    textResult.setLocation(380, 140);
+    textResult.setBorder(new javax.swing.border.TitledBorder("Result as Java object"));
     this.add(textResult);
+    
     
     this.setVisible(true);
   }
@@ -91,12 +104,29 @@ public class SampleGui extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals("Run R Code")) {
+      
+      this.inputStreamResult.setText("");
+      this.errorStreamResult.setText("");
+      
       RCaller caller = new RCaller();
       caller.setRscriptExecutable(RScriptExecutable);
       
       RCode code = new RCode();
       code.clear();
       code.addRCode(textArea.getText());
+      
+      caller.addEventHandler(new EventHandler() {
+
+        public void MessageReceived(String threadName, String msg) {
+          if(threadName.equals("Output")){
+            inputStreamResult.append(msg+"\n");
+          }else{
+            errorStreamResult.append(msg+"\n");
+          }
+        }
+      });
+      
+      
       try {
         caller.setRCode(code);
         caller.runAndReturnResult(textField.getText());

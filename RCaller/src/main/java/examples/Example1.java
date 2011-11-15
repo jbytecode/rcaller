@@ -47,7 +47,7 @@ public class Example1 {
     try {
       RCaller caller = new RCaller();
       caller.setRscriptExecutable("/usr/bin/Rscript");
-
+      
       RCode code = new RCode();
       code.clear();
 
