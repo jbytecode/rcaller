@@ -31,6 +31,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import rcaller.exception.RCallerExecutionException;
 
@@ -53,8 +54,21 @@ public class RCaller {
   private InputStream inputStreamToR = null;
   private OutputStream outputStreamToR = null;
   private InputStream errorStreamToR = null;
+  private ArrayList<EventHandler> eventHandlers = null;
   InputStreamConsumer isConsumer;
   InputStreamConsumer errConsumer;
+
+  public void addEventHandler(EventHandler eh) {
+    this.eventHandlers.add(eh);
+  }
+
+  public void removeEventHandler(EventHandler eh) {
+    this.eventHandlers.remove(eh);
+  }
+
+  public ArrayList<EventHandler> getEventHandlers() {
+    return this.eventHandlers;
+  }
 
   /**
    * Stops the threads that are emptying the output and error streams of the 
@@ -146,6 +160,7 @@ public class RCaller {
   public RCaller() {
     this.rcode = new RCode();
     this.parser = new ROutputParser();
+    this.eventHandlers = new ArrayList<EventHandler>();
     cleanRCode();
   }
 
@@ -356,8 +371,8 @@ public class RCaller {
         outputStreamToR = process.getOutputStream();
         inputStreamToR = process.getInputStream();
         errorStreamToR = process.getErrorStream();
-        isConsumer = new InputStreamConsumer(inputStreamToR, "rInputConsumer");
-        errConsumer = new InputStreamConsumer(errorStreamToR, "rErrorConsumer");
+        isConsumer = new InputStreamConsumer(inputStreamToR, this, "Output");
+        errConsumer = new InputStreamConsumer(errorStreamToR, this, "Error");
         isConsumer.getConsumerThread().start();
         errConsumer.getConsumerThread().start();
       } catch (Exception e) {
