@@ -38,7 +38,7 @@ public class EventHandlerTest {
     caller.setRExecutable(Globals.R_current);
 
     caller.addEventHandler(new EventHandler() {
-      public void MessageReceived(String threadName, String msg) {
+      public void MessageReceived(String threadName,  String msg) {
         System.out.println("** Event Handled ("+threadName+"): " + msg);
       }
     });
