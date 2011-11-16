@@ -72,12 +72,12 @@ public class Example1 {
       caller.setRCode(code);
       System.out.println(code.getCode().toString());
       
-      caller.addEventHandler(new EventHandler() {
-
-        public void MessageReceived(String threadName, String msg) {
-          System.out.println(threadName + ": "+ msg);
-        }
-      });
+//      caller.addEventHandler(new EventHandler() {
+//
+//        public void messageReceived(String threadName, String msg) {
+//          System.out.println(threadName + ": "+ msg);
+//        }
+//      });
       caller.runOnly();
       code.showPlot(file);
     } catch (Exception e) {

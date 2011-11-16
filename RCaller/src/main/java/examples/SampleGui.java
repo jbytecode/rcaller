@@ -115,16 +115,16 @@ public class SampleGui extends JFrame implements ActionListener {
       code.clear();
       code.addRCode(textArea.getText());
       
-      caller.addEventHandler(new EventHandler() {
-
-        public void MessageReceived(String threadName, String msg) {
-          if(threadName.equals("Output")){
-            inputStreamResult.append(msg+"\n");
-          }else{
-            errorStreamResult.append(msg+"\n");
-          }
-        }
-      });
+//      caller.addEventHandler(new EventHandler() {
+//
+//        public void messageReceived(String threadName, String msg) {
+//          if(threadName.equals("Output")){
+//            inputStreamResult.append(msg+"\n");
+//          }else{
+//            errorStreamResult.append(msg+"\n");
+//          }
+//        }
+//      });
       
       
       try {
