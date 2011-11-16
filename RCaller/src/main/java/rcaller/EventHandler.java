@@ -1,6 +1,14 @@
 package rcaller;
 
-public interface EventHandler {
+import java.io.OutputStream;
 
-  public void MessageReceived(String threadName, String msg);
+public abstract class EventHandler {
+
+    private OutputStream o;
+
+    public EventHandler(OutputStream o) {
+        this.o = o;
+    }
+
+    public abstract void messageReceived(String senderName, String msg);
 }
