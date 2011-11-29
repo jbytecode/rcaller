@@ -25,9 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package examples;
 
 import graphics.BlackTheme;
-import graphics.SkyTheme;
 import java.io.File;
-import rcaller.EventHandler;
 import rcaller.RCaller;
 import rcaller.RCode;
 
@@ -35,10 +33,10 @@ import rcaller.RCode;
  *
  * @author Mehmet Hakan Satman
  */
-public class Example1 {
+public class SimplePlot {
 
   public static void main(String[] args) {
-    new Example1();
+    new SimplePlot();
   }
 
   /*
@@ -46,7 +44,7 @@ public class Example1 {
    * This class simply plots a time series array using plot.ts()
    * function of R.
    */
-  public Example1() {
+  public SimplePlot() {
     try {
       RCaller caller = new RCaller();
       caller.setRscriptExecutable("/usr/bin/Rscript");

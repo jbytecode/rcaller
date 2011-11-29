@@ -1,6 +1,7 @@
 
 package rcaller;
 
+import graphics.GraphicsType;
 import java.io.File;
 import java.io.IOException;
 import javax.swing.ImageIcon;
@@ -74,8 +75,27 @@ public class RCode {
   }
 
   public File startPlot() throws IOException {
-    File f = File.createTempFile("RPlot", ".png");
-    addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
+    return(startPlot(GraphicsType.png));
+  }
+  
+  public File startPlot(GraphicsType type) throws IOException {
+    File f = File.createTempFile("RPlot", "." + type.name());
+    switch (type) {
+      case png:
+        addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
+        break;
+      case jpeg:
+        addRCode("jpeg(\"" + f.toString().replace("\\", "/") + "\")");
+        break;
+      case tiff:
+        addRCode("tiff(\"" + f.toString().replace("\\", "/") + "\")");
+        break;
+      case bmp:
+        addRCode("bmp(\"" + f.toString().replace("\\", "/") + "\")");
+        break;
+      default:
+        addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
+    }
     addRCode(Globals.theme.generateRCode());
     return (f);
   }
