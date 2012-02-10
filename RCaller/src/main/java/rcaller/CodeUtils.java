@@ -139,7 +139,7 @@ public class CodeUtils {
       for (int j = 0; j < matrix[0].length; j++) {
         RCode.append(String.valueOf(matrix[i][j]));
         counter++;
-        if ( counter < (matrix.length * matrix.length) ) {
+        if ( counter < (matrix.length * matrix[0].length) ) {
           RCode.append(", ");
         }
       }
