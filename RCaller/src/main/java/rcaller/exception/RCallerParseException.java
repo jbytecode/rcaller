@@ -28,7 +28,7 @@ package rcaller.exception;
  *
  * @author Mehmet Hakan Satman
  */
-public class RCallerParseException extends RuntimeException {
+public class RCallerParseException extends RCallerExecutionException {
 
   /**
    * Creates a new instance of <code>RCallerParseException</code> without detail message.

@@ -53,7 +53,6 @@ public class RStreamHandler implements Runnable {
         return this.consumerThread.isAlive();
     }
 
-    @Override
     public void run() {
         if (reader == null) {
             reader = new BufferedReader(new InputStreamReader(stream));
