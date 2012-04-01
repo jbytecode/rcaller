@@ -25,6 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package rcaller;
 
 import graphics.GraphicsTheme;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,6 +37,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import rcaller.exception.RCallerExecutionException;
+import rcaller.exception.RCallerParseException;
 
 /**
  *
@@ -503,7 +505,7 @@ public class RCaller {
             parser.parse();
         } catch (Exception e) {
             System.out.println(rcode.toString());
-            throw new RCallerExecutionException("Can not handle R results due to : " + e.toString());
+            throw new RCallerParseException("Can not handle R results due to : " + e.toString());
         }
 
         stopStreamConsumers();

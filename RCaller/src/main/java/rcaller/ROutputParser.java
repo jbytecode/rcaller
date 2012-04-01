@@ -73,6 +73,9 @@ public class ROutputParser {
   }
 
   public void parse() throws RCallerParseException {
+	if(this.XMLFile.length() == 0){
+		throw new RCallerParseException("Can not parse output: The generated file "+this.XMLFile.toString()+" is empty");
+	}
     factory = DocumentBuilderFactory.newInstance();
     try {
       builder = factory.newDocumentBuilder();

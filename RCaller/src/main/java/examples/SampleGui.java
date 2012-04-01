@@ -101,7 +101,6 @@ public class SampleGui extends JFrame implements ActionListener {
     new SampleGui();
   }
   
-  @Override
   public void actionPerformed(ActionEvent e) {
     if (e.getActionCommand().equals("Run R Code")) {
       
