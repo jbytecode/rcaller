@@ -9,7 +9,7 @@ public class ParserEmptyFileTest {
     @Test(expected = rcaller.exception.RCallerParseException.class)
     public void EmptyOutputInParser(){
     	RCaller caller = new RCaller();
-    	caller.setRscriptExecutable(Globals.RScript_Linux);
+    	caller.setRscriptExecutable(Globals.Rscript_current);
     	RCode code = new RCode();
     	code.addRCode("Some meaningless code");
     	caller.runAndReturnResult("requestedvar");
