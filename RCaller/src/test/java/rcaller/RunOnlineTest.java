@@ -1,6 +1,6 @@
 package rcaller;
 
-import rcaller.exception.RCallerExecutionException;
+import rcaller.exception.ExecutionException;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -68,7 +68,7 @@ public class RunOnlineTest {
      * Same as RunOnlineTest#onlineCalculationTest, except a problem is deliberately caused
      * Expected behaviour: RCaller must retry
      */
-    @Test(expected = rcaller.exception.RCallerExecutionException.class)
+    @Test(expected = rcaller.exception.ExecutionException.class)
     public void errorHandlerTest() {
         RCaller rcaller = new RCaller();
         RCode code = new RCode();
@@ -133,7 +133,7 @@ public class RunOnlineTest {
         boolean exceptionThrown = false;
         try {
             rcaller.runAndReturnResultOnline("a");
-        } catch (RCallerExecutionException ex) {
+        } catch (ExecutionException ex) {
 //            ex.printStackTrace();
             exceptionThrown = true;
         }

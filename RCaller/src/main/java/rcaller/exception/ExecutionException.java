@@ -28,19 +28,19 @@ package rcaller.exception;
  *
  * @author Mehmet Hakan Satman
  */
-public class RCallerParseException extends RCallerExecutionException {
+public class ExecutionException extends RuntimeException {
 
   /**
-   * Creates a new instance of <code>RCallerParseException</code> without detail message.
+   * Creates a new instance of <code>RCallerExecutionException</code> without detail message.
    */
-  public RCallerParseException() {
+  public ExecutionException() {
   }
 
   /**
-   * Constructs an instance of <code>RCallerParseException</code> with the specified detail message.
+   * Constructs an instance of <code>RCallerExecutionException</code> with the specified detail message.
    * @param msg the detail message.
    */
-  public RCallerParseException(String msg) {
+  public ExecutionException(String msg) {
     super(msg);
   }
 }
