@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Built-By: hako
-Build-Jdk: 1.7.0_147-icedtea
-Created-By: Maven Integration for Eclipse
-
