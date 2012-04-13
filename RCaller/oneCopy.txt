@@ -2,35 +2,33 @@ Output:
 Output:R version 2.15.0 (2012-03-30)
 Output:Copyright (C) 2012 The R Foundation for Statistical Computing
 Output:ISBN 3-900051-07-0
-Output:Platform: i686-pc-linux-gnu (32-bit)
+Output:Platform: i386-pc-mingw32/i386 (32-bit)
 Output:
-Output:R is free software and comes with ABSOLUTELY NO WARRANTY.
-Output:You are welcome to redistribute it under certain conditions.
-Output:Type 'license()' or 'licence()' for distribution details.
+Output:R özgür bir yazýlýmdýr ve KESÝNLÝKLE BÝR GARANTÝ VERMEZ.
+Output:Belli koþullar altýnda tekrar daðýtýmýna izin verilir.
+Output:Daðýtým detaylarý için 'license()' ya da 'licence()' girin.
 Output:
-Output:  Natural language support but running in an English locale
+Output:R, bir çok insanýn katkýda bulunduðu ortak bir projedir
+Output:Daha fazla bilgi için 'contributors()' girin.
+Output:Yayýnlarda R veya R paketlerinden alýntý yapmak için 'citation()' girin.
 Output:
-Output:R is a collaborative project with many contributors.
-Output:Type 'contributors()' for more information and
-Output:'citation()' on how to cite R or R packages in publications.
-Output:
-Output:Type 'demo()' for some demos, 'help()' for on-line help, or
-Output:'help.start()' for an HTML browser interface to help.
-Output:Type 'q()' to quit R.
+Output:Birkaç örnek için 'demo()', çevrimiçi yardým için 'help()' veya
+Output:HTML tarayýcýlý yardýmý açmak için 'help.start()' girin.
+Output:R'den çýkmak için 'q()' girin.
 Output:
 Output:> packageExist<-require(Runiversal)
-Error:Loading required package: Runiversal
+Error:Zorunlu paket yükleniyor: Runiversal
 Output:> if(!packageExist){
 Output:+ install.packages("Runiversal", repos=" http://cran.r-project.org")
 Output:+ }
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput8443649167803936337")
+Output:> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput7329894664884344234")
 Output:> packageExist<-require(Runiversal)
 Output:> if(!packageExist){
 Output:+ install.packages("Runiversal", repos=" http://cran.r-project.org")
 Output:+ }
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput7191776141855825495")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput9210595327267261696")

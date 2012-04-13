@@ -35,6 +35,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import rcaller.exception.RCallerParseException;
+import rcaller.exception.RCallerXMLParseException;
 
 /**
  *
@@ -86,7 +87,7 @@ public class ROutputParser {
     try {
       document = builder.parse(XMLFile);
     } catch (Exception e) {
-      throw new RCallerParseException("Can not parse the R output: " + e.toString());
+      throw new RCallerXMLParseException("Can not parse the R output: " + e.toString());
     }
 
     document.getDocumentElement().normalize();

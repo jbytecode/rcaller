@@ -265,7 +265,7 @@ public class RCaller {
         try {
             f = File.createTempFile("rcaller", "");
         } catch (Exception e) {
-            throw new RCallerExecutionException("Can not open a tempopary file for storing the R Code: " + e.toString());
+            throw new RCallerExecutionException("Can not open a temporary file for storing the R Code: " + e.toString());
         }
 
         try {
