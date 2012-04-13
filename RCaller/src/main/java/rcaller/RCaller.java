@@ -36,8 +36,10 @@ import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
-import rcaller.exception.RCallerExecutionException;
-import rcaller.exception.RCallerParseException;
+import rcaller.exception.ExecutionException;
+import rcaller.exception.ParseException;
+import rcaller.exception.RExecutableNotFoundException;
+import rcaller.exception.RscriptExecutableNotFoundException;
 
 /**
  *
@@ -109,6 +111,10 @@ public class RCaller {
     }
 
     public void setRExecutable(String RExecutable) {
+    	File file = new File(RExecutable);
+    	if(!file.exists()){
+    		throw new RExecutableNotFoundException("R Executable "+RExecutable+" not found");
+    	}
         this.RExecutable = RExecutable;
     }
 
@@ -129,6 +135,10 @@ public class RCaller {
     }
 
     public void setRscriptExecutable(String RscriptExecutable) {
+    	File file = new File(RscriptExecutable);
+    	if(!file.exists()){
+    		throw new RscriptExecutableNotFoundException("R executable "+RscriptExecutable+" not found");
+    	}
         this.RscriptExecutable = RscriptExecutable;
     }
 
@@ -144,128 +154,22 @@ public class RCaller {
         rcode.addRCode("}\n");
     }
 
-    /**
-     * @deprecated Use RCode.addRCode instead
-     * @param code 
-     */
-    public void addRCode(String code) {
-        this.rcode.getCode().append(code).append("\n");
-    }
-
-    /**
-     * @deprecated Use RCode.addStringArray instead
-     * @param name
-     * @param arr 
-     */
-    public void addStringArray(String name, String[] arr) {
-        CodeUtils.addStringArray(rcode.getCode(), name, arr, false);
-    }
-
-    /**
-     * @deprecated Use RCode.addDoubleArray
-     * @param name
-     * @param arr 
-     */
-    public void addDoubleArray(String name, double[] arr) {
-        CodeUtils.addDoubleArray(rcode.getCode(), name, arr, false);
-    }
-
-    /**
-     * @deprecated Use RCode.addFloatArray
-     * @param name
-     * @param arr 
-     */
-    public void addFloatArray(String name, float[] arr) {
-        CodeUtils.addFloatArray(rcode.getCode(), name, arr, false);
-    }
-
-    /**
-     * @deprecated Use RCode.addIntArray
-     * @param name
-     * @param arr 
-     */
-    public void addIntArray(String name, int[] arr) {
-        CodeUtils.addIntArray(rcode.getCode(), name, arr, false);
-    }
-
-    /**
-     * @deprecated Use RCode.addShortArray
-     * @param name
-     * @param arr 
-     */
-    public void addShortArray(String name, short[] arr) {
-        CodeUtils.addShortArray(rcode.getCode(), name, arr, false);
-    }
-
-    /**
-     * @deprecated Use RCode.addLogicalArray
-     * @param name
-     * @param arr 
-     */
-    public void addLogicalArray(String name, boolean[] arr) {
-        CodeUtils.addLogicalArray(rcode.getCode(), name, arr, false);
-    }
-
-    /**
-     * @deprecated Use RCode.addJavaObject
-     * @param name
-     * @param arr 
-     */
-    public void addJavaObject(String name, Object o) throws IllegalAccessException {
-        CodeUtils.addJavaObject(rcode.getCode(), name, o, false);
-    }
-
-    /**
-     * @deprecated Use RCode.startPlot
-     * @param name
-     * @param arr 
-     */
-    public File startPlot() throws IOException {
-        return (this.rcode.startPlot());
-    }
-
-    /**
-     * @deprecated Use RCode.endPlot
-     * @param name
-     * @param arr 
-     */
-    public void endPlot() {
-        rcode.endPlot();
-    }
-
-    /**
-     * @deprecated Use RCode.getPlot
-     * @param name
-     * @param arr 
-     */
-    public ImageIcon getPlot(File f) {
-        return rcode.getPlot(f);
-    }
-
-    /**
-     * @deprecated Use RCode.showPlot
-     * @param name
-     * @param arr 
-     */
-    public void showPlot(File f) {
-        rcode.showPlot(f);
-    }
-
+    
     /**
      * Stores the current RCode contained in this RCaller in a temporary file
      * and return a reference to that file
      * @return a reference to the file
-     * @throws rcaller.exception.RCallerExecutionException if a temporary file cannot be
+     * @throws rcaller.exception.ExecutionException if a temporary file cannot be
      * created or written to
      */
-    private File createRSourceFile() throws rcaller.exception.RCallerExecutionException {
+    private File createRSourceFile() throws rcaller.exception.ExecutionException {
         File f = null;
         BufferedWriter writer = null;
 
         try {
             f = File.createTempFile("rcaller", "");
         } catch (Exception e) {
-            throw new RCallerExecutionException("Can not open a temporary file for storing the R Code: " + e.toString());
+            throw new ExecutionException("Can not open a temporary file for storing the R Code: " + e.toString());
         }
 
         try {
@@ -273,7 +177,7 @@ public class RCaller {
             writer.write(this.rcode.toString());
             writer.flush();
         } catch (Exception e) {
-            throw new RCallerExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
+            throw new ExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
         } finally {
             try {
                 writer.close();
@@ -288,12 +192,12 @@ public class RCaller {
      * Executes the code contained in this RCaller instance in s separate process.
      * Upon completion the process is killed and none of the R variables
      * are returned
-     * @throws rcaller.exception.RCallerExecutionException if R cannot be run for some 
+     * @throws rcaller.exception.ExecutionException if R cannot be run for some 
      * reason
      */
-    public void runOnly() throws rcaller.exception.RCallerExecutionException {
+    public void runOnly() throws rcaller.exception.ExecutionException {
         if (this.RscriptExecutable == null) {
-            throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable "
+            throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
                     + "to full path of Rscript executable binary file.");
         }
         this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
@@ -307,7 +211,7 @@ public class RCaller {
             rError.start();
             process.waitFor();
         } catch (Exception e) {
-            throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+            throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
         }
 
         stopStreamConsumers();
@@ -320,9 +224,9 @@ public class RCaller {
      * stop it.
      * @see #stopStreamConsumers() 
      * @param var The R variable to return
-     * @throws rcaller.exception.RCallerExecutionException if R cannot be started
+     * @throws rcaller.exception.ExecutionException if R cannot be started
      */
-    public void runAndReturnResultOnline(String var) throws rcaller.exception.RCallerExecutionException {
+    public void runAndReturnResultOnline(String var) throws rcaller.exception.ExecutionException {
         this.retries = 0;//assumes only one of the run* methods of this class is 
 //        executing at any given time
         boolean done = false;
@@ -428,7 +332,7 @@ public class RCaller {
      * @throws RCallerExecutionException if no more retries are permitted, but an exception
      * still occurs
      */
-    private boolean handleRFailure(String reason) throws RCallerExecutionException {
+    private boolean handleRFailure(String reason) throws ExecutionException {
         int maxFailures = 0;
         if (this.failPolicy == FailurePolicy.CONTINUE) {
             maxFailures = -1;
@@ -452,7 +356,7 @@ public class RCaller {
             retries++;
             return true;
         } else {
-            throw new RCallerExecutionException(reason
+            throw new ExecutionException(reason
                     + " Maximum number of retries exceeded.");
         }
     }
@@ -461,18 +365,18 @@ public class RCaller {
      * Runs the current code and returns the R variable "var". The R process is terminated
      * upon completion of this method.
      * @param var the R variable to return
-     * @throws rcaller.exception.RCallerExecutionException if R could be started; if a temporary
+     * @throws rcaller.exception.ExecutionException if R could be started; if a temporary
      * file to store the results could not be created; if the temporary file is corrupt. The exact cause will
      * be added to the stack trace
      */
-    public void runAndReturnResult(String var) throws rcaller.exception.RCallerExecutionException {
+    public void runAndReturnResult(String var) throws rcaller.exception.ExecutionException {
         //TODO this method should throw different exceptions depending on why it has failed
         String commandline = null;
         String result = null;
         File rSourceFile, outputFile;
 
         if (this.RscriptExecutable == null) {
-            throw new RCallerExecutionException("RscriptExecutable is not defined. Please set this variable "
+            throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
                     + "to full path of Rscript executable binary file.");
         }
 
@@ -480,7 +384,7 @@ public class RCaller {
         try {
             outputFile = File.createTempFile("Routput", "");
         } catch (Exception e) {
-            throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+            throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
         }
 
         rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
@@ -496,7 +400,7 @@ public class RCaller {
             rError.start();
             process.waitFor();
         } catch (Exception e) {
-            throw new RCallerExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+            throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
         }
 
 
@@ -505,28 +409,14 @@ public class RCaller {
             parser.parse();
         } catch (Exception e) {
             System.out.println(rcode.toString());
-            throw new RCallerParseException("Can not handle R results due to : " + e.toString());
+            throw new ParseException("Can not handle R results due to : " + e.toString());
         }
 
         stopStreamConsumers();
     }
 
-    /**
-     * @deprecated Use RCode.R_require instead
-     * @param pkg 
-     */
-    public void R_require(String pkg) {
-        this.rcode.code = this.rcode.getCode().insert(0, "require(" + pkg + ")\n");
-    }
-
-    /**
-     * @deprecated Use RCode.R_source instead
-     * @param sourceFile 
-     */
-    public void R_source(String sourceFile) {
-        rcode.addRCode("source(\"" + sourceFile + "\")\n");
-    }
-
+    
+   
     public void redirectROutputToConsole() {
         redirectROutputToStream(System.out);
 

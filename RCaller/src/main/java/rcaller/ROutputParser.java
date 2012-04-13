@@ -34,8 +34,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import rcaller.exception.RCallerParseException;
-import rcaller.exception.RCallerXMLParseException;
+import rcaller.exception.ParseException;
+import rcaller.exception.XMLParseException;
 
 /**
  *
@@ -73,21 +73,21 @@ public class ROutputParser {
     this.XMLFile = XMLFile;
   }
 
-  public void parse() throws RCallerParseException {
+  public void parse() throws ParseException {
 	if(this.XMLFile.length() == 0){
-		throw new RCallerParseException("Can not parse output: The generated file "+this.XMLFile.toString()+" is empty");
+		throw new ParseException("Can not parse output: The generated file "+this.XMLFile.toString()+" is empty");
 	}
     factory = DocumentBuilderFactory.newInstance();
     try {
       builder = factory.newDocumentBuilder();
     } catch (Exception e) {
-      throw new RCallerParseException("Can not create parser builder: " + e.toString());
+      throw new ParseException("Can not create parser builder: " + e.toString());
     }
 
     try {
       document = builder.parse(XMLFile);
     } catch (Exception e) {
-      throw new RCallerXMLParseException("Can not parse the R output: " + e.toString());
+      throw new XMLParseException("Can not parse the R output: " + e.toString());
     }
 
     document.getDocumentElement().normalize();
@@ -123,10 +123,10 @@ public class ROutputParser {
     return (content);
   }
 
-  public String[] getAsStringArray(String name) throws RCallerParseException {
+  public String[] getAsStringArray(String name) throws ParseException {
     NodeList nodes = getValueNodes(name);
     if (nodes == null) {
-      throw new RCallerParseException("Variable " + name + " not found");
+      throw new ParseException("Variable " + name + " not found");
     }
     ArrayList<String> values = new ArrayList<String>();
     for (int i = 0; i < nodes.getLength(); i++) {
@@ -142,72 +142,72 @@ public class ROutputParser {
     return (result);
   }
 
-  public double[] getAsDoubleArray(String name) throws RCallerParseException {
+  public double[] getAsDoubleArray(String name) throws ParseException {
     String[] strResults = getAsStringArray(name);
     double[] d = new double[strResults.length];
     for (int i = 0; i < strResults.length; i++) {
       try {
         d[i] = Double.parseDouble(strResults[i]);
       } catch (Exception e) {
-        throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to double");
+        throw new ParseException("String value '" + strResults[i] + "' can not convert to double");
       }
     }
     return (d);
   }
 
-  public float[] getAsFloatArray(String name) throws RCallerParseException {
+  public float[] getAsFloatArray(String name) throws ParseException {
     String[] strResults = getAsStringArray(name);
     float[] f = new float[strResults.length];
     for (int i = 0; i < strResults.length; i++) {
       try {
         f[i] = Float.parseFloat(strResults[i]);
       } catch (Exception e) {
-        throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to float");
+        throw new ParseException("String value '" + strResults[i] + "' can not convert to float");
       }
     }
     return (f);
   }
 
-  public int[] getAsIntArray(String name) throws RCallerParseException {
+  public int[] getAsIntArray(String name) throws ParseException {
     String[] strResults = getAsStringArray(name);
     int[] ints = new int[strResults.length];
     for (int i = 0; i < strResults.length; i++) {
       try {
         ints[i] = Integer.parseInt(strResults[i]);
       } catch (Exception e) {
-        throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to int");
+        throw new ParseException("String value '" + strResults[i] + "' can not convert to int");
       }
     }
     return (ints);
   }
 
-  public long[] getAsLongArray(String name) throws RCallerParseException {
+  public long[] getAsLongArray(String name) throws ParseException {
     String[] strResults = getAsStringArray(name);
     long[] longs = new long[strResults.length];
     for (int i = 0; i < strResults.length; i++) {
       try {
         longs[i] = Long.parseLong(strResults[i]);
       } catch (Exception e) {
-        throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to long");
+        throw new ParseException("String value '" + strResults[i] + "' can not convert to long");
       }
     }
     return (longs);
   }
 
-  public boolean[] getAsLogicalArray(String name) throws RCallerParseException {
+  public boolean[] getAsLogicalArray(String name) throws ParseException {
     String[] strResults = getAsStringArray(name);
     boolean[] bools = new boolean[strResults.length];
     for (int i = 0; i < strResults.length; i++) {
       try {
         bools[i] = Boolean.parseBoolean(strResults[i]);
       } catch (Exception e) {
-        throw new RCallerParseException("String value '" + strResults[i] + "' can not convert to boolean");
+        throw new ParseException("String value '" + strResults[i] + "' can not convert to boolean");
       }
     }
     return (bools);
   }
   
-  public double[][] getAsDoubleMatrix(String name, int n, int m) throws RCallerParseException {
+  public double[][] getAsDoubleMatrix(String name, int n, int m) throws ParseException {
     double[][] result = new double[n][m];
     double[] arr = this.getAsDoubleArray(name);
     int c = 0;
