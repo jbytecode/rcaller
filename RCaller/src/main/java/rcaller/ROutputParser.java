@@ -43,10 +43,10 @@ import rcaller.exception.XMLParseException;
  */
 public class ROutputParser {
 
-  File XMLFile;
-  DocumentBuilderFactory factory;
-  DocumentBuilder builder;
-  Document document;
+  protected File XMLFile;
+  protected DocumentBuilderFactory factory;
+  protected DocumentBuilder builder;
+  protected Document document;
 
   public Document getDocument() {
     return document;
