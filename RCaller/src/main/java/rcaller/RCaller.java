@@ -52,19 +52,19 @@ import rcaller.exception.RscriptExecutableNotFoundException;
  */
 public class RCaller {
 
-    private String RscriptExecutable;
-    private String RExecutable;
-    private RCode rcode;
-    private ROutputParser parser;
-    private Process process;
-    private RStreamHandler rOutput = null;
-    private RStreamHandler rError = null;
-    private OutputStream rInput = null;
-    private FailurePolicy failPolicy;
+    protected String RscriptExecutable;
+    protected String RExecutable;
+    protected RCode rcode;
+    protected ROutputParser parser;
+    protected Process process;
+    protected RStreamHandler rOutput = null;
+    protected RStreamHandler rError = null;
+    protected OutputStream rInput = null;
+    protected FailurePolicy failPolicy;
     //in case of R failute, how many retries have been made
-    private int retries = 0;
+    protected int retries = 0;
     //how long to wait for R to finish
-    private long maxWaitTime;
+    protected long maxWaitTime;
 
     public RCaller() {
         this.rcode = new RCode();
