@@ -1,4 +1,3 @@
-
 package rcaller;
 
 import graphics.GraphicsType;
@@ -9,7 +8,7 @@ import javax.swing.ImageIcon;
 
 public class RCode {
   
-  StringBuffer code;
+  protected StringBuffer code;
   
   public void setCode(StringBuffer sb){
     this.code = sb;
