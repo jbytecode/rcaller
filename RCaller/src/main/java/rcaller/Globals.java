@@ -6,10 +6,10 @@ import graphics.GraphicsTheme;
 public class Globals {
 
 	public static String cranRepos = "http://cran.r-project.org";
-	public static String RScript_Windows = "C:\\Program Files\\R\\R-2.15.0\\bin\\Rscript.exe";
+	public static String RScript_Windows = "C:\\Program Files\\R\\R-3.0.2\\bin\\Rscript.exe";
 	public static String RScript_Linux = "/usr/bin/Rscript";
 	public static String Rscript_current;
-	public static String R_Windows = "C:\\Program Files\\R\\R-2.15.0\\bin\\R.exe";
+	public static String R_Windows = "C:\\Program Files\\R\\R-3.0.2\\bin\\R.exe";
 	public static String R_Linux = "/usr/bin/R";
 	public static String R_current;
         
