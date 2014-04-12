@@ -1,33 +1,264 @@
 Output:
-Output:R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
-Output:Copyright (C) 2013 The R Foundation for Statistical Computing
-Output:Platform: i386-w64-mingw32/i386 (32-bit)
+Output:R version 3.1.0 (2014-04-10) -- "Spring Dance"
+Output:Copyright (C) 2014 The R Foundation for Statistical Computing
+Output:Platform: x86_64-pc-linux-gnu (64-bit)
 Output:
-Output:R özgür bir yazýlýmdýr ve KESÝNLÝKLE BÝR GARANTÝ VERMEZ.
-Output:Belli koþullar altýnda tekrar daðýtýmýna izin verilir.
-Output:Daðýtým detaylarý için 'license()' ya da 'licence()' girin.
+Output:R is free software and comes with ABSOLUTELY NO WARRANTY.
+Output:You are welcome to redistribute it under certain conditions.
+Output:Type 'license()' or 'licence()' for distribution details.
 Output:
-Output:R, bir çok insanýn katkýda bulunduðu ortak bir projedir
-Output:Daha fazla bilgi için 'contributors()' girin.
-Output:Yayýnlarda R veya R paketlerinden alýntý yapmak için 'citation()' girin.
+Output:  Natural language support but running in an English locale
 Output:
-Output:Birkaç örnek için 'demo()', çevrimiçi yardým için 'help()' veya
-Output:HTML tarayýcýlý yardýmý açmak için 'help.start()' girin.
-Output:R'den çýkmak için 'q()' girin.
+Output:R is a collaborative project with many contributors.
+Output:Type 'contributors()' for more information and
+Output:'citation()' on how to cite R or R packages in publications.
 Output:
-Output:> packageExist<-require(Runiversal)
-Error:Zorunlu paket yükleniyor: Runiversal
-Output:> if(!packageExist){
-Output:+ install.packages("Runiversal", repos=" http://cran.r-project.org")
+Output:Type 'demo()' for some demos, 'help()' for on-line help, or
+Output:'help.start()' for an HTML browser interface to help.
+Output:Type 'q()' to quit R.
+Output:
+Output:> concat<-function(to,...){
+Output:+ 	to<-paste(to,toString(...),sep="");
+Output:+ 	return(to);
 Output:+ }
+Output:> 
+Output:> cleanNames<-function(names){
+Output:+ 	cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,">")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames," ")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\(")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\)")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\[")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\]")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\*")),collapse="");
+Output:+ 	return(cleanNames);
+Output:+ }
+Output:> 
+Output:> makevectorjava<-function(code,objt,name=""){
+Output:+ 	javacode<-code;
+Output:+ 		obj<-objt;
+Output:+ 		if(is.matrix(obj)) obj<-as.vector(obj);
+Output:+ 		if(typeof(obj)=="language") obj<-toString(obj);
+Output:+         	if(typeof(obj)=="logical") obj<-as.character(obj);
+Output:+ 
+Output:+ 		if(is.vector(obj) && is.numeric(obj)){
+Output:+                         javacode<-concat(javacode,"double[] ");
+Output:+                         if(name==""){
+Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
+Output:+ 			}else{
+Output:+ 				javacode<-concat(javacode,name);
+Output:+ 			}
+Output:+                         javacode<-concat(javacode,"= new double[] {");
+Output:+                         javacode<-concat(javacode,obj);
+Output:+                         javacode<-concat(javacode,"};\n");
+Output:+                 }
+Output:+                 if(is.vector(obj) && is.character(obj)){
+Output:+                         javacode<-concat(javacode,"String[] ");
+Output:+ 	                if(name==""){
+Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
+Output:+ 			}else{
+Output:+ 				javacode<-concat(javacode,name);
+Output:+ 			}
+Output:+                         javacode<-concat(javacode,"= new String[] {");
+Output:+                         for (elem in 1:length(obj)){
+Output:+                                 javacode<-paste(javacode,"\"",toString(obj[elem]),"\"",sep="");
+Output:+                                 if (elem!=length(obj)) javacode<-paste(javacode,",",sep="");
+Output:+ 
+Output:+                         }
+Output:+                         javacode<-concat(javacode,"};\n");
+Output:+                 }
+Output:+ 	return(javacode);
+Output:+ }
+Output:> 
+Output:> makejava<-function(obj,name=""){
+Output:+ 	javacode<-"";
+Output:+ 	if(!is.list(obj)){
+Output:+         	javacode<-makevectorjava(javacode,obj,name);
+Output:+         }
+Output:+ 	if (is.list(obj)){
+Output:+ 		objnames<-names(obj);
+Output:+ 		for (i in 1:length(obj)){
+Output:+ 			javacode<-makevectorjava(javacode,obj[[i]],cleanNames(objnames[[i]]));
+Output:+ 		}
+Output:+ 	}
+Output:+ return(javacode);
+Output:+ }
+Output:> 
+Output:> 
+Output:> makevectorxml<-function(code,objt,name=""){
+Output:+         xmlcode<-code;
+Output:+ 	if(name==""){
+Output:+ 	        varname<-cleanNames(deparse(substitute(obj)));
+Output:+         }else{
+Output:+                 varname<-name;
+Output:+         }
+Output:+ 	obj<-objt;
+Output:+ 	if(is.matrix(obj)) obj<-as.vector(obj);
+Output:+ 	if(typeof(obj)=="language") obj<-toString(obj);
+Output:+ 	if(typeof(obj)=="logical") obj<-as.character(obj);
+Output:+                 if(is.vector(obj) && is.numeric(obj)){
+Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
+Output:+ 			for (i in obj){
+Output:+                         	xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+ 				xmlcode<-paste(xmlcode,toString(i),sep="");
+Output:+ 	                        xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+ 			}
+Output:+                         xmlcode<-paste(xmlcode,"</variable>\n",sep="");
+Output:+                 }
+Output:+                 if(is.vector(obj) && is.character(obj)){
+Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="");
+Output:+                         for (i in obj){
+Output:+                                 xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+                                 xmlcode<-paste(xmlcode,toString(i),sep="");
+Output:+                                 xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+                         }
+Output:+ 			xmlcode<-paste(xmlcode,"</variable>\n");
+Output:+                 }
+Output:+         return(xmlcode);
+Output:+ }
+Output:> 
+Output:> 
+Output:> makexml<-function(obj,name=""){
+Output:+ 	xmlcode<-"<?xml version=\"1.0\"?>\n";
+Output:+ 	xmlcode<-concat(xmlcode,"<root>\n");
+Output:+ 	if(!is.list(obj)){
+Output:+                 xmlcode<-makevectorxml(xmlcode,obj,name);
+Output:+         }
+Output:+         else{
+Output:+                 objnames<-names(obj);
+Output:+                 for (i in 1:length(obj)){
+Output:+ 			xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(objnames[[i]]));
+Output:+ 		}
+Output:+         }
+Output:+ 	xmlcode<-concat(xmlcode,"</root>\n");
+Output:+ 	return(xmlcode);
+Output:+ }
+Output:> 
+Output:> 
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput7539690479440429266")
-Output:> packageExist<-require(Runiversal)
-Output:> if(!packageExist){
-Output:+ install.packages("Runiversal", repos=" http://cran.r-project.org")
+Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput3320855867083649900")
+Output:> concat<-function(to,...){
+Output:+ 	to<-paste(to,toString(...),sep="");
+Output:+ 	return(to);
 Output:+ }
 Output:> 
+Output:> cleanNames<-function(names){
+Output:+ 	cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,">")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames," ")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\(")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\)")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\[")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\]")),collapse="");
+Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\*")),collapse="");
+Output:+ 	return(cleanNames);
+Output:+ }
+Output:> 
+Output:> makevectorjava<-function(code,objt,name=""){
+Output:+ 	javacode<-code;
+Output:+ 		obj<-objt;
+Output:+ 		if(is.matrix(obj)) obj<-as.vector(obj);
+Output:+ 		if(typeof(obj)=="language") obj<-toString(obj);
+Output:+         	if(typeof(obj)=="logical") obj<-as.character(obj);
+Output:+ 
+Output:+ 		if(is.vector(obj) && is.numeric(obj)){
+Output:+                         javacode<-concat(javacode,"double[] ");
+Output:+                         if(name==""){
+Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
+Output:+ 			}else{
+Output:+ 				javacode<-concat(javacode,name);
+Output:+ 			}
+Output:+                         javacode<-concat(javacode,"= new double[] {");
+Output:+                         javacode<-concat(javacode,obj);
+Output:+                         javacode<-concat(javacode,"};\n");
+Output:+                 }
+Output:+                 if(is.vector(obj) && is.character(obj)){
+Output:+                         javacode<-concat(javacode,"String[] ");
+Output:+ 	                if(name==""){
+Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
+Output:+ 			}else{
+Output:+ 				javacode<-concat(javacode,name);
+Output:+ 			}
+Output:+                         javacode<-concat(javacode,"= new String[] {");
+Output:+                         for (elem in 1:length(obj)){
+Output:+                                 javacode<-paste(javacode,"\"",toString(obj[elem]),"\"",sep="");
+Output:+                                 if (elem!=length(obj)) javacode<-paste(javacode,",",sep="");
+Output:+ 
+Output:+                         }
+Output:+                         javacode<-concat(javacode,"};\n");
+Output:+                 }
+Output:+ 	return(javacode);
+Output:+ }
+Output:> 
+Output:> makejava<-function(obj,name=""){
+Output:+ 	javacode<-"";
+Output:+ 	if(!is.list(obj)){
+Output:+         	javacode<-makevectorjava(javacode,obj,name);
+Output:+         }
+Output:+ 	if (is.list(obj)){
+Output:+ 		objnames<-names(obj);
+Output:+ 		for (i in 1:length(obj)){
+Output:+ 			javacode<-makevectorjava(javacode,obj[[i]],cleanNames(objnames[[i]]));
+Output:+ 		}
+Output:+ 	}
+Output:+ return(javacode);
+Output:+ }
+Output:> 
+Output:> 
+Output:> makevectorxml<-function(code,objt,name=""){
+Output:+         xmlcode<-code;
+Output:+ 	if(name==""){
+Output:+ 	        varname<-cleanNames(deparse(substitute(obj)));
+Output:+         }else{
+Output:+                 varname<-name;
+Output:+         }
+Output:+ 	obj<-objt;
+Output:+ 	if(is.matrix(obj)) obj<-as.vector(obj);
+Output:+ 	if(typeof(obj)=="language") obj<-toString(obj);
+Output:+ 	if(typeof(obj)=="logical") obj<-as.character(obj);
+Output:+                 if(is.vector(obj) && is.numeric(obj)){
+Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
+Output:+ 			for (i in obj){
+Output:+                         	xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+ 				xmlcode<-paste(xmlcode,toString(i),sep="");
+Output:+ 	                        xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+ 			}
+Output:+                         xmlcode<-paste(xmlcode,"</variable>\n",sep="");
+Output:+                 }
+Output:+                 if(is.vector(obj) && is.character(obj)){
+Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="");
+Output:+                         for (i in obj){
+Output:+                                 xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+                                 xmlcode<-paste(xmlcode,toString(i),sep="");
+Output:+                                 xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+                         }
+Output:+ 			xmlcode<-paste(xmlcode,"</variable>\n");
+Output:+                 }
+Output:+         return(xmlcode);
+Output:+ }
+Output:> 
+Output:> 
+Output:> makexml<-function(obj,name=""){
+Output:+ 	xmlcode<-"<?xml version=\"1.0\"?>\n";
+Output:+ 	xmlcode<-concat(xmlcode,"<root>\n");
+Output:+ 	if(!is.list(obj)){
+Output:+                 xmlcode<-makevectorxml(xmlcode,obj,name);
+Output:+         }
+Output:+         else{
+Output:+                 objnames<-names(obj);
+Output:+                 for (i in 1:length(obj)){
+Output:+ 			xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(objnames[[i]]));
+Output:+ 		}
+Output:+         }
+Output:+ 	xmlcode<-concat(xmlcode,"</root>\n");
+Output:+ 	return(xmlcode);
+Output:+ }
+Output:> 
+Output:> 
+Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput341889142645803592")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput8883222595721592272")
