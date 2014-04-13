@@ -23,12 +23,19 @@ makevectorxml<-function(code,objt,name=""){
         }else{
                 varname<-name;
         }
-	obj<-objt;
+	obj<-objt;  
+        n <- 0; m <- 0
+        mydim <- dim(obj)
+        if(!is.null(mydim)){
+            n <- mydim[1]; m <- mydim[2];
+        }else{
+            n <- length(obj); m <- 1;
+        }
 	if(is.matrix(obj)) obj<-as.vector(obj);
 	if(typeof(obj)=="language") obj<-toString(obj);
 	if(typeof(obj)=="logical") obj<-as.character(obj);
                 if(is.vector(obj) && is.numeric(obj)){
-                        xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
+                        xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="");
 			for (i in obj){
                         	xmlcode<-paste(xmlcode,"<v>",sep="");
 				xmlcode<-paste(xmlcode,toString(i),sep="");
