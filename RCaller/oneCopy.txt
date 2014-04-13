@@ -35,57 +35,6 @@ Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\*")),collapse="");
 Output:+ 	return(cleanNames);
 Output:+ }
 Output:> 
-Output:> makevectorjava<-function(code,objt,name=""){
-Output:+ 	javacode<-code;
-Output:+ 		obj<-objt;
-Output:+ 		if(is.matrix(obj)) obj<-as.vector(obj);
-Output:+ 		if(typeof(obj)=="language") obj<-toString(obj);
-Output:+         	if(typeof(obj)=="logical") obj<-as.character(obj);
-Output:+ 
-Output:+ 		if(is.vector(obj) && is.numeric(obj)){
-Output:+                         javacode<-concat(javacode,"double[] ");
-Output:+                         if(name==""){
-Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
-Output:+ 			}else{
-Output:+ 				javacode<-concat(javacode,name);
-Output:+ 			}
-Output:+                         javacode<-concat(javacode,"= new double[] {");
-Output:+                         javacode<-concat(javacode,obj);
-Output:+                         javacode<-concat(javacode,"};\n");
-Output:+                 }
-Output:+                 if(is.vector(obj) && is.character(obj)){
-Output:+                         javacode<-concat(javacode,"String[] ");
-Output:+ 	                if(name==""){
-Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
-Output:+ 			}else{
-Output:+ 				javacode<-concat(javacode,name);
-Output:+ 			}
-Output:+                         javacode<-concat(javacode,"= new String[] {");
-Output:+                         for (elem in 1:length(obj)){
-Output:+                                 javacode<-paste(javacode,"\"",toString(obj[elem]),"\"",sep="");
-Output:+                                 if (elem!=length(obj)) javacode<-paste(javacode,",",sep="");
-Output:+ 
-Output:+                         }
-Output:+                         javacode<-concat(javacode,"};\n");
-Output:+                 }
-Output:+ 	return(javacode);
-Output:+ }
-Output:> 
-Output:> makejava<-function(obj,name=""){
-Output:+ 	javacode<-"";
-Output:+ 	if(!is.list(obj)){
-Output:+         	javacode<-makevectorjava(javacode,obj,name);
-Output:+         }
-Output:+ 	if (is.list(obj)){
-Output:+ 		objnames<-names(obj);
-Output:+ 		for (i in 1:length(obj)){
-Output:+ 			javacode<-makevectorjava(javacode,obj[[i]],cleanNames(objnames[[i]]));
-Output:+ 		}
-Output:+ 	}
-Output:+ return(javacode);
-Output:+ }
-Output:> 
-Output:> 
 Output:> makevectorxml<-function(code,objt,name=""){
 Output:+         xmlcode<-code;
 Output:+ 	if(name==""){
@@ -100,18 +49,18 @@ Output:+ 	if(typeof(obj)=="logical") obj<-as.character(obj);
 Output:+                 if(is.vector(obj) && is.numeric(obj)){
 Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
 Output:+ 			for (i in obj){
-Output:+                         	xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+                         	xmlcode<-paste(xmlcode,"<v>",sep="");
 Output:+ 				xmlcode<-paste(xmlcode,toString(i),sep="");
-Output:+ 	                        xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+ 	                        xmlcode<-paste(xmlcode,"</v>",sep="");
 Output:+ 			}
 Output:+                         xmlcode<-paste(xmlcode,"</variable>\n",sep="");
 Output:+                 }
 Output:+                 if(is.vector(obj) && is.character(obj)){
 Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="");
 Output:+                         for (i in obj){
-Output:+                                 xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+                                 xmlcode<-paste(xmlcode,"<v>",sep="");
 Output:+                                 xmlcode<-paste(xmlcode,toString(i),sep="");
-Output:+                                 xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+                                 xmlcode<-paste(xmlcode,"</v>",sep="");
 Output:+                         }
 Output:+ 			xmlcode<-paste(xmlcode,"</variable>\n");
 Output:+                 }
@@ -139,7 +88,7 @@ Output:>
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput9000159131815919554")
+Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput4102047040615139965")
 Output:> concat<-function(to,...){
 Output:+ 	to<-paste(to,toString(...),sep="");
 Output:+ 	return(to);
@@ -158,57 +107,6 @@ Output:+ 	cleanNames<-paste(unlist(strsplit(cleanNames,"\\*")),collapse="");
 Output:+ 	return(cleanNames);
 Output:+ }
 Output:> 
-Output:> makevectorjava<-function(code,objt,name=""){
-Output:+ 	javacode<-code;
-Output:+ 		obj<-objt;
-Output:+ 		if(is.matrix(obj)) obj<-as.vector(obj);
-Output:+ 		if(typeof(obj)=="language") obj<-toString(obj);
-Output:+         	if(typeof(obj)=="logical") obj<-as.character(obj);
-Output:+ 
-Output:+ 		if(is.vector(obj) && is.numeric(obj)){
-Output:+                         javacode<-concat(javacode,"double[] ");
-Output:+                         if(name==""){
-Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
-Output:+ 			}else{
-Output:+ 				javacode<-concat(javacode,name);
-Output:+ 			}
-Output:+                         javacode<-concat(javacode,"= new double[] {");
-Output:+                         javacode<-concat(javacode,obj);
-Output:+                         javacode<-concat(javacode,"};\n");
-Output:+                 }
-Output:+                 if(is.vector(obj) && is.character(obj)){
-Output:+                         javacode<-concat(javacode,"String[] ");
-Output:+ 	                if(name==""){
-Output:+ 				javacode<-concat(javacode,cleanNames(deparse(substitute(obj))));
-Output:+ 			}else{
-Output:+ 				javacode<-concat(javacode,name);
-Output:+ 			}
-Output:+                         javacode<-concat(javacode,"= new String[] {");
-Output:+                         for (elem in 1:length(obj)){
-Output:+                                 javacode<-paste(javacode,"\"",toString(obj[elem]),"\"",sep="");
-Output:+                                 if (elem!=length(obj)) javacode<-paste(javacode,",",sep="");
-Output:+ 
-Output:+                         }
-Output:+                         javacode<-concat(javacode,"};\n");
-Output:+                 }
-Output:+ 	return(javacode);
-Output:+ }
-Output:> 
-Output:> makejava<-function(obj,name=""){
-Output:+ 	javacode<-"";
-Output:+ 	if(!is.list(obj)){
-Output:+         	javacode<-makevectorjava(javacode,obj,name);
-Output:+         }
-Output:+ 	if (is.list(obj)){
-Output:+ 		objnames<-names(obj);
-Output:+ 		for (i in 1:length(obj)){
-Output:+ 			javacode<-makevectorjava(javacode,obj[[i]],cleanNames(objnames[[i]]));
-Output:+ 		}
-Output:+ 	}
-Output:+ return(javacode);
-Output:+ }
-Output:> 
-Output:> 
 Output:> makevectorxml<-function(code,objt,name=""){
 Output:+         xmlcode<-code;
 Output:+ 	if(name==""){
@@ -223,18 +121,18 @@ Output:+ 	if(typeof(obj)=="logical") obj<-as.character(obj);
 Output:+                 if(is.vector(obj) && is.numeric(obj)){
 Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
 Output:+ 			for (i in obj){
-Output:+                         	xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+                         	xmlcode<-paste(xmlcode,"<v>",sep="");
 Output:+ 				xmlcode<-paste(xmlcode,toString(i),sep="");
-Output:+ 	                        xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+ 	                        xmlcode<-paste(xmlcode,"</v>",sep="");
 Output:+ 			}
 Output:+                         xmlcode<-paste(xmlcode,"</variable>\n",sep="");
 Output:+                 }
 Output:+                 if(is.vector(obj) && is.character(obj)){
 Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="");
 Output:+                         for (i in obj){
-Output:+                                 xmlcode<-paste(xmlcode,"\t<value>",sep="");
+Output:+                                 xmlcode<-paste(xmlcode,"<v>",sep="");
 Output:+                                 xmlcode<-paste(xmlcode,toString(i),sep="");
-Output:+                                 xmlcode<-paste(xmlcode,"</value>\n",sep="");
+Output:+                                 xmlcode<-paste(xmlcode,"</v>",sep="");
 Output:+                         }
 Output:+ 			xmlcode<-paste(xmlcode,"</variable>\n");
 Output:+                 }
@@ -261,4 +159,4 @@ Output:>
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput6296122375468591870")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput5995339189328441845")
