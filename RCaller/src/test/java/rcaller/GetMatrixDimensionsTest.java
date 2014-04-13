@@ -7,7 +7,7 @@ import org.junit.Test;
 public class GetMatrixDimensionsTest {
    
     @Test
-    public void testGetDimensions(){
+    public void testMatrixGetDimensions(){
         int n = 21;
         int m = 23;
         double[][] data = new double[n][m];
@@ -30,7 +30,30 @@ public class GetMatrixDimensionsTest {
         
         Assert.assertEquals(n, mydim[0]);
         Assert.assertEquals(m, mydim[1]);
-        System.out.println(mydim[0]+" - "+ mydim[1]);
+    }
+
+    @Test
+    public void testVectorGetDimensions(){
+        int n = 25;
+        int m = 1;
+        double[] data = new double[n];
+        for (int i=0;i<data.length;i++){
+            data[i] = Math.random();
+        }
+        RCaller caller = new RCaller();
+        Globals.detect_current_rscript();
+        caller.setRscriptExecutable(Globals.Rscript_current);
+        
+        RCode code = new RCode();
+        code.addDoubleArray("x", data);
+        caller.setRCode(code);
+        
+        caller.runAndReturnResult("x");
+        
+        int[] mydim = caller.getParser().getDimensions("x");
+        
+        Assert.assertEquals(n, mydim[0]);
+        Assert.assertEquals(m, mydim[1]);
     }
 
 }
