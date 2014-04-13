@@ -47,6 +47,7 @@ public class ROutputParser {
   protected DocumentBuilderFactory factory;
   protected DocumentBuilder builder;
   protected Document document;
+  final private String variable_tag_name = "variable";
 
   public Document getDocument() {
     return document;
@@ -102,7 +103,7 @@ public class ROutputParser {
 
   public ArrayList<String> getNames() {
     ArrayList<String> names = new ArrayList<String>();
-    NodeList nodes = document.getElementsByTagName("variable");
+    NodeList nodes = document.getElementsByTagName(variable_tag_name);
     for (int i = 0; i < nodes.getLength(); i++) {
       Node node = nodes.item(i);
       names.add(node.getAttributes().getNamedItem("name").getNodeValue());
@@ -111,7 +112,7 @@ public class ROutputParser {
   }
 
   public NodeList getValueNodes(String name) {
-    NodeList nodes = document.getElementsByTagName("variable");
+    NodeList nodes = document.getElementsByTagName(variable_tag_name);
     NodeList content = null;
     for (int i = 0; i < nodes.getLength(); i++) {
       Node node = nodes.item(i);
