@@ -42,12 +42,19 @@ Output:+ 	        varname<-cleanNames(deparse(substitute(obj)));
 Output:+         }else{
 Output:+                 varname<-name;
 Output:+         }
-Output:+ 	obj<-objt;
+Output:+ 	obj<-objt;  
+Output:+         n <- 0; m <- 0
+Output:+         mydim <- dim(obj)
+Output:+         if(!is.null(mydim)){
+Output:+             n <- mydim[1]; m <- mydim[2];
+Output:+         }else{
+Output:+             n <- length(obj); m <- 1;
+Output:+         }
 Output:+ 	if(is.matrix(obj)) obj<-as.vector(obj);
 Output:+ 	if(typeof(obj)=="language") obj<-toString(obj);
 Output:+ 	if(typeof(obj)=="logical") obj<-as.character(obj);
 Output:+                 if(is.vector(obj) && is.numeric(obj)){
-Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
+Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="");
 Output:+ 			for (i in obj){
 Output:+                         	xmlcode<-paste(xmlcode,"<v>",sep="");
 Output:+ 				xmlcode<-paste(xmlcode,toString(i),sep="");
@@ -88,7 +95,7 @@ Output:>
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput4102047040615139965")
+Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput9211339685794098630")
 Output:> concat<-function(to,...){
 Output:+ 	to<-paste(to,toString(...),sep="");
 Output:+ 	return(to);
@@ -114,12 +121,19 @@ Output:+ 	        varname<-cleanNames(deparse(substitute(obj)));
 Output:+         }else{
 Output:+                 varname<-name;
 Output:+         }
-Output:+ 	obj<-objt;
+Output:+ 	obj<-objt;  
+Output:+         n <- 0; m <- 0
+Output:+         mydim <- dim(obj)
+Output:+         if(!is.null(mydim)){
+Output:+             n <- mydim[1]; m <- mydim[2];
+Output:+         }else{
+Output:+             n <- length(obj); m <- 1;
+Output:+         }
 Output:+ 	if(is.matrix(obj)) obj<-as.vector(obj);
 Output:+ 	if(typeof(obj)=="language") obj<-toString(obj);
 Output:+ 	if(typeof(obj)=="logical") obj<-as.character(obj);
 Output:+                 if(is.vector(obj) && is.numeric(obj)){
-Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\">\n",sep="");
+Output:+                         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="");
 Output:+ 			for (i in obj){
 Output:+                         	xmlcode<-paste(xmlcode,"<v>",sep="");
 Output:+ 				xmlcode<-paste(xmlcode,toString(i),sep="");
@@ -159,4 +173,4 @@ Output:>
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput5995339189328441845")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput2313948075044558142")
