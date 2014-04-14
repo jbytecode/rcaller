@@ -1,21 +1,19 @@
 Output:
-Output:R version 3.1.0 (2014-04-10) -- "Spring Dance"
-Output:Copyright (C) 2014 The R Foundation for Statistical Computing
-Output:Platform: x86_64-pc-linux-gnu (64-bit)
+Output:R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
+Output:Copyright (C) 2013 The R Foundation for Statistical Computing
+Output:Platform: i386-w64-mingw32/i386 (32-bit)
 Output:
-Output:R is free software and comes with ABSOLUTELY NO WARRANTY.
-Output:You are welcome to redistribute it under certain conditions.
-Output:Type 'license()' or 'licence()' for distribution details.
+Output:R özgür bir yazýlýmdýr ve KESÝNLÝKLE BÝR GARANTÝ VERMEZ.
+Output:Belli koþullar altýnda tekrar daðýtýmýna izin verilir.
+Output:Daðýtým detaylarý için 'license()' ya da 'licence()' girin.
 Output:
-Output:  Natural language support but running in an English locale
+Output:R, bir çok insanýn katkýda bulunduðu ortak bir projedir
+Output:Daha fazla bilgi için 'contributors()' girin.
+Output:Yayýnlarda R veya R paketlerinden alýntý yapmak için 'citation()' girin.
 Output:
-Output:R is a collaborative project with many contributors.
-Output:Type 'contributors()' for more information and
-Output:'citation()' on how to cite R or R packages in publications.
-Output:
-Output:Type 'demo()' for some demos, 'help()' for on-line help, or
-Output:'help.start()' for an HTML browser interface to help.
-Output:Type 'q()' to quit R.
+Output:Birkaç örnek için 'demo()', çevrimiçi yardým için 'help()' veya
+Output:HTML tarayýcýlý yardýmý açmak için 'help.start()' girin.
+Output:R'den çýkmak için 'q()' girin.
 Output:
 Output:> concat<-function(to,...){
 Output:+ 	to<-paste(to,toString(...),sep="");
@@ -95,7 +93,7 @@ Output:>
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="/tmp/Routput6935254224373012568")
+Output:> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput6096843603028650854")
 Output:> concat<-function(to,...){
 Output:+ 	to<-paste(to,toString(...),sep="");
 Output:+ 	return(to);
@@ -173,4 +171,4 @@ Output:>
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="/tmp/Routput3989795130983052450")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput4296909908991323587")
