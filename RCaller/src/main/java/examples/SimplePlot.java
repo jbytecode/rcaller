@@ -26,6 +26,7 @@ package examples;
 
 import graphics.BlackTheme;
 import java.io.File;
+import rcaller.Globals;
 import rcaller.RCaller;
 import rcaller.RCode;
 
@@ -47,12 +48,13 @@ public class SimplePlot {
   public SimplePlot() {
     try {
       RCaller caller = new RCaller();
-      caller.setRscriptExecutable("/usr/bin/Rscript");
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
       
       /*
        * One of the themes.
        */
-      caller.setGraphicsTheme(new BlackTheme());
+      //caller.setGraphicsTheme(new BlackTheme());
       
       RCode code = new RCode();
       code.clear();
@@ -63,7 +65,7 @@ public class SimplePlot {
       code.addDoubleArray("x", numbers);
       File file = code.startPlot();
       System.out.println("Plot will be saved to : " + file);
-      code.addRCode("plot(x)");
+      code.addRCode("plot(x, pch=19)");
       code.endPlot();
       
       
