@@ -5,6 +5,7 @@
 package rcaller;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -110,6 +111,31 @@ public class JavaObjectTest {
     }
 
   }
+  
+  
+  
+    @Test
+  public void TestClassWithArraysCalculations() throws IllegalAccessException, IOException {
+    TestClassWithArrays tcwa = new TestClassWithArrays();
+    JavaObject jo = new JavaObject("tcwa", tcwa);
+
+    RCaller rcaller = new RCaller();
+    RCode code = new RCode();
+
+    Globals.detect_current_rscript();
+    rcaller.setRscriptExecutable(Globals.Rscript_current);
+    code.clear();
+
+    code.addRCode(jo.produceRCode(false));
+    code.addRCode("result <- quantile(tcwa$da, 0.95)");
+    rcaller.setRCode(code);
+    
+    rcaller.runAndReturnResult("result");
+    
+    double mean = rcaller.getParser().getAsDoubleArray("result")[0];
+    assertEquals(mean, 10.05, delta);
+  }
+
 }/* end of test class */
 
 
@@ -129,7 +155,6 @@ class TestClass {
 }
 
 class TestClassWithArrays extends TestClass {
-
   public int[] ia = new int[]{1, 2, 3, 4, 5};
   public double[] da = new double[]{1.0, 2.0, 3.0, 4.0, 9.9, 10.1};
   public String[] sa = new String[]{"One", "Two", "Three"};
@@ -142,7 +167,6 @@ class OtherClass {
 }
 
 class TestClassWithObject {
-
   public JavaObject InnerObject = new JavaObject("anObject", new OtherClass());
   public int[] ia = new int[]{1, 2, 3, 4, 5};
   public int i = 90;
