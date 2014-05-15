@@ -93,7 +93,7 @@ Output:>
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput1135932518208826829")
+Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput9073910147053419210")
 Output:> concat<-function(to,...){
 Output:+ 	to<-paste(to,toString(...),sep="");
 Output:+ 	return(to);
@@ -171,4 +171,4 @@ Output:>
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput7323464163281373254")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput8640722569723088844")
