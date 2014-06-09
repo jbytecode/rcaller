@@ -33,6 +33,7 @@ public class LargeDataTest {
         
         Assert.assertEquals(result[0], 10.0, delta);
         Assert.assertEquals(result[1], 10.0, delta);
+        caller.deleteTempFiles();
     }
     
     @Test
@@ -54,5 +55,6 @@ public class LargeDataTest {
         
         Assert.assertEquals(0.0, m, delta);
         Assert.assertEquals((long)len, 2048l);
+        caller.deleteTempFiles();
     }
 }

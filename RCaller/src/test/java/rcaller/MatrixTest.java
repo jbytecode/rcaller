@@ -35,6 +35,7 @@ public class MatrixTest {
         assertEquals(expected[i][j], inverse[i][j], delta);
       }
     }
-
+    
+    caller.deleteTempFiles();
   }
 }

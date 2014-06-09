@@ -30,6 +30,7 @@ public class GetMatrixDimensionsTest {
         
         Assert.assertEquals(n, mydim[0]);
         Assert.assertEquals(m, mydim[1]);
+        caller.deleteTempFiles();
     }
 
     @Test
@@ -54,6 +55,8 @@ public class GetMatrixDimensionsTest {
         
         Assert.assertEquals(n, mydim[0]);
         Assert.assertEquals(m, mydim[1]);
+        
+        caller.deleteTempFiles();
     }
 
 }

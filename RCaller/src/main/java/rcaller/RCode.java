@@ -38,7 +38,8 @@ import rcaller.exception.ExecutionException;
 public class RCode {
 
     protected StringBuffer code;
-
+    protected TempFileService tempFileService = null;
+    
     public void setCode(StringBuffer sb) {
         this.code = new StringBuffer();
         clear();
@@ -120,7 +121,11 @@ public class RCode {
     }
 
     public File startPlot(GraphicsType type) throws IOException {
-        File f = File.createTempFile("RPlot", "." + type.name());
+        if(tempFileService == null){
+            tempFileService = new TempFileService();
+        }
+        //File f = File.createTempFile("RPlot", "." + type.name());
+        File f = tempFileService.createTempFile("RPlot", "." + type.name());
         switch (type) {
             case png:
                 addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
@@ -162,6 +167,12 @@ public class RCode {
 
     public void R_source(String sourceFile) {
         addRCode("source(\"" + sourceFile + "\")\n");
+    }
+    
+    public void deleteTempFiles(){
+        if(tempFileService != null){
+            tempFileService.deleteRCallerTempFiles();   
+        }
     }
 
     @Override
