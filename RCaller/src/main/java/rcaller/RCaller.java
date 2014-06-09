@@ -36,7 +36,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import rcaller.exception.ExecutionException;
 import rcaller.exception.ParseException;
 import rcaller.exception.RExecutableNotFoundException;
@@ -66,7 +65,8 @@ public class RCaller {
     protected int retries = 0;
     //how long to wait for R to finish
     protected long maxWaitTime;
-
+    protected TempFileService tempFileService = null;
+    
     public RCaller() {
         this.rcode = new RCode();
         this.parser = new ROutputParser();
@@ -76,6 +76,7 @@ public class RCaller {
         //set the stream they listen to to null
         rOutput = new RStreamHandler(null, "Output");
         rError = new RStreamHandler(null, "Error");
+        tempFileService = new TempFileService();
         cleanRCode();
     }
 
@@ -152,6 +153,11 @@ public class RCaller {
     }
 
     
+    public void deleteTempFiles(){
+        tempFileService.deleteRCallerTempFiles();
+        this.rcode.deleteTempFiles();
+    }
+    
     /**
      * Stores the current RCode contained in this RCaller in a temporary file
      * and return a reference to that file
@@ -164,8 +170,9 @@ public class RCaller {
         BufferedWriter writer = null;
 
         try {
-            f = File.createTempFile("rcaller", "");
-        } catch (Exception e) {
+            //f = File.createTempFile("rcaller", "");
+            f = tempFileService.createTempFile("rcaller", "");
+        } catch (IOException e) {
             throw new ExecutionException("Can not open a temporary file for storing the R Code: " + e.toString());
         }
 
@@ -173,12 +180,12 @@ public class RCaller {
             writer = new BufferedWriter(new FileWriter(f));
             writer.write(this.rcode.toString());
             writer.flush();
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new ExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
         } finally {
             try {
                 writer.close();
-            } catch (Exception einner) {
+            } catch (IOException einner) {
             }
         }
 
@@ -248,7 +255,8 @@ public class RCaller {
 
 
             try {
-                outputFile = File.createTempFile("Routput", "");
+                //outputFile = File.createTempFile("Routput", "");
+                outputFile = tempFileService.createTempFile("Routput", "");
             } catch (Exception e) {
                 if (handleRFailure("Can not create a tempopary file for storing the R results: "
                         + e.toString())) {
@@ -379,7 +387,8 @@ public class RCaller {
 
 
         try {
-            outputFile = File.createTempFile("Routput", "");
+            //outputFile = File.createTempFile("Routput", "");
+            outputFile = tempFileService.createTempFile("Routput", "");
         } catch (Exception e) {
             throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
         }

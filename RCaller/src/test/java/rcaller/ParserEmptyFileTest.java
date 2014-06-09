@@ -13,5 +13,6 @@ public class ParserEmptyFileTest {
     	RCode code = new RCode();
     	code.addRCode("Some meaningless code");
     	caller.runAndReturnResult("requestedvar");
+        caller.deleteTempFiles();
     }
 }

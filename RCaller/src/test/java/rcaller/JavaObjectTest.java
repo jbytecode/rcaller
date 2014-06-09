@@ -75,6 +75,7 @@ public class JavaObjectTest {
     int[] result = rcaller.getParser().getAsIntArray("i");
 
     assertEquals(1000, result[0]);
+    rcaller.deleteTempFiles();
   }
 
   @Test
@@ -110,6 +111,7 @@ public class JavaObjectTest {
       assertEquals(expectedStringArray[i], tcwa.sa[i]);
     }
 
+    rcaller.deleteTempFiles();
   }
   
   
@@ -134,6 +136,7 @@ public class JavaObjectTest {
     
     double mean = rcaller.getParser().getAsDoubleArray("result")[0];
     assertEquals(mean, 10.05, delta);
+    rcaller.deleteTempFiles();
   }
 
 }/* end of test class */

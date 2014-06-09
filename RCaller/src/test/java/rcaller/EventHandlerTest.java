@@ -54,6 +54,7 @@ public class EventHandlerTest {
         caller.runAndReturnResultOnline("m");
         System.out.println("stopping consumers");
         caller.stopStreamConsumers();
-
+        
+        caller.deleteTempFiles();
     }
 }

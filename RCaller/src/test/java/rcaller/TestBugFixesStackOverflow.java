@@ -27,6 +27,7 @@ public class TestBugFixesStackOverflow {
         caller.runAndReturnResult("result");
         boolean result = caller.getParser().getAsLogicalArray("result")[0];
         Assert.assertFalse(result);
+        caller.deleteTempFiles();
     }
 
     @Test
@@ -53,5 +54,6 @@ public class TestBugFixesStackOverflow {
         double df = caller.getParser().getAsDoubleArray("df")[0];
         System.out.println("Pvalue is : " + pvalue);
         System.out.println("Df is : " + df);
+        caller.deleteTempFiles();
     }
 }
