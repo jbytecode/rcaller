@@ -28,6 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package rcaller;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class RStreamHandler implements Runnable {
 
     private InputStream stream = null;
     private BufferedReader reader = null;
-    private Thread consumerThread;
+    private final Thread consumerThread;
     private boolean closeSignal = false;
     private String name = null;
     private ArrayList<EventHandler> eventHandlers = null;
@@ -93,7 +94,7 @@ public class RStreamHandler implements Runnable {
                         eventHandler.messageReceived(name, s);
                     }
                 }
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }

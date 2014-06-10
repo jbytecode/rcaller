@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -83,7 +84,7 @@ public class ROutputParser {
     factory = DocumentBuilderFactory.newInstance();
     try {
       builder = factory.newDocumentBuilder();
-    } catch (Exception e) {
+    } catch (ParserConfigurationException e) {
       throw new ParseException("Can not create parser builder: " + e.toString());
     }
 
@@ -169,7 +170,7 @@ public class ROutputParser {
     for (int i = 0; i < strResults.length; i++) {
       try {
         d[i] = Double.parseDouble(strResults[i]);
-      } catch (Exception e) {
+      } catch (NumberFormatException e) {
         throw new ParseException("String value '" + strResults[i] + "' can not convert to double");
       }
     }
@@ -182,7 +183,7 @@ public class ROutputParser {
     for (int i = 0; i < strResults.length; i++) {
       try {
         f[i] = Float.parseFloat(strResults[i]);
-      } catch (Exception e) {
+      } catch (NumberFormatException e) {
         throw new ParseException("String value '" + strResults[i] + "' can not convert to float");
       }
     }
@@ -195,7 +196,7 @@ public class ROutputParser {
     for (int i = 0; i < strResults.length; i++) {
       try {
         ints[i] = Integer.parseInt(strResults[i]);
-      } catch (Exception e) {
+      } catch (NumberFormatException e) {
         throw new ParseException("String value '" + strResults[i] + "' can not convert to int");
       }
     }
@@ -208,7 +209,7 @@ public class ROutputParser {
     for (int i = 0; i < strResults.length; i++) {
       try {
         longs[i] = Long.parseLong(strResults[i]);
-      } catch (Exception e) {
+      } catch (NumberFormatException e) {
         throw new ParseException("String value '" + strResults[i] + "' can not convert to long");
       }
     }

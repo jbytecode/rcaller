@@ -154,6 +154,7 @@ public class CodeUtils {
   }
 
   public static void addDoubleMatrix(StringBuffer RCode, String name, double[][] matrix, boolean useEquals) {
+    int dim1 = matrix.length, dim2 = matrix[0].length;
     int counter = 0;
     if (useEquals) {
       RCode.append(name).append("=").append("matrix(");
@@ -161,8 +162,8 @@ public class CodeUtils {
       RCode.append(name).append("<-").append("matrix(");
     }
     RCode.append("c(");
-    for (int i = 0; i < matrix.length; i++) {
-      for (int j = 0; j < matrix[0].length; j++) {
+    for (int i = 0; i < dim1; i++) {
+      for (int j = 0; j < dim2; j++) {
         RCode.append(String.valueOf(matrix[i][j]));
         counter++;
         if ( counter < (matrix.length * matrix[0].length) ) {
