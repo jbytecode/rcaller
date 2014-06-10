@@ -257,7 +257,7 @@ public class RCaller {
             try {
                 //outputFile = File.createTempFile("Routput", "");
                 outputFile = tempFileService.createTempFile("Routput", "");
-            } catch (Exception e) {
+            } catch (IOException e) {
                 if (handleRFailure("Can not create a tempopary file for storing the R results: "
                         + e.toString())) {
                     continue;
@@ -289,7 +289,7 @@ public class RCaller {
             try {
                 rInput.write(rcode.toString().getBytes());
                 rInput.flush();
-            } catch (Exception e) {
+            } catch (IOException e) {
                 if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
                     continue;
                 }
@@ -309,7 +309,6 @@ public class RCaller {
                         process.destroy();
                         stopStreamConsumers();
                         processKilled = true;
-                        System.out.println("Process killed");
                     }
                 }
             } catch (InterruptedException e) {
@@ -320,7 +319,7 @@ public class RCaller {
 
             try {
                 parser.parse();
-            } catch (Exception e) {
+            } catch (ParseException e) {
                 if (handleRFailure("Can not handle R results due to : " + e.toString())) {
                     continue;
                 }
