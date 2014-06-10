@@ -304,7 +304,7 @@ public class RCaller {
                     //java attempts to read, resulting in an xml parse exception. We need to  put in 
                     //a lock file or something like that and only read when that is gone
                     Thread.sleep(1);
-                    slept++;
+                    slept++; 
                     if (slept > this.maxWaitTime) {
                         process.destroy();
                         stopStreamConsumers();

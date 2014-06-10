@@ -81,7 +81,7 @@ Output:>
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput184600075451141423")
+Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput4118206246697494487")
 Output:> cleanNames<-function(names){
 Output:+     cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
 Output:+     cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="")
@@ -147,4 +147,4 @@ Output:+ }
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput5854095196057863538")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput4730815117095081203")

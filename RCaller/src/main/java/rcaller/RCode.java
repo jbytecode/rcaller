@@ -75,7 +75,7 @@ public class RCode {
                 addRCode(s);
             }
             addRCode("\n");
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new ExecutionException("runiversal.R in package: " + e.toString());
         }
     }
