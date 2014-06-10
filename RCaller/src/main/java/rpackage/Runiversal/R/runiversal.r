@@ -1,8 +1,3 @@
-concat<-function(to,...){
-    to<-paste(to,toString(...),sep="")
-    return(to)
-}
-
 cleanNames<-function(names){
     cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
     cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="")
@@ -37,18 +32,14 @@ makevectorxml<-function(code,objt,name=""){
     if(is.vector(obj) && is.numeric(obj)){
         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
         for (i in obj){
-            xmlcode<-paste(xmlcode,"<v>",sep="")
-            xmlcode<-paste(xmlcode,toString(i),sep="")
-            xmlcode<-paste(xmlcode,"</v>",sep="")
+            xmlcode<-paste(xmlcode,"<v>", toString(i), "</v>",sep="")
         }
         xmlcode<-paste(xmlcode,"</variable>\n",sep="")
     }
     if(is.vector(obj) && is.character(obj)){
         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
         for (i in obj){
-            xmlcode<-paste(xmlcode,"<v>",sep="")
-            xmlcode<-paste(xmlcode,toString(i),sep="")
-            xmlcode<-paste(xmlcode,"</v>",sep="")
+            xmlcode<-paste(xmlcode,"<v>",toString(i),"</v>",sep="")
         }
         xmlcode<-paste(xmlcode,"</variable>\n")
     }
@@ -57,8 +48,7 @@ makevectorxml<-function(code,objt,name=""){
 
 
 makexml<-function(obj,name=""){
-    xmlcode<-"<?xml version=\"1.0\"?>\n"
-    xmlcode<-concat(xmlcode,"<root>\n")
+    xmlcode<-"<?xml version=\"1.0\"?>\n<root>\n"
     if(!is.list(obj)){
         xmlcode<-makevectorxml(xmlcode,obj,name)
     }else{
@@ -67,6 +57,6 @@ makexml<-function(obj,name=""){
             xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(objnames[[i]]))
 	}
     }
-    xmlcode<-concat(xmlcode,"</root>\n")
+    xmlcode<-paste(xmlcode,"</root>\n",sep="")
     return(xmlcode)
 }

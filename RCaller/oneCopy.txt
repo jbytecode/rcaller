@@ -15,11 +15,6 @@ Output:Type 'demo()' for some demos, 'help()' for on-line help, or
 Output:'help.start()' for an HTML browser interface to help.
 Output:Type 'q()' to quit R.
 Output:
-Output:> concat<-function(to,...){
-Output:+     to<-paste(to,toString(...),sep="")
-Output:+     return(to)
-Output:+ }
-Output:> 
 Output:> cleanNames<-function(names){
 Output:+     cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
 Output:+     cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="")
@@ -54,18 +49,14 @@ Output:+     if(typeof(obj)=="logical") obj<-as.character(obj)
 Output:+     if(is.vector(obj) && is.numeric(obj)){
 Output:+         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
 Output:+         for (i in obj){
-Output:+             xmlcode<-paste(xmlcode,"<v>",sep="")
-Output:+             xmlcode<-paste(xmlcode,toString(i),sep="")
-Output:+             xmlcode<-paste(xmlcode,"</v>",sep="")
+Output:+             xmlcode<-paste(xmlcode,"<v>", toString(i), "</v>",sep="")
 Output:+         }
 Output:+         xmlcode<-paste(xmlcode,"</variable>\n",sep="")
 Output:+     }
 Output:+     if(is.vector(obj) && is.character(obj)){
 Output:+         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
 Output:+         for (i in obj){
-Output:+             xmlcode<-paste(xmlcode,"<v>",sep="")
-Output:+             xmlcode<-paste(xmlcode,toString(i),sep="")
-Output:+             xmlcode<-paste(xmlcode,"</v>",sep="")
+Output:+             xmlcode<-paste(xmlcode,"<v>",toString(i),"</v>",sep="")
 Output:+         }
 Output:+         xmlcode<-paste(xmlcode,"</variable>\n")
 Output:+     }
@@ -74,8 +65,7 @@ Output:+ }
 Output:> 
 Output:> 
 Output:> makexml<-function(obj,name=""){
-Output:+     xmlcode<-"<?xml version=\"1.0\"?>\n"
-Output:+     xmlcode<-concat(xmlcode,"<root>\n")
+Output:+     xmlcode<-"<?xml version=\"1.0\"?>\n<root>\n"
 Output:+     if(!is.list(obj)){
 Output:+         xmlcode<-makevectorxml(xmlcode,obj,name)
 Output:+     }else{
@@ -84,19 +74,14 @@ Output:+         for (i in 1:length(obj)){
 Output:+             xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(objnames[[i]]))
 Output:+ 	}
 Output:+     }
-Output:+     xmlcode<-concat(xmlcode,"</root>\n")
+Output:+     xmlcode<-paste(xmlcode,"</root>\n",sep="")
 Output:+     return(xmlcode)
 Output:+ }
 Output:> 
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput2212228435069561858")
-Output:> concat<-function(to,...){
-Output:+     to<-paste(to,toString(...),sep="")
-Output:+     return(to)
-Output:+ }
-Output:> 
+Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput985590983185699042")
 Output:> cleanNames<-function(names){
 Output:+     cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
 Output:+     cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="")
@@ -131,18 +116,14 @@ Output:+     if(typeof(obj)=="logical") obj<-as.character(obj)
 Output:+     if(is.vector(obj) && is.numeric(obj)){
 Output:+         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
 Output:+         for (i in obj){
-Output:+             xmlcode<-paste(xmlcode,"<v>",sep="")
-Output:+             xmlcode<-paste(xmlcode,toString(i),sep="")
-Output:+             xmlcode<-paste(xmlcode,"</v>",sep="")
+Output:+             xmlcode<-paste(xmlcode,"<v>", toString(i), "</v>",sep="")
 Output:+         }
 Output:+         xmlcode<-paste(xmlcode,"</variable>\n",sep="")
 Output:+     }
 Output:+     if(is.vector(obj) && is.character(obj)){
 Output:+         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
 Output:+         for (i in obj){
-Output:+             xmlcode<-paste(xmlcode,"<v>",sep="")
-Output:+             xmlcode<-paste(xmlcode,toString(i),sep="")
-Output:+             xmlcode<-paste(xmlcode,"</v>",sep="")
+Output:+             xmlcode<-paste(xmlcode,"<v>",toString(i),"</v>",sep="")
 Output:+         }
 Output:+         xmlcode<-paste(xmlcode,"</variable>\n")
 Output:+     }
@@ -151,8 +132,7 @@ Output:+ }
 Output:> 
 Output:> 
 Output:> makexml<-function(obj,name=""){
-Output:+     xmlcode<-"<?xml version=\"1.0\"?>\n"
-Output:+     xmlcode<-concat(xmlcode,"<root>\n")
+Output:+     xmlcode<-"<?xml version=\"1.0\"?>\n<root>\n"
 Output:+     if(!is.list(obj)){
 Output:+         xmlcode<-makevectorxml(xmlcode,obj,name)
 Output:+     }else{
@@ -161,10 +141,10 @@ Output:+         for (i in 1:length(obj)){
 Output:+             xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(objnames[[i]]))
 Output:+ 	}
 Output:+     }
-Output:+     xmlcode<-concat(xmlcode,"</root>\n")
+Output:+     xmlcode<-paste(xmlcode,"</root>\n",sep="")
 Output:+     return(xmlcode)
 Output:+ }
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput8557518407880913947")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput7736496168508884840")
