@@ -328,6 +328,14 @@ public class RCaller {
             done = true;//if we got to there, no exceptions occured
         } while (!done);
     }
+    
+    public void StopRCallerOnline(){
+        if (process != null){
+            while(process.isAlive()){
+                process.destroy();
+            }
+        }
+    }
 
     /* Returns true if it is OK to try again under the current FailurePolicy
      * @param reason The reason for the failure, e.g. could not start R, could not parse

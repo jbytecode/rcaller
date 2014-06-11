@@ -56,5 +56,6 @@ public class EventHandlerTest {
         caller.stopStreamConsumers();
         
         caller.deleteTempFiles();
+        caller.StopRCallerOnline();
     }
 }
