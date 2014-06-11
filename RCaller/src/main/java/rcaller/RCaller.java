@@ -331,9 +331,7 @@ public class RCaller {
     
     public void StopRCallerOnline(){
         if (process != null){
-            while(process.isAlive()){
                 process.destroy();
-            }
         }
     }
 
