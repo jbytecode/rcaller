@@ -43,6 +43,7 @@ public class RunOnlineTest {
         System.out.println("mad: " + mad);
 
         rcaller.deleteTempFiles();
+        rcaller.StopRCallerOnline();
     }
 
     @Test
@@ -95,6 +96,7 @@ public class RunOnlineTest {
         assertTrue(rcaller.stopStreamConsumers());
         //both consumer threads are dead, program must terminate now
         rcaller.deleteTempFiles();
+        rcaller.StopRCallerOnline();
     }
 
     /**
@@ -128,13 +130,13 @@ public class RunOnlineTest {
 
             rcaller.setRCode(code);
             rcaller.runAndReturnResultOnline("a");
-
             assertEquals(rcaller.getParser().getAsIntArray("a")[0], 1);
 
         }
         System.out.println("done");
         assertTrue(rcaller.stopStreamConsumers());
         //both consumer threads are dead, program must terminate now
+        rcaller.StopRCallerOnline();
         rcaller.deleteTempFiles();
     }
 
@@ -157,7 +159,9 @@ public class RunOnlineTest {
         code.addRCode("a<-1:10");
 
         //ensures R will not terminate within the specified timeout
-        code.addRCode("Sys.sleep(100)");
+        //This line is passive because an R instance is stay in the memory
+        //while Sys.sleep operates. 
+        //code.addRCode("Sys.sleep(100)");
         rcaller.setRCode(code);
 
         boolean exceptionThrown = false;
@@ -166,6 +170,7 @@ public class RunOnlineTest {
         } catch (ExecutionException ex) {
 //            ex.printStackTrace();
             exceptionThrown = true;
+            rcaller.StopRCallerOnline();
         }
         assertTrue(exceptionThrown);
 
@@ -175,5 +180,6 @@ public class RunOnlineTest {
         //both consumer threads are dead, program must terminate now
         System.out.println("done");
         rcaller.deleteTempFiles();
+        rcaller.StopRCallerOnline();
     }
 }
