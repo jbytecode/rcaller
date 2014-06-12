@@ -1,20 +1,20 @@
 /*
  *
-RCaller, A solution for calling R from Java
-Copyright (C) 2010-2014  Mehmet Hakan Satman
+ RCaller, A solution for calling R from Java
+ Copyright (C) 2010-2014  Mehmet Hakan Satman
 
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU Lesser General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-any later version.
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU Lesser General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ any later version.
 
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
 
-You should have received a copy of the GNU Lesser General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ You should have received a copy of the GNU Lesser General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
@@ -43,12 +43,9 @@ import rcaller.exception.RscriptExecutableNotFoundException;
 
 /**
  *
- * @author Mehmet Hakan Satman
- * mhsatman@yahoo.com
- * http://stdioe.blogspot.com
- * http://www.mhsatman.com
- * http://code.google.com/p/rcaller
- * 
+ * @author Mehmet Hakan Satman mhsatman@yahoo.com http://stdioe.blogspot.com
+ * http://www.mhsatman.com http://code.google.com/p/rcaller
+ *
  */
 public class RCaller {
 
@@ -66,7 +63,7 @@ public class RCaller {
     //how long to wait for R to finish
     protected long maxWaitTime;
     protected TempFileService tempFileService = null;
-    
+
     public RCaller() {
         this.rcode = new RCode();
         this.parser = new ROutputParser();
@@ -81,16 +78,17 @@ public class RCaller {
     }
 
     /**
-     * How long this R caller will wait for the R process to terminate before 
+     * How long this R caller will wait for the R process to terminate before
      * forcibly killing it
-     * @return 
+     *
+     * @return
      */
     public long getMaxWaitTime() {
         return maxWaitTime;
     }
 
     /**
-     * How long this R caller will wait for the R process to terminate before 
+     * How long this R caller will wait for the R process to terminate before
      * forcibly killing it (in milliseconds)
      */
     public void setMaxWaitTime(long maxWaitTime) {
@@ -98,12 +96,13 @@ public class RCaller {
     }
 
     /**
-     * Stops the threads that are emptying the output and error streams of the 
-     * live but idle R process. If R is still working, this may cause it to hang.
-     * If R has finished execution, these threads prevent the operating system from
-     * shutting it down, so that the same process is used. Invoke this method when
-     * you have used R online and are finished with it.
-     * @return 
+     * Stops the threads that are emptying the output and error streams of the
+     * live but idle R process. If R is still working, this may cause it to
+     * hang. If R has finished execution, these threads prevent the operating
+     * system from shutting it down, so that the same process is used. Invoke
+     * this method when you have used R online and are finished with it.
+     *
+     * @return
      */
     public boolean stopStreamConsumers() {
         rOutput.setCloseSignal(true);
@@ -113,10 +112,10 @@ public class RCaller {
     }
 
     public void setRExecutable(String RExecutable) {
-    	File file = new File(RExecutable);
-    	if(!file.exists()){
-    		throw new RExecutableNotFoundException("R Executable "+RExecutable+" not found");
-    	}
+        File file = new File(RExecutable);
+        if (!file.exists()) {
+            throw new RExecutableNotFoundException("R Executable " + RExecutable + " not found");
+        }
         this.RExecutable = RExecutable;
     }
 
@@ -137,10 +136,10 @@ public class RCaller {
     }
 
     public void setRscriptExecutable(String RscriptExecutable) {
-    	File file = new File(RscriptExecutable);
-    	if(!file.exists()){
-    		throw new RscriptExecutableNotFoundException("R executable "+RscriptExecutable+" not found");
-    	}
+        File file = new File(RscriptExecutable);
+        if (!file.exists()) {
+            throw new RscriptExecutableNotFoundException("R executable " + RscriptExecutable + " not found");
+        }
         this.RscriptExecutable = RscriptExecutable;
     }
 
@@ -152,18 +151,18 @@ public class RCaller {
         rcode.clear();
     }
 
-    
-    public void deleteTempFiles(){
+    public void deleteTempFiles() {
         tempFileService.deleteRCallerTempFiles();
         this.rcode.deleteTempFiles();
     }
-    
+
     /**
      * Stores the current RCode contained in this RCaller in a temporary file
      * and return a reference to that file
+     *
      * @return a reference to the file
-     * @throws rcaller.exception.ExecutionException if a temporary file cannot be
-     * created or written to
+     * @throws rcaller.exception.ExecutionException if a temporary file cannot
+     * be created or written to
      */
     private File createRSourceFile() throws rcaller.exception.ExecutionException {
         File f = null;
@@ -193,10 +192,11 @@ public class RCaller {
     }
 
     /**
-     * Executes the code contained in this RCaller instance in s separate process.
-     * Upon completion the process is killed and none of the R variables
-     * are returned
-     * @throws rcaller.exception.ExecutionException if R cannot be run for some 
+     * Executes the code contained in this RCaller instance in s separate
+     * process. Upon completion the process is killed and none of the R
+     * variables are returned
+     *
+     * @throws rcaller.exception.ExecutionException if R cannot be run for some
      * reason
      */
     public void runOnly() throws rcaller.exception.ExecutionException {
@@ -222,11 +222,12 @@ public class RCaller {
     }
 
     /**
-     * Runs the current code in the existing R instance (or in a new one) and returns
-     * the R variable "var". The R process is kept alive and can be re-used by
-     * invoking this method again. When you are done with this process, you must explicitly
-     * stop it.
-     * @see #stopStreamConsumers() 
+     * Runs the current code in the existing R instance (or in a new one) and
+     * returns the R variable "var". The R process is kept alive and can be
+     * re-used by invoking this method again. When you are done with this
+     * process, you must explicitly stop it.
+     *
+     * @see #stopStreamConsumers()
      * @param var The R variable to return
      * @throws rcaller.exception.ExecutionException if R cannot be started
      */
@@ -252,7 +253,6 @@ public class RCaller {
 //                throw new RCallerExecutionException("RExecutable is not defined."
 //                        + " Please set this variable to full path of R executable binary file.");
             }
-
 
             try {
                 //outputFile = File.createTempFile("Routput", "");
@@ -285,7 +285,6 @@ public class RCaller {
                 }
             }
 
-
             try {
                 rInput.write(rcode.toString().getBytes());
                 rInput.flush();
@@ -295,7 +294,6 @@ public class RCaller {
                 }
             }
 
-
             long slept = 0;
             boolean processKilled = false;
             try {
@@ -304,7 +302,7 @@ public class RCaller {
                     //java attempts to read, resulting in an xml parse exception. We need to  put in 
                     //a lock file or something like that and only read when that is gone
                     Thread.sleep(1);
-                    slept++; 
+                    slept++;
                     if (slept > this.maxWaitTime) {
                         process.destroy();
                         stopStreamConsumers();
@@ -328,10 +326,16 @@ public class RCaller {
             done = true;//if we got to there, no exceptions occured
         } while (!done);
     }
-    
-    public void StopRCallerOnline(){
-        if (process != null){
-                process.destroy();
+
+    public void StopRCallerOnline() {
+        if (process != null) {
+            try {
+                process.getOutputStream().write("q(\"no\")\n".getBytes());
+                process.getOutputStream().flush();
+            } catch (Exception e) {
+            }
+            process.destroy();
+            process.destroyForcibly();
         }
     }
 
@@ -372,12 +376,14 @@ public class RCaller {
     }
 
     /**
-     * Runs the current code and returns the R variable "var". The R process is terminated
-     * upon completion of this method.
+     * Runs the current code and returns the R variable "var". The R process is
+     * terminated upon completion of this method.
+     *
      * @param var the R variable to return
-     * @throws rcaller.exception.ExecutionException if R could be started; if a temporary
-     * file to store the results could not be created; if the temporary file is corrupt. The exact cause will
-     * be added to the stack trace
+     * @throws rcaller.exception.ExecutionException if R could be started; if a
+     * temporary file to store the results could not be created; if the
+     * temporary file is corrupt. The exact cause will be added to the stack
+     * trace
      */
     public void runAndReturnResult(String var) throws rcaller.exception.ExecutionException {
         //TODO this method should throw different exceptions depending on why it has failed
@@ -389,7 +395,6 @@ public class RCaller {
             throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
                     + "to full path of Rscript executable binary file.");
         }
-
 
         try {
             //outputFile = File.createTempFile("Routput", "");
@@ -414,7 +419,6 @@ public class RCaller {
             throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
         }
 
-
         parser.setXMLFile(outputFile);
         try {
             parser.parse();
@@ -426,8 +430,6 @@ public class RCaller {
         stopStreamConsumers();
     }
 
-    
-   
     public void redirectROutputToConsole() {
         redirectROutputToStream(System.out);
 
@@ -459,8 +461,9 @@ public class RCaller {
 
     /**
      * Sets the failure policy of this RCaller
-     * @param f 
-     * @see  RCaller$FailurePolicy
+     *
+     * @param f
+     * @see RCaller$FailurePolicy
      */
     public void setFailurePolicy(FailurePolicy f) {
         this.failPolicy = f;
@@ -468,6 +471,7 @@ public class RCaller {
 
     /**
      * How many times we have retried to run the R code
+     *
      * @return the retries
      */
     public int getRetries() {
