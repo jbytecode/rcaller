@@ -3,17 +3,17 @@ Output:R version 3.0.2 (2013-09-25) -- "Frisbee Sailing"
 Output:Copyright (C) 2013 The R Foundation for Statistical Computing
 Output:Platform: i386-w64-mingw32/i386 (32-bit)
 Output:
-Output:R is free software and comes with ABSOLUTELY NO WARRANTY.
-Output:You are welcome to redistribute it under certain conditions.
-Output:Type 'license()' or 'licence()' for distribution details.
+Output:R özgür bir yazýlýmdýr ve KESÝNLÝKLE BÝR GARANTÝ VERMEZ.
+Output:Belli koþullar altýnda tekrar daðýtýmýna izin verilir.
+Output:Daðýtým detaylarý için 'license()' ya da 'licence()' girin.
 Output:
-Output:R is a collaborative project with many contributors.
-Output:Type 'contributors()' for more information and
-Output:'citation()' on how to cite R or R packages in publications.
+Output:R, bir çok insanýn katkýda bulunduðu ortak bir projedir
+Output:Daha fazla bilgi için 'contributors()' girin.
+Output:Yayýnlarda R veya R paketlerinden alýntý yapmak için 'citation()' girin.
 Output:
-Output:Type 'demo()' for some demos, 'help()' for on-line help, or
-Output:'help.start()' for an HTML browser interface to help.
-Output:Type 'q()' to quit R.
+Output:Birkaç örnek için 'demo()', çevrimiçi yardým için 'help()' veya
+Output:HTML tarayýcýlý yardýmý açmak için 'help.start()' girin.
+Output:R'den çýkmak için 'q()' girin.
 Output:
 Output:> cleanNames<-function(names){
 Output:+     cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
@@ -81,7 +81,7 @@ Output:>
 Output:> 
 Output:> x<-1:1000
 Output:> m<-median(x)
-Output:> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput7542015237063474361")
+Output:> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput8531949112233943273")
 Output:> cleanNames<-function(names){
 Output:+     cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
 Output:+     cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="")
@@ -147,4 +147,5 @@ Output:+ }
 Output:> 
 Output:> 
 Output:> cat("This message might be catched by the event handler")
-Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/hako/AppData/Local/Temp/Routput4821385980650645056")
+Output:This message might be catched by the event handler> cat(makexml(obj=m, name="m"), file="C:/Users/oem/AppData/Local/Temp/Routput470414924711074954")
+Output:> q("no")
