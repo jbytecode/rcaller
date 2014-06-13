@@ -32,7 +32,9 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import jdk.nashorn.internal.objects.Global;
 import rcaller.EventHandler;
+import rcaller.Globals;
 import rcaller.RCaller;
 import rcaller.RCode;
 
@@ -55,6 +57,9 @@ public class SampleGui extends JFrame implements ActionListener {
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     this.setSize(640, 480);
     this.setLayout(null);
+
+    Globals.detect_current_rscript();
+    this.RScriptExecutable = Globals.Rscript_current;
     
     textArea = new JTextArea("myvar<-c(1,2,3,4,5)\nothervar<-runif(10,0,1)\ncat(\"Hello World!\")\nfor(i in 1:5){\nprint(i)\n}\n");
     textArea.setSize(350, 200);

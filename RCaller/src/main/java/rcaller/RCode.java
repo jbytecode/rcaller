@@ -79,6 +79,10 @@ public class RCode {
             throw new ExecutionException("runiversal.R in package: " + e.toString());
         }
     }
+    
+    public void clearOnline(){
+        code.setLength(0);
+    }
 
     public void addRCode(String code) {
         this.code.append(code).append("\n");

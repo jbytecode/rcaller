@@ -439,7 +439,7 @@ public class RCaller {
         redirectROutputToStream(fstream);
     }
 
-    private void redirectROutputToStream(final OutputStream o) {
+    public void redirectROutputToStream(final OutputStream o) {
         EventHandler eh = new EventHandler(o) {
 
             public void messageReceived(String senderName, String msg) {
