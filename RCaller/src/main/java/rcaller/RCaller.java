@@ -335,7 +335,6 @@ public class RCaller {
             } catch (Exception e) {
             }
             process.destroy();
-            process.destroyForcibly();
         }
     }
 
