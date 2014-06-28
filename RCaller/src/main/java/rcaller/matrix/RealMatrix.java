@@ -104,20 +104,42 @@ public class RealMatrix {
         return(rcaller.getParser().getAsDoubleMatrix(this.name, dims[0], dims[1]));
     }
     
-    public RealMatrix product(RealMatrix another){
-        throw new RuntimeException("product not implemented yet");
+    public double[][] product(double[][] another){
+        String anotherHashString = "RCALLER"+String.valueOf(another.hashCode());
+        code.clearOnline();
+        code.addDoubleMatrix(anotherHashString, another);
+        code.addRCode(this.HashString + " <- " + this.name + " %*% " + anotherHashString);
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
     }
     
-    public RealMatrix sum(RealMatrix another){
-        throw new RuntimeException("sum not implemented yet");
+    public double[][] sum(double[][] another){
+        String anotherHashString = "RCALLER"+String.valueOf(another.hashCode());
+        code.clearOnline();
+        code.addDoubleMatrix(anotherHashString, another);
+        code.addRCode(this.HashString + " <- " + this.name + " + " + anotherHashString);
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
     }
     
-    public RealMatrix productWithScaler(double scaler){
-        throw new RuntimeException("productWithScaler not implemented yet");
+    public double[][] productWithScaler(double scaler){
+        code.clearOnline();
+        code.addRCode(this.HashString + " <- " + this.name + " * " + String.valueOf(scaler));
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
     }
     
-    public RealMatrix subtract(RealMatrix another){
-        throw new RuntimeException("subtract not implemented yet");
+    public double[][] subtract(double[][] another){
+        String anotherHashString = "RCALLER"+String.valueOf(another.hashCode());
+        code.clearOnline();
+        code.addDoubleMatrix(anotherHashString, another);
+        code.addRCode(this.HashString + " <- " + this.name + " - " + anotherHashString);
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
     }
     
 }
