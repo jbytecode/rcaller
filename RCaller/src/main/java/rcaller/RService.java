@@ -16,6 +16,14 @@ public class RService {
         rcaller.setRCode(rcode);
     }
     
+    public RCaller getRCaller(){
+        return(this.rcaller);
+    }
+    
+    public RCode getRCode(){
+        return(this.rcode);
+    }
+    
     public Object[] get(String var, String command, String type){
         Object[] returnObject = null;
         rcode.clear();
@@ -33,5 +41,16 @@ public class RService {
         result = this.get("version_string", "version", RService.type_String);
         return(result[0].toString());
     }
-        
+    
+    public String minor(){
+        Object[] result;
+        result = this.get("minor", "version", type_String);
+        return(result[0].toString());
+    }
+     
+    public String major(){
+        Object[] result;
+        result = this.get("major", "version", type_String);
+        return(result[0].toString());
+    }
 }

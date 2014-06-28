@@ -29,4 +29,12 @@ public class RServiceTest {
         String version = service.version();
         Assert.assertTrue(version.contains("R version"));
     }
+    
+    @Test
+    public void TestMajorVersion(){
+        String major = service.major();
+        Assert.assertTrue(Integer.parseInt(major) >= 3);
+    }
+    
+    
 }
