@@ -7,11 +7,13 @@ import org.junit.Test;
 
 public class RServiceTest {
 
-    RService service;
+    static RService service;
     
     public RServiceTest(){
         Globals.detect_current_rscript();
-        service = new RService(Globals.R_current);
+        if(service == null){
+            service = new RService(Globals.R_current);
+        }
     }
     
     

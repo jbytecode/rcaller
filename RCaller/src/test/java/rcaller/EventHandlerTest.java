@@ -1,5 +1,6 @@
 package rcaller;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -18,6 +19,10 @@ public class EventHandlerTest {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
+        System.out.println("************* Cleaning oneCopy.txt ****************");
+        File f = new File("oneCopy.txt");
+        boolean result = f.delete();
+        System.out.println("Deletion Result: "+result);
     }
 
     @Before

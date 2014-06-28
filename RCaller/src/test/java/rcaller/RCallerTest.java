@@ -238,6 +238,7 @@ public class RCallerTest {
         rcaller.runOnly();
         assertFalse(rcaller.getRCode().getPlot(plot) == null);
         rcaller.deleteTempFiles();
+        plot.deleteOnExit();
     }
 
     @Test
