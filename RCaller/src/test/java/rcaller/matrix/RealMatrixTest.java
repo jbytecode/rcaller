@@ -14,13 +14,12 @@ public class RealMatrixTest {
     double delta = 0.00001;
     static RealMatrix rm = null;
 
-    
     @AfterClass
-    public static void MyAfterClass(){
+    public static void MyAfterClass() {
         System.out.println("***** Finalizing RealMatrixTest *****");
         rm.rcaller.deleteTempFiles();
     }
-    
+
     public RealMatrixTest() {
         Globals.detect_current_rscript();
         pathToR = Globals.R_Windows;
@@ -83,7 +82,7 @@ public class RealMatrixTest {
     @Test
     public void testGetTranspose() {
         System.out.println("getTranspose");
-        double[][] t = rm.getTranspose();
+        double[][] t = rm.getTranspose().getData();
         assertEquals(matrix[0][0], t[0][0], delta);
         assertEquals(matrix[0][1], t[1][0], delta);
         assertEquals(matrix[1][0], t[0][1], delta);
@@ -93,7 +92,15 @@ public class RealMatrixTest {
     @Test
     public void testProductMatrix() {
         System.out.println("product");
-        double[][] result = rm.product(another);
+        double[][] result = rm.product(another).getData();
+        assertEquals(30.0, result[0][0], delta);
+        assertEquals(5.0, result[1][0], delta);
+        assertEquals(131.0, result[0][1], delta);
+        assertEquals(19.0, result[1][1], delta);
+
+        System.out.println("product2");
+        RealMatrix resultMat = rm.product(another);
+        result = resultMat.getData();
         assertEquals(30.0, result[0][0], delta);
         assertEquals(5.0, result[1][0], delta);
         assertEquals(131.0, result[0][1], delta);
@@ -103,32 +110,48 @@ public class RealMatrixTest {
     @Test
     public void testSumMatrix() {
         System.out.println("sum");
-        double[][] result = rm.sum(another);
+        double[][] result = rm.sum(another).getData();
         assertEquals(9.0, result[0][0], delta);
         assertEquals(9.0, result[1][0], delta);
         assertEquals(15.0, result[0][1], delta);
         assertEquals(8.0, result[1][1], delta);
     }
-    
+
     @Test
-    public void testProductWithScaler(){
+    public void testProductWithScaler() {
         System.out.println("Matrix product with scaler");
         double scaler = 10.0;
-        double[][] result = rm.productWithScaler(scaler);
+        double[][] result = rm.productWithScaler(scaler).getData();
         assertEquals(matrix[0][0] * scaler, result[0][0], delta);
         assertEquals(matrix[0][1] * scaler, result[1][0], delta);
         assertEquals(matrix[1][0] * scaler, result[0][1], delta);
         assertEquals(matrix[1][1] * scaler, result[1][1], delta);
     }
-    
+
     @Test
     public void testSubtractMatrix() {
         System.out.println("subtract");
-        double[][] result = rm.subtract(another);
+        double[][] result = rm.subtract(another).getData();
         assertEquals(-7.0, result[0][0], delta);
         assertEquals(-5.0, result[1][0], delta);
         assertEquals(-7.0, result[0][1], delta);
         assertEquals(10.0, result[1][1], delta);
+    }
+
+    @Test
+    public void testEigenValues() {
+        System.out.println("subtract");
+        double[] result = rm.getEigenValues();
+        assertEquals(9.8989795, result[0], delta);
+        assertEquals(0.1010205, result[1], delta);
+    }
+
+    @Test
+    public void testGetColumn() {
+        System.out.println("getColumn");
+        double[] result = rm.getColumn(1);
+        assertEquals(1.0, result[0], delta);
+        assertEquals(4.0, result[1], delta);
     }
 
 }
