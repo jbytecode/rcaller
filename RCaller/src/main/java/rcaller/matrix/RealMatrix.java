@@ -91,6 +91,57 @@ public class RealMatrix {
         return (rcaller.getParser().getAsDoubleArray(this.HashString));
     }
 
+    public double[][] getColumns(int[] columns) {
+        for (int i = 0; i < columns.length; i++) {
+            if (columns[i] == 0) {
+                throw new ExecutionException("getColumns: Column number can not be zero. R indices start from 1");
+            }
+        }
+        code.clearOnline();
+        code.addRCode(this.HashString + "<- t(" + this.name + "[,c(");
+        for (int i = 0; i < columns.length; i++) {
+            code.addRCode(String.valueOf(columns[i]));
+            if (i != columns.length - 1) {
+                code.addRCode(",");
+            }
+        }
+        code.addRCode(")])");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        return (rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+    }
+
+    public double[] getRow(int row) {
+        if (row == 0) {
+            throw new ExecutionException("getRow: Row number can not be zero. R indices start from 1");
+        }
+        code.clearOnline();
+        code.addRCode(this.HashString + "<- " + this.name + "[" + row + ",]");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        return (rcaller.getParser().getAsDoubleArray(this.HashString));
+    }
+
+    public double[][] getRows(int[] rows) {
+        for (int i = 0; i < rows.length; i++) {
+            if (rows[i] == 0) {
+                throw new ExecutionException("getRows: Row number can not be zero. R indices start from 1");
+            }
+        }
+        code.clearOnline();
+        code.addRCode(this.HashString + "<- t(" + this.name + "[c(");
+        for (int i = 0; i < rows.length; i++) {
+            code.addRCode(String.valueOf(rows[i]));
+            if (i != rows.length - 1) {
+                code.addRCode(",");
+            }
+        }
+        code.addRCode("),])");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        return (rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+    }
+    
+    
     public double getDeterminant() {
         code.clearOnline();
         code.addRCode(this.HashString + " <- det(" + this.name + ")");

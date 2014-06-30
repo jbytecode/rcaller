@@ -153,5 +153,34 @@ public class RealMatrixTest {
         assertEquals(1.0, result[0], delta);
         assertEquals(4.0, result[1], delta);
     }
+    
+    @Test
+    public void testRow() {
+        System.out.println("getRow");
+        double[] result = rm.getRow(1);
+        assertEquals(1.0, result[0], delta);
+        assertEquals(2.0, result[1], delta);
+    }
+    
+    @Test
+    public void testGetColumns(){
+        System.out.println("getColumns");
+        double[][] result = rm.getColumns(new int[]{1,2});
+        assertEquals(1.0, result[0][0], delta);
+        assertEquals(2.0, result[0][1], delta);
+        assertEquals(4.0, result[1][0], delta);
+        assertEquals(9.0, result[1][1], delta);
+    }
+    
+    @Test
+    public void testGetRows(){
+        System.out.println("getRows");
+        double[][] result = rm.getRows(new int[]{1,2});
+        assertEquals(1.0, result[0][0], delta);
+        assertEquals(2.0, result[0][1], delta);
+        assertEquals(4.0, result[1][0], delta);
+        assertEquals(9.0, result[1][1], delta);
+    }
+    
 
 }
