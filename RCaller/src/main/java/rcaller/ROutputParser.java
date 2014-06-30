@@ -242,4 +242,9 @@ public class ROutputParser {
     return (result);
   }
   
+  public double[][] getAsDoubleMatrix(String name) throws ParseException {
+    int[] dims = this.getDimensions(name);
+    return (this.getAsDoubleMatrix(name, dims[0], dims[1]));
+  }
+  
 }
