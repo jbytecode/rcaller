@@ -140,8 +140,7 @@ public class RealMatrix {
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
         return (rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
     }
-    
-    
+
     public double getDeterminant() {
         code.clearOnline();
         code.addRCode(this.HashString + " <- det(" + this.name + ")");
@@ -150,11 +149,14 @@ public class RealMatrix {
         return (det);
     }
 
-    public double[][] getInverse() {
+    public RealMatrix getInverse() {
         code.clearOnline();
         code.addRCode(this.HashString + " <- t(solve(" + this.name + "))");
         rcaller.runAndReturnResultOnline(this.HashString);
-        return (rcaller.getParser().getAsDoubleMatrix(this.HashString, 2, 2));
+        double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.HashString, 2, 2);
+        RealMatrix matnew = new RealMatrix(service);
+        matnew.setData(mat);
+        return (matnew);
     }
 
     public double[] getDiagonal() {
@@ -248,6 +250,40 @@ public class RealMatrix {
         code.addRCode(this.HashString + " <- eigen(" + this.name + ")$values");
         rcaller.runAndReturnResultOnline(this.HashString);
         return (rcaller.getParser().getAsDoubleArray(this.HashString));
+    }
+
+    public RealMatrix getEigenVectors() {
+        code.clearOnline();
+        code.addRCode(this.HashString + " <- t(eigen(" + this.name + ")$vectors)");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        int[] dims = rcaller.getParser().getDimensions(this.HashString);
+        double[][] result = rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]);
+        RealMatrix newmat = new RealMatrix(service);
+        newmat.setData(result);
+        return (newmat);
+    }
+    
+    public SVD getSVD(){
+        SVD svd = new SVD();
+        code.clearOnline();
+        code.addRCode(this.HashString + " <- svd(" + this.name + ")");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        double[] d = rcaller.getParser().getAsDoubleArray("d");
+        double[][] u = rcaller.getParser().getAsDoubleMatrix("u");
+        double[][] v = rcaller.getParser().getAsDoubleMatrix("v");
+        
+        RealMatrix uMatrix = new RealMatrix(service);
+        RealMatrix vMatrix = new RealMatrix(service);
+        
+        svd.d = d;
+        
+        uMatrix.setData(u);
+        svd.u = uMatrix;
+        
+        vMatrix.setData(v);
+        svd.v = vMatrix;
+        
+        return(svd);
     }
 
 }

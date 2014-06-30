@@ -57,7 +57,7 @@ public class RealMatrixTest {
     @Test
     public void testGetInverse() {
         System.out.println("getInverse");
-        double[][] myinverse = rm.getInverse();
+        double[][] myinverse = rm.getInverse().getData();
         assertEquals(inverse[0][0], myinverse[0][0], delta);
         assertEquals(inverse[1][0], myinverse[1][0], delta);
         assertEquals(inverse[0][1], myinverse[0][1], delta);
@@ -140,10 +140,20 @@ public class RealMatrixTest {
 
     @Test
     public void testEigenValues() {
-        System.out.println("subtract");
+        System.out.println("eigen-values");
         double[] result = rm.getEigenValues();
         assertEquals(9.8989795, result[0], delta);
         assertEquals(0.1010205, result[1], delta);
+    }
+
+    @Test
+    public void testEigenVectors() {
+        System.out.println("eigen-vectors");
+        double[][] result = rm.getEigenVectors().getData();
+        assertEquals(-0.2192753, result[0][0], delta);
+        assertEquals(-0.9120956, result[0][1], delta);
+        assertEquals(-0.9756630, result[1][0], delta);
+        assertEquals(0.4099776, result[1][1], delta);
     }
 
     @Test
@@ -153,7 +163,7 @@ public class RealMatrixTest {
         assertEquals(1.0, result[0], delta);
         assertEquals(4.0, result[1], delta);
     }
-    
+
     @Test
     public void testRow() {
         System.out.println("getRow");
@@ -161,26 +171,46 @@ public class RealMatrixTest {
         assertEquals(1.0, result[0], delta);
         assertEquals(2.0, result[1], delta);
     }
-    
+
     @Test
-    public void testGetColumns(){
+    public void testGetColumns() {
         System.out.println("getColumns");
-        double[][] result = rm.getColumns(new int[]{1,2});
+        double[][] result = rm.getColumns(new int[]{1, 2});
         assertEquals(1.0, result[0][0], delta);
         assertEquals(2.0, result[0][1], delta);
         assertEquals(4.0, result[1][0], delta);
         assertEquals(9.0, result[1][1], delta);
     }
-    
+
     @Test
-    public void testGetRows(){
+    public void testGetRows() {
         System.out.println("getRows");
-        double[][] result = rm.getRows(new int[]{1,2});
+        double[][] result = rm.getRows(new int[]{1, 2});
         assertEquals(1.0, result[0][0], delta);
         assertEquals(2.0, result[0][1], delta);
         assertEquals(4.0, result[1][0], delta);
         assertEquals(9.0, result[1][1], delta);
     }
-    
+
+    @Test
+    public void testSVD() {
+        System.out.println("SVD");
+        SVD svd = rm.getSVD();
+        double[][] uMatrix = svd.u.getData();
+        double[][] vMatrix = svd.v.getData();
+
+        assertEquals(10.09901951, svd.d[0], delta);
+        assertEquals(0.09901951, svd.d[1], delta);
+
+        assertEquals(-0.2212078, uMatrix[0][0], delta);
+        assertEquals(-0.9752267, uMatrix[0][1], delta);
+        assertEquals(-0.9752267, uMatrix[1][0], delta);
+        assertEquals(0.2212078, uMatrix[1][1], delta);
+
+        assertEquals(-0.4081698, vMatrix[0][0], delta);
+        assertEquals(-0.9129060, vMatrix[0][1], delta);
+        assertEquals(-0.9129060, vMatrix[1][0], delta);
+        assertEquals(0.4081698, vMatrix[1][1], delta);
+    }
 
 }
