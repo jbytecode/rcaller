@@ -23,123 +23,180 @@
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-
 package rcaller.matrix;
 
+import java.util.Arrays;
+import java.util.Random;
 import rcaller.RCaller;
 import rcaller.RCode;
 import rcaller.RService;
+import rcaller.exception.ExecutionException;
 
 public class RealMatrix {
+
     RService service;
     RCaller rcaller;
     RCode code;
     String name;
     String HashString;
-    
-    public RealMatrix(String pathToR, String name){
+
+    public RealMatrix(RService service) {
+        this.service = service;
+        this.rcaller = service.getRCaller();
+        code = this.service.getRCode();
+        this.name = "MAT" + String.valueOf(Math.round(Math.random() * 100000));
+        this.HashString = "RCALLER" + String.valueOf(this.hashCode());
+        code.addRCode(this.HashString + " <- 3");
+        rcaller.runAndReturnResultOnline(this.HashString);
+    }
+
+    public RealMatrix(String pathToR, String name) {
         service = new RService(pathToR);
         rcaller = service.getRCaller();
         code = service.getRCode();
         this.name = name;
         this.HashString = "RCALLER" + String.valueOf(this.hashCode());
-        code.addRCode(this.HashString + " <- 3" );
+        code.addRCode(this.HashString + " <- 3");
         rcaller.runAndReturnResultOnline(this.HashString);
     }
-    
-    public void setData(double[][] data){
+
+    public void setData(double[][] data) {
         code.clearOnline();
         code.addDoubleMatrix(name, data);
         rcaller.runAndReturnResultOnline(this.HashString);
     }
-    
-    public int[] getDimensions(){
+
+    public int[] getDimensions() {
         code.clearOnline();
         rcaller.runAndReturnResultOnline(this.name);
         int[] dims = rcaller.getParser().getDimensions(this.name);
-        return(dims);
+        return (dims);
     }
-    
-    public double[][] getData(){
+
+    public double[][] getData() {
         code.clearOnline();
-        code.addRCode(this.HashString + "<- t(" + this.name +")");
+        code.addRCode(this.HashString + "<- t(" + this.name + ")");
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
-        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+        return (rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
     }
-    
-    public double getDeterminant(){
+
+    public double[] getColumn(int column) {
+        if (column == 0) {
+            throw new ExecutionException("getColumn: Column number can not be zero. R indices start from 1");
+        }
         code.clearOnline();
-        code.addRCode(this.HashString + " <- det("+ this.name +")");
+        code.addRCode(this.HashString + "<- " + this.name + "[," + column + "]");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        return (rcaller.getParser().getAsDoubleArray(this.HashString));
+    }
+
+    public double getDeterminant() {
+        code.clearOnline();
+        code.addRCode(this.HashString + " <- det(" + this.name + ")");
         rcaller.runAndReturnResultOnline(this.HashString);
         double det = rcaller.getParser().getAsDoubleArray(this.HashString)[0];
-        return(det);
+        return (det);
     }
-    
-    public double[][] getInverse(){
+
+    public double[][] getInverse() {
         code.clearOnline();
-        code.addRCode(this.HashString + " <- t(solve("+this.name+"))");
+        code.addRCode(this.HashString + " <- t(solve(" + this.name + "))");
         rcaller.runAndReturnResultOnline(this.HashString);
-        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, 2, 2));
+        return (rcaller.getParser().getAsDoubleMatrix(this.HashString, 2, 2));
     }
-    
-    public double[] getDiagonal(){
+
+    public double[] getDiagonal() {
         code.clearOnline();
-        code.addRCode(this.HashString + " <- diag("+this.name+")");
+        code.addRCode(this.HashString + " <- diag(" + this.name + ")");
         rcaller.runAndReturnResultOnline(this.HashString);
-        return(rcaller.getParser().getAsDoubleArray(this.HashString));
+        return (rcaller.getParser().getAsDoubleArray(this.HashString));
     }
-    
-    public double getTrace(){
+
+    public double getTrace() {
         code.clearOnline();
-        code.addRCode(this.HashString + " <- sum(diag("+this.name+"))");
+        code.addRCode(this.HashString + " <- sum(diag(" + this.name + "))");
         rcaller.runAndReturnResultOnline(this.HashString);
-        return(rcaller.getParser().getAsDoubleArray(this.HashString)[0]);
+        return (rcaller.getParser().getAsDoubleArray(this.HashString)[0]);
     }
-    
-    public double[][] getTranspose(){
+
+    public RealMatrix getTranspose() {
         code.clearOnline();
         rcaller.runAndReturnResultOnline(this.name);
         int[] dims = rcaller.getParser().getDimensions(this.name);
-        return(rcaller.getParser().getAsDoubleMatrix(this.name, dims[0], dims[1]));
+        double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.name, dims[0], dims[1]);
+        RealMatrix matnew = new RealMatrix(service);
+        matnew.setData(mat);
+        return (matnew);
     }
-    
-    public double[][] product(double[][] another){
-        String anotherHashString = "RCALLER"+String.valueOf(another.hashCode());
+
+    public RealMatrix product(double[][] another) {
+        String anotherHashString = "RCALLER" + String.valueOf(another.hashCode());
         code.clearOnline();
         code.addDoubleMatrix(anotherHashString, another);
         code.addRCode(this.HashString + " <- " + this.name + " %*% " + anotherHashString);
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
-        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+        double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]);
+        RealMatrix matnew = new RealMatrix(service);
+        matnew.setData(mat);
+        return (matnew);
     }
-    
-    public double[][] sum(double[][] another){
-        String anotherHashString = "RCALLER"+String.valueOf(another.hashCode());
+
+    public RealMatrix product(RealMatrix another) {
+        return (this.product(another.getData()));
+    }
+
+    public RealMatrix sum(double[][] another) {
+        String anotherHashString = "RCALLER" + String.valueOf(another.hashCode());
         code.clearOnline();
         code.addDoubleMatrix(anotherHashString, another);
         code.addRCode(this.HashString + " <- " + this.name + " + " + anotherHashString);
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
-        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+        double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]);
+        RealMatrix matnew = new RealMatrix(service);
+        matnew.setData(mat);
+        return (matnew);
     }
-    
-    public double[][] productWithScaler(double scaler){
+
+    public RealMatrix sum(RealMatrix another) {
+        return (this.sum(another.getData()));
+    }
+
+    public RealMatrix productWithScaler(double scaler) {
         code.clearOnline();
         code.addRCode(this.HashString + " <- " + this.name + " * " + String.valueOf(scaler));
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
-        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+        double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]);
+        RealMatrix matnew = new RealMatrix(service);
+        matnew.setData(mat);
+        return (matnew);
     }
-    
-    public double[][] subtract(double[][] another){
-        String anotherHashString = "RCALLER"+String.valueOf(another.hashCode());
+
+    public RealMatrix subtract(double[][] another) {
+        String anotherHashString = "RCALLER" + String.valueOf(another.hashCode());
         code.clearOnline();
         code.addDoubleMatrix(anotherHashString, another);
         code.addRCode(this.HashString + " <- " + this.name + " - " + anotherHashString);
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
-        return(rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
+        double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]);
+        RealMatrix matnew = new RealMatrix(service);
+        matnew.setData(mat);
+        return (matnew);
     }
-    
+
+    public RealMatrix subtract(RealMatrix another) {
+        return (this.subtract(another.getData()));
+    }
+
+    public double[] getEigenValues() {
+        code.clearOnline();
+        code.addRCode(this.HashString + " <- eigen(" + this.name + ")$values");
+        rcaller.runAndReturnResultOnline(this.HashString);
+        return (rcaller.getParser().getAsDoubleArray(this.HashString));
+    }
+
 }
