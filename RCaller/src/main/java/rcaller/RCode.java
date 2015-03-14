@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
  * http://www.mhsatman.com
- * Google code project: http://code.google.com/p/rcaller/
+ * Google code project: https://github.com/jbytecode/rcaller
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
@@ -118,6 +118,10 @@ public class RCode {
 
     public void addDoubleMatrix(String name, double[][] matrix) {
         CodeUtils.addDoubleMatrix(code, name, matrix, false);
+    }
+    
+    public void addFunctionCall(String returnVarName, FunctionCall fc){
+        this.code.append(fc.generateCode(returnVarName));
     }
 
     public File startPlot() throws IOException {
