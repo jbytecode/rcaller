@@ -192,6 +192,14 @@ public class CodeUtils {
         }
     }
     
+    public static void addLong(StringBuffer RCode, String name, long l, boolean useEquals) {
+        if (useEquals) {
+            RCode.append(name).append("=").append(l);
+        } else {
+            RCode.append(name).append("<-").append(l).append("\n");
+        }
+    }
+    
     public static void addFloat(StringBuffer RCode, String name, float f, boolean useEquals) {
         if (useEquals) {
             RCode.append(name).append("=").append(f);

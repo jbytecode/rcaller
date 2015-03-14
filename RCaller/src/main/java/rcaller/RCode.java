@@ -132,6 +132,10 @@ public class RCode {
         CodeUtils.addInt(code, name, i, false);
     }
     
+    public void addLong(String name, long l){
+        CodeUtils.addLong(code, name, l, false);
+    }
+    
     public void addFloat(String name, float f){
         CodeUtils.addFloat(code, name, f, false);
     }

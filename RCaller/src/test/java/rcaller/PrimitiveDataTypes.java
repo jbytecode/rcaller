@@ -49,6 +49,14 @@ public class PrimitiveDataTypes {
     }
     
     @Test
+    public void testLong(){
+        RCode code = new RCode();
+        code.addLong("d", 3);
+        System.out.println(code);
+        assertEquals(true, code.toString().contains("d<-3\n"));
+    }
+    
+    @Test
     public void testFloat(){
         RCode code = new RCode();
         code.addFloat("d", 3.141592f);
