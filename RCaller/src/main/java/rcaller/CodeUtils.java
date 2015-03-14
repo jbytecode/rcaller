@@ -1,7 +1,7 @@
 /*
  *
 RCaller, A solution for calling R from Java
-Copyright (C) 2010-2014  Mehmet Hakan Satman
+Copyright (C) 2010-2015  Mehmet Hakan Satman
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
  * http://www.mhsatman.com
- * Google code project: http://code.google.com/p/rcaller/
+ * Google code project: https://github.com/jbytecode/rcaller
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */

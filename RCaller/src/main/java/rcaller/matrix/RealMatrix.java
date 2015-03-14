@@ -19,14 +19,12 @@
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
  * http://www.mhsatman.com
- * Google code project: http://code.google.com/p/rcaller/
+ * Google code project: https://github.com/jbytecode/rcaller
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
 package rcaller.matrix;
 
-import java.util.Arrays;
-import java.util.Random;
 import rcaller.RCaller;
 import rcaller.RCode;
 import rcaller.RService;

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
  * http://www.mhsatman.com
- * Google code projec: http://code.google.com/p/rcaller/
+ * Google code projec: https://github.com/jbytecode/rcaller
  *
  */
 package examples;

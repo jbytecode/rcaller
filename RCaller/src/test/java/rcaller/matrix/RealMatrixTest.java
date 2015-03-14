@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.AfterClass;
 import rcaller.Globals;
 
+
 public class RealMatrixTest {
 
     double[][] matrix = new double[][]{{1.0, 2.0}, {4.0, 9.0}};
