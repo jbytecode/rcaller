@@ -1,7 +1,7 @@
 /*
  *
 RCaller, A solution for calling R from Java
-Copyright (C) 2010-2014  Mehmet Hakan Satman
+Copyright (C) 2010-2015  Mehmet Hakan Satman
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -124,6 +124,26 @@ public class RCode {
         this.code.append(fc.generateCode(returnVarName));
     }
 
+    public void addDouble(String name, double d){
+        CodeUtils.addDouble(code, name, d, false);
+    }
+    
+    public void addInt(String name, int i){
+        CodeUtils.addInt(code, name, i, false);
+    }
+    
+    public void addFloat(String name, float f){
+        CodeUtils.addFloat(code, name, f, false);
+    }
+    
+    public void addShort(String name, short s){
+        CodeUtils.addShort(code, name, s, false);
+    }
+    
+    public void addBoolean(String name, boolean b){
+        CodeUtils.addBoolean(code, name, b, false);
+    }
+    
     public File startPlot() throws IOException {
         return (startPlot(GraphicsType.png));
     }
