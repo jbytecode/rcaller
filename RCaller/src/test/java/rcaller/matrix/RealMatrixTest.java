@@ -22,7 +22,7 @@ public class RealMatrixTest {
 
     public RealMatrixTest() {
         Globals.detect_current_rscript();
-        pathToR = Globals.R_Windows;
+        pathToR = Globals.R_current;
         if (rm == null) {
             rm = new RealMatrix(pathToR, "MyMatrix");
         }

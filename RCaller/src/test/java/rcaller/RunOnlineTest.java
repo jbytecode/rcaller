@@ -42,7 +42,9 @@ public class RunOnlineTest {
         double mad = rcaller.getParser().getAsDoubleArray("result")[0];
         System.out.println("mad: " + mad);
 
+        System.out.println("Deleting temp files:");
         rcaller.deleteTempFiles();
+        System.out.println("Stopping RCaller online");
         rcaller.StopRCallerOnline();
     }
 

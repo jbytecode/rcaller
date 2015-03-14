@@ -332,9 +332,12 @@ public class RCaller {
             try {
                 process.getOutputStream().write("q(\"no\")\n".getBytes());
                 process.getOutputStream().flush();
+                process.getOutputStream().close();
             } catch (Exception e) {
             }
-            process.destroy();
+            if(Globals.isWindows()){
+                process.destroy();
+            }
         }
     }
 

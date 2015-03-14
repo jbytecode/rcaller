@@ -10,7 +10,8 @@ public class GridCapTest {
     public void GridCapTest(){
         RCaller caller = new RCaller();
         RCode code = new RCode();
-        caller.setRscriptExecutable("C:\\Program Files\\R\\R-3.0.2\\bin\\Rscript.exe");
+        Globals.detect_current_rscript();
+        caller.setRscriptExecutable(Globals.Rscript_current);
         code.R_require("grid");
         code.addRCode("dev.new(width=.5, height=.5)");
         code.addRCode("grid.rect()");
