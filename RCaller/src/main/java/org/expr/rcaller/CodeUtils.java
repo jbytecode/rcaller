@@ -50,6 +50,26 @@ public class CodeUtils {
         }
     }
 
+    public static void addLongArray(StringBuffer RCode, String name, long[] arr, boolean useEquals) {
+        if (useEquals) {
+            RCode.append(name).append("=").append("c(");
+        } else {
+            RCode.append(name).append("<-").append("c(");
+        }
+        for (int i = 0; i < arr.length; i++) {
+            RCode.append(String.valueOf(arr[i]));
+            if (i < arr.length - 1) {
+                RCode.append(", ");
+            }
+        }
+        if (useEquals) {
+            RCode.append(")");
+        } else {
+            RCode.append(");").append("\n");
+        }
+    }
+    
+    
     public static void addFloatArray(StringBuffer RCode, String name, float[] arr, boolean useEquals) {
         if (useEquals) {
             RCode.append(name).append("=").append("c(");

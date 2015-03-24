@@ -1,7 +1,7 @@
 /*
  *
 RCaller, A solution for calling R from Java
-Copyright (C) 2010-2014  Mehmet Hakan Satman
+Copyright (C) 2010-2015  Mehmet Hakan Satman
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Lesser General Public License as published by
@@ -38,6 +38,23 @@ public class JavaObject {
     this.name = name;
   }
 
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+  
   public String produceRCode(boolean useEquals) throws IllegalAccessException {
     /*
      * builder should be changed to StringBuilder soon.
@@ -82,6 +99,10 @@ public class JavaObject {
       } else if (className.equals("short[]")) {
         tempbuffer.setLength(0);
         CodeUtils.addShortArray(tempbuffer, varName, (short[]) o, true);
+        builder.append(tempbuffer.toString());
+      } else if (className.equals("long[]")) {
+        tempbuffer.setLength(0);
+        CodeUtils.addLongArray(tempbuffer, varName, (long[]) o, true);
         builder.append(tempbuffer.toString());
       } else if (className.equals("boolean[]")) {
         tempbuffer.setLength(0);

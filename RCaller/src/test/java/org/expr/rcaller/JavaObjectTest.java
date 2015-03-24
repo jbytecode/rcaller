@@ -49,7 +49,7 @@ public class JavaObjectTest {
   public void simpleJavaObjectTest() throws IllegalAccessException {
     TestClass tc = new TestClass();
     JavaObject t = new JavaObject("myObj", tc);
-    assertEquals("myObj <- list(i=9, f=10.0, d=3.14, b=TRUE, s=\"test\")\n", t.produceRCode(false));
+    assertEquals("myObj <- list(i=9, f=10.0, d=3.14, b=TRUE, l=567, s=\"test\")\n", t.produceRCode(false));
   }
 
   @Test
@@ -157,6 +157,7 @@ class TestClass {
   public float f = 10.0f;
   public double d = 3.14;
   public boolean b = true;
+  public long l = 567;
   public String s = "test";
 }
 
