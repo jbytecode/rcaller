@@ -6,8 +6,8 @@ public class RService {
     public static String type_String = "[Ljava.lang.String;";
     public static String type_double = "[Ljava.lang.double;";
     public static String type_Integer = "[Ljava.lang.Integer;";
-    RCaller rcaller;
-    RCode rcode;
+    private RCaller rcaller = null;
+    private RCode rcode = null;
 
     public RService(String pathToR){
         rcaller = new RCaller();
@@ -25,16 +25,31 @@ public class RService {
     }
     
     public Object[] get(String var, String command, String type){
-        Object[] returnObject = null;
-        rcode.clear();
+        //rcode.clear();
         rcode.addRCode(var + " <- " +command);
         rcaller.runAndReturnResultOnline(var);
         if(type.equals(type_String)){
-            returnObject = rcaller.getParser().getAsStringArray(var);
+            Object[] returnObject = rcaller.getParser().getAsStringArray(var);
+            return(returnObject);
+        }else if (type.equals(type_Integer)){
+            int[] res = rcaller.getParser().getAsIntArray(var);
+            Integer[] ints = new Integer[res.length];
+            for (int i=0;i<res.length;i++){
+                ints[i] = new Integer(res[i]);
+            }
+            return(ints);
+        }else if(type.equals(type_double)){
+            double[] res = rcaller.getParser().getAsDoubleArray(var);
+            Double[] dbls = new Double[res.length];
+            for (int i=0;i<res.length;i++){
+                dbls[i] = new Double(res[i]);
+            }
+            return(dbls);
+        }else{
+            return(null);
         }
-        return(returnObject);
     }
-    
+        
     
     public String version(){
         Object[] result;
