@@ -23,4 +23,6 @@ It is recomanded to take a look at the existing examples: https://github.com/jby
 
 # Building
 
+download the .jar file (https://github.com/jbytecode/rcaller/releases) and added it to your pom.xml. 
+
 coming soon: library available in the maven central repository
