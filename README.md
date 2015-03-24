@@ -15,6 +15,8 @@ and rJava outperform the RCaller by means of interaction times. As a result of t
 suitable for the projects which have many clients that request relatively single and small computations.
 [RCaller: A Software Library for Calling R from Java - M. Hakan Satman]
 
+Official publication: http://www.sciencedomain.org/download.php?f=Satman4152014BJMCS10902_1.pdf&aid=4838&type=a
+
 # Usage
 
 It is recomanded to take a look at the existing examples: https://github.com/jbytecode/rcaller/tree/master/RCaller/src/test/java/rcaller
