@@ -1,10 +1,10 @@
 package examples;
 
-import graphics.BlackTheme;
+import org.expr.rcaller.graphics.BlackTheme;
 import java.io.File;
 import javax.swing.ImageIcon;
-import rcaller.RCaller;
-import rcaller.RCode;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.RCode;
 
 /**
  *

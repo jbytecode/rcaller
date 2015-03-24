@@ -24,11 +24,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import graphics.BlackTheme;
+import org.expr.rcaller.graphics.BlackTheme;
 import java.io.File;
-import rcaller.Globals;
-import rcaller.RCaller;
-import rcaller.RCode;
+import org.expr.rcaller.Globals;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.RCode;
 
 /**
  *

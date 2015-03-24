@@ -31,9 +31,9 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import rcaller.Globals;
-import rcaller.RCaller;
-import rcaller.RCode;
+import org.expr.rcaller.Globals;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.RCode;
 
 /**
  *

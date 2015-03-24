@@ -1,7 +1,7 @@
 package examples;
 
-import rcaller.RCaller;
-import rcaller.RCode;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.RCode;
 
 public class StringArrayTest {
 

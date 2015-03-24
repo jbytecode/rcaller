@@ -4,9 +4,9 @@ package examples;
 
 import java.awt.event.KeyEvent;
 import java.io.ByteArrayOutputStream;
-import rcaller.Globals;
-import rcaller.RCaller;
-import rcaller.RCode;
+import org.expr.rcaller.Globals;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.RCode;
 
 public class SampleRGui extends javax.swing.JFrame {
 

@@ -28,8 +28,8 @@
  */
 package examples;
 
-import rcaller.RCaller;
-import rcaller.statistics.RandomNumberGenerator;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.statistics.RandomNumberGenerator;
 
 /**
  *

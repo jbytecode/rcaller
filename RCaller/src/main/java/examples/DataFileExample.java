@@ -4,9 +4,8 @@ package examples;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import rcaller.Globals;
-import rcaller.RCaller;
-import rcaller.RCode;
+import org.expr.rcaller.RCaller;
+import org.expr.rcaller.RCode;
 
 
 public class DataFileExample {
