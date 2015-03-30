@@ -27,4 +27,10 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
 
 download the [.jar file](https://github.com/jbytecode/rcaller/releases) and added it to your pom.xml.
 
-coming soon: library available in the maven central repository
+import RCaller in your project using `maven`. add following dependency to `pom.xml`
+
+<dependency>
+  <groupId>org.expr.rcaller</groupId>
+  <artifactId>RCaller</artifactId>
+  <version>2.6</version>
+</dependency>

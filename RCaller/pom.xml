@@ -1,41 +1,144 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-  <groupId>rcaller</groupId>
-  <artifactId>RCaller</artifactId>
-  <version>2.6_rc</version>
-  <packaging>jar</packaging>
+    <groupId>org.expr.rcaller</groupId>
+    <artifactId>RCaller</artifactId>
+    <version>2.6</version>
+    <packaging>jar</packaging>
 
-  <name>RCaller</name>
-  <url>http://maven.apache.org</url>
+    <name>RCaller</name>
+    <url>https://github.com/jbytecode/rcaller</url>
 
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.5</maven.compiler.source>
-    <maven.compiler.target>1.5</maven.compiler.target>
-  </properties>
+    <developers>
+        <developer>
+            <name>Mehmet Hakan Satman</name>
+            <email>mhsatman@gmail.com</email>
+        </developer>
+        <developer>
+            <name>mhsatman@gmail.com</name>
+            <email>mbatchkarov@gmail.com</email>
+        </developer>
+        <developer>
+            <name>Paul Curcean</name>
+            <email>curcean.paul@gmail.com</email>
+        </developer>
+    </developers>
 
+    <scm>
+        <connection>scm:git:https://github.com/jbytecode/rcaller.git</connection>
+        <developerConnection>scm:git:git@github.com:jbytecode/rcaller.git</developerConnection>
+        <url>git@github.com:jbytecode/rcaller.git</url>
+    </scm>
 
-  
-  <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.7</version>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-    <description>http://www.mhsatman.com
-</description>
+    <licenses>
+        <license>
+            <name>GNU GPL</name>
+            <url>https://www.gnu.org/copyleft/gpl.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-<build>
-    <resources>
-        <resource>
-            <directory>src/main/java/org/expr/rcaller/runiversal</directory>
-            <targetPath>org/expr/rcaller/runiversal/</targetPath>
-        </resource>
-    </resources>
-</build>
+    <description>
+        http://www.mhsatman.com
+    </description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.5</maven.compiler.source>
+        <maven.compiler.target>1.5</maven.compiler.target>
+    </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.7</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+        <resources>
+            <resource>
+                <directory>src/main/java/org/expr/rcaller/runiversal</directory>
+                <targetPath>org/expr/rcaller/runiversal/</targetPath>
+            </resource>
+        </resources>
+    </build>
 
 </project>

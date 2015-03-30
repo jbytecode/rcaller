@@ -35,7 +35,7 @@ import java.util.ArrayList;
 
 /**
  * A class to handle R's standard output and error streams
- * @author Miroslav Batchkarov <mbatchkarov@gmail.com>
+ * @author <a href="mailto:mbatchkarov@gmail.com">Miroslav Batchkarov</a>
  */
 public class RStreamHandler implements Runnable {
 

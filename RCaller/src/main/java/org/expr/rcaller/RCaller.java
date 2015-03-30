@@ -81,7 +81,7 @@ public class RCaller {
      * How long this R caller will wait for the R process to terminate before
      * forcibly killing it
      *
-     * @return
+     * @return maxWaitTime - the max time to wait
      */
     public long getMaxWaitTime() {
         return maxWaitTime;
@@ -90,6 +90,7 @@ public class RCaller {
     /**
      * How long this R caller will wait for the R process to terminate before
      * forcibly killing it (in milliseconds)
+     * @param maxWaitTime - the max time to wait
      */
     public void setMaxWaitTime(long maxWaitTime) {
         this.maxWaitTime = maxWaitTime;
@@ -102,7 +103,7 @@ public class RCaller {
      * system from shutting it down, so that the same process is used. Invoke
      * this method when you have used R online and are finished with it.
      *
-     * @return
+     * @return true if rOutput and rError are alive, else return false
      */
     public boolean stopStreamConsumers() {
         rOutput.setCloseSignal(true);
@@ -464,8 +465,8 @@ public class RCaller {
     /**
      * Sets the failure policy of this RCaller
      *
-     * @param f
-     * @see RCaller$FailurePolicy
+     * @param f - the FailurePolicy f
+     * @see RCaller.FailurePolicy
      */
     public void setFailurePolicy(FailurePolicy f) {
         this.failPolicy = f;
