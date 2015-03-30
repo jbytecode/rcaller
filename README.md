@@ -29,8 +29,8 @@ download the [.jar file](https://github.com/jbytecode/rcaller/releases) and adde
 
 import RCaller in your project using `maven`. add following dependency to `pom.xml`
 
-<dependency>
-  <groupId>org.expr.rcaller</groupId>
-  <artifactId>RCaller</artifactId>
-  <version>2.6</version>
-</dependency>
+    <dependency>
+      <groupId>org.expr.rcaller</groupId>
+      <artifactId>RCaller</artifactId>
+      <version>2.6</version>
+    </dependency>
