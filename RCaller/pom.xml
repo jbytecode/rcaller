@@ -33,7 +33,7 @@
 
     <licenses>
         <license>
-            <name>GNU GPL</name>
+            <name>GNU LGPL</name>
             <url>https://www.gnu.org/copyleft/gpl.html</url>
             <distribution>repo</distribution>
         </license>
