@@ -34,7 +34,7 @@
     <licenses>
         <license>
             <name>GNU LGPL</name>
-            <url>https://www.gnu.org/copyleft/gpl.html</url>
+            <url>https://www.gnu.org/copyleft/lgpl.html</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
