@@ -244,4 +244,23 @@ public class CodeUtils {
             RCode.append(name).append("<-").append(strBool).append("\n");
         }
     }
+    
+    public static void addLogical(StringBuffer RCode, String name, boolean b, boolean useEquals){
+        addBoolean(RCode, name, b, useEquals);
+    }
+    
+    public static void addString(StringBuffer RCode, String name, String value, boolean useEquals) {
+        if (useEquals) {
+            RCode.append(name).append("=")
+                    .append("\"")
+                    .append(value)
+                    .append("\"");
+        } else {
+            RCode.append(name).append("<-")
+                    .append("\"")
+                    .append(value)
+                    .append("\"")
+                    .append("\n");
+        }
+    }
 }

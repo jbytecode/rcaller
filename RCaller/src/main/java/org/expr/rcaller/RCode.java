@@ -148,6 +148,14 @@ public class RCode {
         CodeUtils.addBoolean(code, name, b, false);
     }
     
+    public void addLogical(String name, boolean b){
+        addBoolean(name, b);
+    }
+    
+    public void addString(String name, String value){
+        CodeUtils.addString(code, name, value, false);
+    }
+    
     public File startPlot() throws IOException {
         return (startPlot(GraphicsType.png));
     }

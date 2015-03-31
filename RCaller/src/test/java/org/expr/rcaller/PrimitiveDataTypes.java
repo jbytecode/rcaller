@@ -81,4 +81,12 @@ public class PrimitiveDataTypes {
         assertEquals(true, code.toString().contains("d<-TRUE\n"));
     }
     
+    @Test
+    public void testString(){
+        String msg = "Hello R!";
+        RCode code = new RCode();
+        code.addString("s", msg);
+        assertEquals(true, code.toString().contains("s<-\"Hello R!\"\n"));
+    }
+    
 }
