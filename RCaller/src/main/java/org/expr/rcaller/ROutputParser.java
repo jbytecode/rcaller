@@ -26,10 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.expr.rcaller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -39,6 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.expr.rcaller.exception.ParseException;
 import org.expr.rcaller.exception.XMLParseException;
+import org.xml.sax.InputSource;
 
 /**
  *
@@ -89,8 +87,17 @@ public class ROutputParser {
     }
 
     try {
-      document = builder.parse(XMLFile);
+      FileInputStream in = new FileInputStream(XMLFile);
+      Reader reader = new InputStreamReader(in,"UTF-8");
+      InputSource is = new InputSource(reader);
+      is.setEncoding("UTF-8");
+      document = builder.parse(is);
     } catch (Exception e) {
+      StackTraceElement[] frames = e.getStackTrace();
+      String msgE="";
+      for(StackTraceElement frame : frames)
+        msgE += frame.getClassName() + "-" + frame.getMethodName() + "-" + String.valueOf(frame.getLineNumber());
+      System.out.println(e + msgE);
       throw new XMLParseException("Can not parse the R output: " + e.toString());
     }
 
