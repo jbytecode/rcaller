@@ -29,6 +29,20 @@ download the [.jar file](https://github.com/jbytecode/rcaller/releases) and adde
 
 import RCaller in your project using `maven`. add following dependency to `pom.xml`
 
+     <repository>
+          <id>sonatype-nexus-snapshots</id>
+          <name>Sonatype Nexus Snapshots</name>
+          <url>
+              https://oss.sonatype.org/content/repositories/snapshots
+          </url>
+          <releases>
+              <enabled>true</enabled>
+          </releases>
+          <snapshots>
+              <enabled>true</enabled>
+          </snapshots>
+      </repository>
+
     <dependency>
       <groupId>org.expr.rcaller</groupId>
       <artifactId>RCaller</artifactId>
