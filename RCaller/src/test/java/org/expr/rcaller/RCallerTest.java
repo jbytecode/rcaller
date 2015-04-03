@@ -25,9 +25,6 @@
  */
 package org.expr.rcaller;
 
-import org.expr.rcaller.Globals;
-import org.expr.rcaller.RCaller;
-import org.expr.rcaller.RCode;
 import java.io.File;
 import org.junit.After;
 import org.junit.AfterClass;

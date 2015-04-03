@@ -23,138 +23,59 @@
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
+
 package org.expr.rcaller;
 
-/*
- * I wrote this code dirty because the methods have similar content.
- * More automation needed.
- */
+import org.apache.commons.lang.ArrayUtils;
+
 public class CodeUtils {
 
     public static void addIntArray(StringBuffer RCode, String name, int[] arr, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
-        }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append(String.valueOf(arr[i]));
-            if (i < arr.length - 1) {
-                RCode.append(", ");
-            }
-        }
-        if (useEquals) {
-            RCode.append(")");
-        } else {
-            RCode.append(");").append("\n");
-        }
+        addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
     public static void addLongArray(StringBuffer RCode, String name, long[] arr, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
-        }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append(String.valueOf(arr[i]));
-            if (i < arr.length - 1) {
-                RCode.append(", ");
-            }
-        }
-        if (useEquals) {
-            RCode.append(")");
-        } else {
-            RCode.append(");").append("\n");
-        }
+        addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
     
     
     public static void addFloatArray(StringBuffer RCode, String name, float[] arr, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
-        }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append(String.valueOf(arr[i]));
-            if (i < arr.length - 1) {
-                RCode.append(", ");
-            }
-        }
-        if (useEquals) {
-            RCode.append(")");
-        } else {
-            RCode.append(");").append("\n");
-        }
+        addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
     public static void addDoubleArray(StringBuffer RCode, String name, double[] arr, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
-        }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append(String.valueOf(arr[i]));
-            if (i < arr.length - 1) {
-                RCode.append(", ");
-            }
-        }
-        if (useEquals) {
-            RCode.append(")");
-        } else {
-            RCode.append(");").append("\n");
-        }
+        addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
     public static void addStringArray(StringBuffer RCode, String name, String[] arr, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
-        }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append("\"").append(arr[i]).append("\"");
-            if (i < arr.length - 1) {
-                RCode.append(", ");
-            }
-        }
-        if (useEquals) {
-            RCode.append(")");
-        } else {
-            RCode.append(");").append("\n");
-        }
+        addArray(RCode, name, arr, useEquals, true);
     }
 
     public static void addShortArray(StringBuffer RCode, String name, short[] arr, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
-        }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append(String.valueOf(arr[i]));
-            if (i < arr.length - 1) {
-                RCode.append(", ");
-            }
-        }
-        if (useEquals) {
-            RCode.append(")");
-        } else {
-            RCode.append(");").append("\n");
-        }
+        addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
     public static void addLogicalArray(StringBuffer RCode, String name, boolean[] arr, boolean useEquals) {
+        String[] stringArray = new String[arr.length];
+        for (int i = 0; i < arr.length; i++) {
+            stringArray[i] = String.valueOf(arr[i]).toUpperCase();
+        }
+        addArray(RCode, name, stringArray, useEquals, false);
+    }
+
+    public static <T> void addArray(StringBuffer RCode, String name, T[] array, boolean useEquals, boolean isString) {
         if (useEquals) {
             RCode.append(name).append("=").append("c(");
         } else {
             RCode.append(name).append("<-").append("c(");
         }
-        for (int i = 0; i < arr.length; i++) {
-            RCode.append(String.valueOf(arr[i]).toUpperCase());
-            if (i < arr.length - 1) {
+        for (int i = 0; i < array.length; i++) {
+            if (isString) {
+                RCode.append("\"").append(array[i]).append("\"");
+            } else {
+                RCode.append(array[i]);
+            }
+            if (i < array.length - 1) {
                 RCode.append(", ");
             }
         }
