@@ -197,52 +197,27 @@ public class CodeUtils {
     }
 
     public static void addDouble(StringBuffer RCode, String name, double d, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append(d);
-        } else {
-            RCode.append(name).append("<-").append(d).append("\n");
-        }
+        addValue(RCode, name, d, useEquals);
     }
 
     public static void addInt(StringBuffer RCode, String name, int i, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append(i);
-        } else {
-            RCode.append(name).append("<-").append(i).append("\n");
-        }
+        addValue(RCode, name, i, useEquals);
     }
     
     public static void addLong(StringBuffer RCode, String name, long l, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append(l);
-        } else {
-            RCode.append(name).append("<-").append(l).append("\n");
-        }
+        addValue(RCode, name, l, useEquals);
     }
     
     public static void addFloat(StringBuffer RCode, String name, float f, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append(f);
-        } else {
-            RCode.append(name).append("<-").append(f).append("\n");
-        }
+        addValue(RCode, name, String.valueOf(f).toUpperCase(), useEquals);
     }
     
     public static void addShort(StringBuffer RCode, String name, short s, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append(s);
-        } else {
-            RCode.append(name).append("<-").append(s).append("\n");
-        }
+        addValue(RCode, name, s, useEquals);
     }
     
     public static void addBoolean(StringBuffer RCode, String name, boolean b, boolean useEquals) {
-        String strBool = String.valueOf(b).toUpperCase();
-        if (useEquals) {
-            RCode.append(name).append("=").append(strBool);
-        } else {
-            RCode.append(name).append("<-").append(strBool).append("\n");
-        }
+        addValue(RCode, name, String.valueOf(b).toUpperCase(), useEquals);
     }
     
     public static void addLogical(StringBuffer RCode, String name, boolean b, boolean useEquals){
@@ -261,6 +236,14 @@ public class CodeUtils {
                     .append(value)
                     .append("\"")
                     .append("\n");
+        }
+    }
+
+    private static void addValue(StringBuffer RCode, String name, Object value, boolean useEquals) {
+        if (useEquals) {
+            RCode.append(name).append("=").append(value);
+        } else {
+            RCode.append(name).append("<-").append(value).append("\n");
         }
     }
 }
