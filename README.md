@@ -23,25 +23,27 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
  and 
 [examples](https://github.com/jbytecode/rcaller/tree/master/RCaller/src/main/java/examples)
 
-# Building
+# Building RCaller
 
 download the [.jar file](https://github.com/jbytecode/rcaller/releases) and added it to your pom.xml.
 
 import RCaller in your project using `maven`. add following dependency to `pom.xml`
 
-     <repository>
-          <id>sonatype-nexus-snapshots</id>
-          <name>Sonatype Nexus Snapshots</name>
-          <url>
-              https://oss.sonatype.org/content/repositories/snapshots
-          </url>
-          <releases>
-              <enabled>true</enabled>
-          </releases>
-          <snapshots>
-              <enabled>true</enabled>
-          </snapshots>
+    <repositories>
+      <repository>
+       <id>sonatype-nexus-snapshots</id>
+        <name>Sonatype Nexus Snapshots</name>
+         <url>
+          https://oss.sonatype.org/service/local/staging/deploy/maven2/
+         </url>
+         <releases>
+          <enabled>true</enabled>
+         </releases>
+         <snapshots>
+          <enabled>true</enabled>
+         </snapshots>
       </repository>
+    </repositories>
 
     <dependency>
       <groupId>org.expr.rcaller</groupId>
