@@ -1,10 +1,5 @@
 package org.expr.rcaller;
 
-import org.expr.rcaller.Globals;
-import org.expr.rcaller.FunctionParameter;
-import org.expr.rcaller.RCaller;
-import org.expr.rcaller.FunctionCall;
-import org.expr.rcaller.RCode;
 import org.junit.Test;
 import org.junit.Assert;
 
