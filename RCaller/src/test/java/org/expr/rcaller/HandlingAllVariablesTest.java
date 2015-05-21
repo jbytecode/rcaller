@@ -60,4 +60,30 @@ public class HandlingAllVariablesTest {
         Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[0], 5.65, delta);
         Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[0], 8.96, delta);
     }
+    
+    @Test
+    public void GetAllVectorsInEnvironmentTest() {
+        RCaller caller = new RCaller();
+        Globals.detect_current_rscript();
+        caller.setRscriptExecutable(Globals.Rscript_current);
+
+        RCode code = new RCode();
+
+        code.addDoubleArray("x", new double[]{1,2,3,4,5});
+        code.addDoubleArray("y", new double[]{2,4,6,8,10});
+        code.addRCode("result <- as.list(.GlobalEnv)");
+
+        caller.setRCode(code);
+
+        caller.runAndReturnResult("result");
+
+        ArrayList<String> names = caller.getParser().getNames();
+        System.out.println("Names : " + names);
+
+        System.out.println("x[4] is " + caller.getParser().getAsDoubleArray("x")[4]);
+        System.out.println("y[4] is " + caller.getParser().getAsDoubleArray("y")[4]);
+
+        Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[4], 5, delta);
+        Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[4], 10, delta);
+    }
 }
