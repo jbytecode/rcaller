@@ -53,7 +53,7 @@ import RCaller in your project using `maven`. add following dependency to `pom.x
      <dependency>
       <groupId>org.expr.rcaller</groupId>
       <artifactId>RCaller</artifactId>
-      <version>2.6</version>
+      <version>2.6.0.3</version>
      </dependency>
      ...
     </dependencies>
