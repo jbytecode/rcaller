@@ -238,10 +238,9 @@ public class RCaller {
         boolean done = false;
         do {
             if (getRetries() > 0) {
-                System.out.println("Retrying online R execution");
+                Logger.getLogger(RCaller.class.getName()).log(Level.INFO, "Retrying online R execution");
             }
 
-            String commandline = null;
             File outputFile = null;
 
             if (this.RExecutable == null) {
@@ -270,7 +269,7 @@ public class RCaller {
 
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
-                    commandline = RExecutable + " --vanilla";
+                    String commandline = RExecutable + " --vanilla";
                     process = Runtime.getRuntime().exec(commandline);
                     rInput = process.getOutputStream();
                     rOutput.setStream(process.getInputStream());
@@ -426,7 +425,7 @@ public class RCaller {
         try {
             parser.parse();
         } catch (Exception e) {
-            System.out.println(rcode.toString());
+            Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rcode.toString());
             throw new ParseException("Can not handle R results due to : " + e.toString());
         }
 
