@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.expr.rcaller</groupId>
   <artifactId>RCaller</artifactId>
-  <version>2.6</version>
+  <version>2.7</version>
   <name>RCaller</name>
   <description>http://www.mhsatman.com</description>
   <url>https://github.com/jbytecode/rcaller</url>
@@ -31,7 +31,7 @@
   </developers>
   <scm>
     <connection>scm:git:https://github.com/jbytecode/rcaller.git</connection>
-    <developerConnection>scm:git:https://git@github.com:jbytecode/rcaller.git</developerConnection>
+    <developerConnection>scm:git:https://github.com/jbytecode/rcaller.git</developerConnection>
     <url>https://github.com/jbytecode/rcaller</url>
   </scm>
   <distributionManagement>
@@ -106,7 +106,7 @@
       </testResource>
     </testResources>
     <directory>target</directory>
-    <finalName>RCaller-2.6</finalName>
+    <finalName>RCaller-2.7</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-scm-plugin</artifactId>

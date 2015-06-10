@@ -3,7 +3,7 @@
 
     <groupId>org.expr.rcaller</groupId>
     <artifactId>RCaller</artifactId>
-    <version>2.7-SNAPSHOT</version>
+    <version>2.7</version>
     <packaging>jar</packaging>
 
     <name>RCaller</name>
@@ -28,7 +28,8 @@
         <url>https://github.com/jbytecode/rcaller</url>
         <connection>scm:git:https://github.com/jbytecode/rcaller.git</connection>
         <developerConnection>scm:git:https://github.com/jbytecode/rcaller.git</developerConnection>
-    </scm>
+      <tag>RCaller-2.7</tag>
+  </scm>
 
     <licenses>
         <license>
