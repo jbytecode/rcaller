@@ -25,21 +25,17 @@
  */
 package org.expr.rcaller;
 
-import org.expr.rcaller.graphics.GraphicsTheme;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.expr.rcaller.exception.ExecutionException;
 import org.expr.rcaller.exception.ParseException;
 import org.expr.rcaller.exception.RExecutableNotFoundException;
 import org.expr.rcaller.exception.RscriptExecutableNotFoundException;
+import org.expr.rcaller.graphics.GraphicsTheme;
+
+import java.io.*;
+import java.nio.charset.Charset;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -56,6 +52,7 @@ public class RCaller {
     protected Process process;
     protected RStreamHandler rOutput = null;
     protected RStreamHandler rError = null;
+    protected MessageSaver errorMessageSaver = new MessageSaver();
     protected OutputStream rInput = null;
     protected FailurePolicy failPolicy;
     //in case of R failute, how many retries have been made
@@ -73,6 +70,7 @@ public class RCaller {
         //set the stream they listen to to null
         rOutput = new RStreamHandler(null, "Output");
         rError = new RStreamHandler(null, "Error");
+        rError.addEventHandler(errorMessageSaver);
         tempFileService = new TempFileService();
         cleanRCode();
     }
@@ -106,10 +104,17 @@ public class RCaller {
      * @return true if rOutput and rError are alive, else return false
      */
     public boolean stopStreamConsumers() {
-        rOutput.setCloseSignal(true);
-        rError.setCloseSignal(true);
+        rOutput.stop();
+        rError.stop();
         return rOutput.isAlive()
                 && rError.isAlive();
+    }
+
+    public void startStreamConsumers(Process process) {
+        rOutput.setStream(process.getInputStream());
+        rOutput.start();
+        rError.setStream(process.getErrorStream());
+        rError.start();
     }
 
     public void setRExecutable(String RExecutable) {
@@ -201,25 +206,36 @@ public class RCaller {
      * reason
      */
     public void runOnly() throws org.expr.rcaller.exception.ExecutionException {
+        this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
+        runRCode();
+    }
+
+    private Process exec(String command) throws IOException {
+        return Runtime.getRuntime().exec(command);
+    }
+
+    private void runRCode() throws org.expr.rcaller.exception.ExecutionException {
         if (this.RscriptExecutable == null) {
             throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
-                    + "to full path of Rscript executable binary file.");
-        }
-        this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
-        File rSourceFile = createRSourceFile();
-        try {
-            //this Process object is local to this method. Do not use the public one.
-            process = Runtime.getRuntime().exec(RscriptExecutable + " " + rSourceFile.toString());
-            rOutput.setStream(process.getInputStream());
-            rError.setStream(process.getErrorStream());
-            rOutput.start();
-            rError.start();
-            process.waitFor();
-        } catch (Exception e) {
-            throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+                + "to full path of Rscript executable binary file.");
         }
 
-        stopStreamConsumers();
+        File rSourceFile = createRSourceFile();
+        errorMessageSaver.resetMessage();
+        int returnCode;
+        try {
+            //this Process object is local to this method. Do not use the public one.
+            process = exec(RscriptExecutable + " " + rSourceFile.toString());
+            startStreamConsumers(process);
+            returnCode = process.waitFor();
+        } catch (Exception e) {
+            throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+        } finally {
+            stopStreamConsumers();
+        }
+        if (returnCode != 0) {
+            throw new ExecutionException("R command failed with error. Reason: " + errorMessageSaver.getMessage());
+        }
     }
 
     /**
@@ -236,95 +252,96 @@ public class RCaller {
         this.retries = 0;//assumes only one of the run* methods of this class is 
 //        executing at any given time
         boolean done = false;
-        do {
-            if (getRetries() > 0) {
-                Logger.getLogger(RCaller.class.getName()).log(Level.INFO, "Retrying online R execution");
-            }
-
-            File outputFile = null;
-
-            if (this.RExecutable == null) {
-                if (handleRFailure("RExecutable is not defined.Please set this"
-                        + " variable to full path of R executable binary file.")) {
-                    continue;
+        try {
+            do {
+                if (getRetries() > 0) {
+                    Logger.getLogger(RCaller.class.getName()).log(Level.INFO, "Retrying online R execution");
                 }
-                //error handler says it's ok to try again
+
+                File outputFile = null;
+
+                if (this.RExecutable == null) {
+                    if (handleRFailure("RExecutable is not defined.Please set this"
+                        + " variable to full path of R executable binary file.")) {
+                        continue;
+                    }
+                    //error handler says it's ok to try again
 
 //                throw new RCallerExecutionException("RExecutable is not defined."
 //                        + " Please set this variable to full path of R executable binary file.");
-            }
-
-            try {
-                //outputFile = File.createTempFile("Routput", "");
-                outputFile = tempFileService.createTempFile("Routput", "");
-            } catch (IOException e) {
-                if (handleRFailure("Can not create a tempopary file for storing the R results: "
-                        + e.toString())) {
-                    continue;
                 }
-            }
 
-            rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").
-                    append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-
-            if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
-                    String commandline = RExecutable + " --vanilla";
-                    process = Runtime.getRuntime().exec(commandline);
-                    rInput = process.getOutputStream();
-                    rOutput.setStream(process.getInputStream());
-                    rOutput.start();
-                    rError.setStream(process.getErrorStream());
-                    rError.start();
-
-                } catch (Exception e) {
-                    if (handleRFailure("Can not run " + RExecutable + ". Reason: "
-                            + e.toString())) {
+                    //outputFile = File.createTempFile("Routput", "");
+                    outputFile = tempFileService.createTempFile("Routput", "");
+                } catch (IOException e) {
+                    if (handleRFailure("Can not create a tempopary file for storing the R results: "
+                        + e.toString())) {
                         continue;
                     }
                 }
-            }
 
-            try {
-                rInput.write(rcode.toString().getBytes());
-                rInput.flush();
-            } catch (IOException e) {
-                if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
-                    continue;
-                }
-            }
+                rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").
+                    append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
 
-            long slept = 0;
-            boolean processKilled = false;
-            try {
-                while (!processKilled && outputFile.length() < 1) {
-                    //TODO checking file length is wrong. R can still be writing to the file when
-                    //java attempts to read, resulting in an xml parse exception. We need to  put in 
-                    //a lock file or something like that and only read when that is gone
-                    Thread.sleep(1);
-                    slept++;
-                    if (slept > this.maxWaitTime) {
-                        process.destroy();
-                        stopStreamConsumers();
-                        processKilled = true;
+                if (rInput == null || rOutput == null || rError == null || process == null) {
+                    try {
+                        String commandline = RExecutable + " --vanilla";
+                        process = exec(commandline);
+                        rInput = process.getOutputStream();
+                        startStreamConsumers(process);
+
+                    } catch (Exception e) {
+                        if (handleRFailure("Can not run " + RExecutable + ". Reason: "
+                            + e.toString())) {
+                            continue;
+                        }
                     }
                 }
-            } catch (InterruptedException e) {
-                e.printStackTrace();//quite lame, sorry
-            }
 
-            parser.setXMLFile(outputFile);
-
-            try {
-                parser.parse();
-            } catch (ParseException e) {
-                if (handleRFailure("Can not handle R results due to : " + e.toString())) {
-                    continue;
+                try {
+                    rInput.write(rcode.toString().getBytes());
+                    rInput.flush();
+                } catch (IOException e) {
+                    if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
+                        continue;
+                    }
                 }
-            }
 
-            done = true;//if we got to there, no exceptions occured
-        } while (!done);
+                long slept = 0;
+                boolean processKilled = false;
+                try {
+                    while (!processKilled && outputFile.length() < 1) {
+                        //TODO checking file length is wrong. R can still be writing to the file when
+                        //java attempts to read, resulting in an xml parse exception. We need to  put in
+                        //a lock file or something like that and only read when that is gone
+                        Thread.sleep(1);
+                        slept++;
+                        if (slept > this.maxWaitTime) {
+                            process.destroy();
+                            stopStreamConsumers();
+                            processKilled = true;
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();//quite lame, sorry
+                }
+
+                parser.setXMLFile(outputFile);
+
+                try {
+                    parser.parse();
+                } catch (ParseException e) {
+                    if (handleRFailure("Can not handle R results due to : " + e.toString())) {
+                        continue;
+                    }
+                }
+
+                done = true;//if we got to there, no exceptions occured
+            } while (!done);
+        } finally {
+            stopStreamConsumers();
+        }
     }
 
     public void StopRCallerOnline() {
@@ -389,14 +406,7 @@ public class RCaller {
      */
     public void runAndReturnResult(String var) throws org.expr.rcaller.exception.ExecutionException {
         //TODO this method should throw different exceptions depending on why it has failed
-        String commandline = null;
-        String result = null;
-        File rSourceFile, outputFile;
-
-        if (this.RscriptExecutable == null) {
-            throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
-                    + "to full path of Rscript executable binary file.");
-        }
+        File outputFile;
 
         try {
             //outputFile = File.createTempFile("Routput", "");
@@ -407,19 +417,7 @@ public class RCaller {
 
         rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
                 append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-        rSourceFile = createRSourceFile();
-        try {
-            commandline = RscriptExecutable + " " + rSourceFile.toString();
-            //This Process object is local to this method. Do not use the field!
-            Process process = Runtime.getRuntime().exec(commandline);
-            rOutput.setStream(process.getInputStream());
-            rError.setStream(process.getErrorStream());
-            rOutput.start();
-            rError.start();
-            process.waitFor();
-        } catch (Exception e) {
-            throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
-        }
+        runRCode();
 
         parser.setXMLFile(outputFile);
         try {
@@ -428,8 +426,6 @@ public class RCaller {
             Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rcode.toString());
             throw new ParseException("Can not handle R results due to : " + e.toString());
         }
-
-        stopStreamConsumers();
     }
 
     public void redirectROutputToConsole() {
@@ -443,8 +439,7 @@ public class RCaller {
     }
 
     public void redirectROutputToStream(final OutputStream o) {
-        EventHandler eh = new EventHandler(o) {
-
+        EventHandler eh = new EventHandler() {
             public void messageReceived(String senderName, String msg) {
                 try {
                     o.write(senderName.getBytes());
