@@ -31,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 /**
@@ -42,7 +43,6 @@ public class RStreamHandler implements Runnable {
     private InputStream stream = null;
     private BufferedReader reader = null;
     private final Thread consumerThread;
-    private boolean closeSignal = false;
     private String name = null;
     private ArrayList<EventHandler> eventHandlers = null;
 
@@ -56,7 +56,6 @@ public class RStreamHandler implements Runnable {
     public void setStream(InputStream stream) {
         this.stream = stream;
     }
-    
 
     public void addEventHandler(EventHandler eh) {
         this.eventHandlers.add(eh);
@@ -66,15 +65,18 @@ public class RStreamHandler implements Runnable {
         this.eventHandlers.remove(eh);
     }
 
-    public void setCloseSignal(boolean closeSignal) {
-        this.closeSignal = closeSignal;
-    }
-
     public void start() {
-        closeSignal = false;
 //        this.consumerThread = new Thread(this);
 //        this.consumerThread.setName(this.name);
         this.consumerThread.start();
+    }
+
+    public void stop() {
+        try {
+            this.consumerThread.join();
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public boolean isAlive() {
@@ -83,20 +85,21 @@ public class RStreamHandler implements Runnable {
 
     public void run() {
         if (reader == null) {
-            reader = new BufferedReader(new InputStreamReader(stream));
+            //HACK: OS encoding may differ from default encoding (especially on Windows system) and it
+            //results in invalid output messages encoding
+            Charset charset = Charset.forName(System.getProperty("sun.jnu.encoding", Charset.defaultCharset().name()));
+            reader = new BufferedReader(new InputStreamReader(stream, charset));
         }
-        String s;
-        while (!closeSignal) {
-            try {
-                s = reader.readLine();
-                if (s != null) {
-                    for (EventHandler eventHandler : eventHandlers) {
-                        eventHandler.messageReceived(name, s);
-                    }
+        try {
+            String s = reader.readLine();
+            while (s != null) {
+                for (EventHandler eventHandler : eventHandlers) {
+                    eventHandler.messageReceived(name, s);
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+                s = reader.readLine();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
