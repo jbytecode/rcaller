@@ -283,7 +283,7 @@ public class RCaller {
 
                 rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").
                     append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-
+                rcode.getCode().append("\n");
                 if (rInput == null || rOutput == null || rError == null || process == null) {
                     try {
                         String commandline = RExecutable + " --vanilla";
@@ -340,7 +340,7 @@ public class RCaller {
                 done = true;//if we got to there, no exceptions occured
             } while (!done);
         } finally {
-            stopStreamConsumers();
+            //stopStreamConsumers();
         }
     }
 

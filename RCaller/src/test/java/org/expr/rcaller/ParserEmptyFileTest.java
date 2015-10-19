@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
 
 public class ParserEmptyFileTest {
 
-    @Test(expected = org.expr.rcaller.exception.ParseException.class)
+    @Test(expected = Exception.class)
     public void EmptyOutputInParser(){
     	RCaller caller = new RCaller();
         Globals.detect_current_rscript();

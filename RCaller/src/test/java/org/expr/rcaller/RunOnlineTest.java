@@ -185,6 +185,7 @@ public class RunOnlineTest {
         //both consumer threads are dead, program must terminate now
         System.out.println("done");
         rcaller.deleteTempFiles();
+        rcaller.stopStreamConsumers();
         rcaller.StopRCallerOnline();
     }
 

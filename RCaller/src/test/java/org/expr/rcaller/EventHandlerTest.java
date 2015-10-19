@@ -55,6 +55,7 @@ public class EventHandlerTest {
         code.addRCode("m<-median(x)");
         caller.setRCode(code);
         System.out.println("running code");
+        System.out.println(code);
         caller.runAndReturnResultOnline("m");
 
         code.clear();

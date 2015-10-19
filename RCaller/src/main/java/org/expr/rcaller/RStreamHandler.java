@@ -23,8 +23,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-
-
 package org.expr.rcaller;
 
 import java.io.BufferedReader;
@@ -36,6 +34,7 @@ import java.util.ArrayList;
 
 /**
  * A class to handle R's standard output and error streams
+ *
  * @author <a href="mailto:mbatchkarov@gmail.com">Miroslav Batchkarov</a>
  */
 public class RStreamHandler implements Runnable {
@@ -72,11 +71,8 @@ public class RStreamHandler implements Runnable {
     }
 
     public void stop() {
-        try {
-            this.consumerThread.join();
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        }
+        //this.consumerThread.join();
+        this.consumerThread.interrupt();
     }
 
     public boolean isAlive() {
