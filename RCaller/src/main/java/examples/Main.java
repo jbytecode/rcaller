@@ -24,9 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import java.io.File;
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,7 +41,8 @@ public class Main {
   public Main() {
     try {
       RCaller r = new RCaller();
-      r.setRscriptExecutable("/usr/bin/Rscript");
+      Globals.detect_current_rscript();
+      r.setRscriptExecutable(Globals.Rscript_current);
       RCode code = new RCode();
       double[] x = new double[]{1, 2, 3, 4, 5};
       double[] y = new double[]{5, 7, 6, 10, 20};
@@ -61,11 +66,11 @@ public class Main {
       System.out.println("Names : " + r.getParser().getNames());
       code.showPlot(f);
       double[] v = r.getParser().getAsDoubleArray("fitted_values");
-      for (int i = 0; i < v.length; i++) {
-        System.out.println(v[i]);
+      for (double aV : v) {
+        System.out.println(aV);
       }
     } catch (Exception e) {
-      System.out.println(e);
+      Logger.getLogger(Main.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 

@@ -24,16 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
 import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  *
@@ -41,8 +38,6 @@ import org.expr.rcaller.RCode;
  */
 public class SampleGui extends JFrame implements ActionListener {
 
-  //Please change this variable if the Rscript is in an other folder.
-  String RScriptExecutable = "/usr/bin/Rscript";
   JTextArea textArea;
   JButton button;
   JTextField textField;
@@ -56,8 +51,7 @@ public class SampleGui extends JFrame implements ActionListener {
     this.setLayout(null);
 
     Globals.detect_current_rscript();
-    this.RScriptExecutable = Globals.Rscript_current;
-    
+
     textArea = new JTextArea("myvar<-c(1,2,3,4,5)\nothervar<-runif(10,0,1)\ncat(\"Hello World!\")\nfor(i in 1:5){\nprint(i)\n}\n");
     textArea.setSize(350, 200);
     textArea.setLocation(10, 20);
@@ -110,39 +104,25 @@ public class SampleGui extends JFrame implements ActionListener {
       this.errorStreamResult.setText("");
       
       RCaller caller = new RCaller();
-      caller.setRscriptExecutable(RScriptExecutable);
+      caller.setRscriptExecutable(Globals.Rscript_current);
       
       RCode code = new RCode();
       code.clear();
       code.addRCode(textArea.getText());
-      
-//      caller.addEventHandler(new EventHandler() {
-//
-//        public void messageReceived(String threadName, String msg) {
-//          if(threadName.equals("Output")){
-//            inputStreamResult.append(msg+"\n");
-//          }else{
-//            errorStreamResult.append(msg+"\n");
-//          }
-//        }
-//      });
-      
+
       
       try {
         caller.setRCode(code);
         caller.runAndReturnResult(textField.getText());
         double[] result = caller.getParser().getAsDoubleArray(textField.getText());
-        StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < result.length; i++) {
-          buf.append(result[i] + "\n");
+        StringBuilder buf = new StringBuilder();
+        for (double aResult : result) {
+          buf.append(aResult).append("\n");
         }
         textResult.setText(buf.toString());
       } catch (Exception ex) {
         JOptionPane.showMessageDialog(this, ex.toString());
       }
-      
-      
-      
     }
   }
 }

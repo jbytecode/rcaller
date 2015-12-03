@@ -3,11 +3,14 @@
  */
 package examples;
 
-import org.expr.rcaller.graphics.SkyTheme;
-import java.io.File;
 import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+import org.expr.rcaller.graphics.SkyTheme;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -41,7 +44,7 @@ public class Example6 {
 
       code.showPlot(plt);
     } catch (Exception e) {
-      System.err.println(e);
+      Logger.getLogger(Example6.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 

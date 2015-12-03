@@ -2,11 +2,12 @@
 package examples;
 
 
-import java.awt.event.KeyEvent;
-import java.io.ByteArrayOutputStream;
 import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.awt.event.KeyEvent;
+import java.io.ByteArrayOutputStream;
 
 public class SampleRGui extends javax.swing.JFrame {
 
@@ -120,13 +121,13 @@ public class SampleRGui extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex.getMessage());
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex.getMessage());
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex.getMessage());
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(SampleRGui.class.getName()).log(java.util.logging.Level.SEVERE, null, ex.getMessage());
         }
         //</editor-fold>
 

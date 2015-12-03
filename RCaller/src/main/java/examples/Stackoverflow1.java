@@ -12,31 +12,32 @@ import org.expr.rcaller.RCode;
 public class Stackoverflow1 {
 
     public static void main(String[] args) {
-        // TODO Auto-generated method stub
         RCaller rcaller = new RCaller();
         Globals.detect_current_rscript();
-        rcaller.setRExecutable(Globals.R_Windows);
+        rcaller.setRExecutable(Globals.R_current);
         RCode code = new RCode();
 
         code.addDoubleArray("x", new double[]{1.0, 2.0, 3.0, 4.0, 50.0});
         code.addRCode("result <- mean(x)");
-	// First step, getting mean of x
-        // Creating a single R process
         rcaller.setRCode(code);
         System.out.println("Running R");
+
         rcaller.runAndReturnResultOnline("result");
+
         double mean = rcaller.getParser().getAsDoubleArray("result")[0];
         System.out.println("mean: " + mean);
-        // Getting standard deviation of x through same process
+
         code.clear();
         code.addRCode("result <- sd(x)");
         rcaller.runAndReturnResultOnline("result");
+
         double sd = rcaller.getParser().getAsDoubleArray("result")[0];
         System.out.println("sd: " + sd);
-        // Getting mad of x through same process
+
         code.clear();
         code.addRCode("result <- mad(x)");
         rcaller.runAndReturnResultOnline("result");
+
         double mad = rcaller.getParser().getAsDoubleArray("result")[0];
         System.out.println("mad: " + mad);
         rcaller.stopStreamConsumers();

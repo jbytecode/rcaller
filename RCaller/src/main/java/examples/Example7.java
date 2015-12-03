@@ -1,10 +1,14 @@
 package examples;
 
-import org.expr.rcaller.graphics.BlackTheme;
-import java.io.File;
-import javax.swing.ImageIcon;
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+import org.expr.rcaller.graphics.BlackTheme;
+
+import javax.swing.*;
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,12 +24,13 @@ public class Example7 {
     try {
 
       RCaller caller = new RCaller();
-      /*
+      /**
        * This must be caller.setRScriptExecutable() instead.
        */
-      caller.setRscriptExecutable("C:/Program Files/R/R-2.13.2/bin/x64/Rscript");
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
 
-      /*
+      /**
        * After version 2.0.6
        * Graphics themes change the theme for plots.
        * Themes:
@@ -35,7 +40,7 @@ public class Example7 {
        */
       caller.setGraphicsTheme(new BlackTheme());
 
-      /*
+      /**
        * After version 2.0.6
        * We build the code using RCode class. Older 
        * methods are deprecated and will no longer will be
@@ -53,7 +58,7 @@ public class Example7 {
       code.addRCode("plot.ts(x)");
       code.endPlot();
 
-      /*
+      /**
        * After version 2.0.6
        * We set the code.
        */
@@ -66,7 +71,7 @@ public class Example7 {
       
       System.out.println("success");
     } catch (Exception e) {
-      System.out.println(e.toString());
+      Logger.getLogger(Example7.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 }

@@ -24,11 +24,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import org.expr.rcaller.graphics.BlackTheme;
-import java.io.File;
 import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -40,7 +42,7 @@ public class SimplePlot {
     new SimplePlot();
   }
 
-  /*
+  /**
    * Test for simple plots.
    * This class simply plots a time series array using plot.ts()
    * function of R.
@@ -51,11 +53,10 @@ public class SimplePlot {
       Globals.detect_current_rscript();
       caller.setRscriptExecutable(Globals.Rscript_current);
       
-      /*
+      /**
        * One of the themes.
        */
-      //caller.setGraphicsTheme(new BlackTheme());
-      
+
       RCode code = new RCode();
       code.clear();
       
@@ -72,16 +73,10 @@ public class SimplePlot {
       caller.setRCode(code);
       System.out.println(code.getCode().toString());
       
-//      caller.addEventHandler(new EventHandler() {
-//
-//        public void messageReceived(String threadName, String msg) {
-//          System.out.println(threadName + ": "+ msg);
-//        }
-//      });
       caller.runOnly();
       code.showPlot(file);
     } catch (Exception e) {
-      System.out.println(e.toString());
+      Logger.getLogger(SimplePlot.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 }

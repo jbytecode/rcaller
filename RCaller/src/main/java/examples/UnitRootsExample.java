@@ -5,9 +5,13 @@
  */
 package examples;
 
-import java.util.Random;
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UnitRootsExample {
 
@@ -17,11 +21,12 @@ public class UnitRootsExample {
 
   public UnitRootsExample() {
     try {
-      /*
+      /**
        * Creating a Random object
        */
       Random random = new Random(12345);
-      /*
+
+      /**
        * Generating artificial data from
        * y[t] = 0.5 + 1* y[t-1] + epsilon
        * where epsilon ~ N(0,1)
@@ -32,10 +37,12 @@ public class UnitRootsExample {
         stockClosePrices[i] = 0.5 + 1 * stockClosePrices[0] + random.nextGaussian();
       }
       RCaller caller = new RCaller();
-      /*
+
+      /**
        * This must be caller.setRScriptExecutable() instead.
        */
-      caller.setRscriptExecutable("/usr/bin/Rscript");
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
 
       RCode code = new RCode();
       code.clear();
@@ -55,7 +62,7 @@ public class UnitRootsExample {
       System.out.println(res[0]);
       System.out.println("success");
     } catch (Exception e) {
-      System.out.println(e.toString());
+      Logger.getLogger(UnitRootsExample.class.getName()).log(Level.SEVERE, e.getMessage());
     }
 
   }

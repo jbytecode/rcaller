@@ -24,8 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -39,17 +43,19 @@ public class Example4 {
   
   public Example4() {
     try {
-      /*
+      /**
        * Creating an instance of RCaller
        */
       RCaller caller = new RCaller();
       RCode code = new RCode();
-      /*
+      Globals.detect_current_rscript();
+
+      /**
        * Defining the Rscript executable
        */
-      caller.setRscriptExecutable("/usr/bin/Rscript");
+      caller.setRscriptExecutable(Globals.Rscript_current);
 
-      /*
+      /**
        * Some R Stuff
        */
       code.addRCode("set.seed(123)");
@@ -57,19 +63,19 @@ public class Example4 {
       code.addRCode("y<-rnorm(10)");
       code.addRCode("ols<-lm(y~x)");
 
-      /*
+      /**
        * We want to handle the object 'ols'
        */
       caller.setRCode(code);
       caller.runAndReturnResult("ols");
 
-      /*
+      /**
        * Getting R results as XML
        * for debugging issues.
        */
       System.out.println(caller.getParser().getXMLFileAsString());
     } catch (Exception e) {
-      System.out.println(e.toString());
+      Logger.getLogger(Example4.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 }

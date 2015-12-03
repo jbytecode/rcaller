@@ -1,15 +1,19 @@
 package examples;
 
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StringArrayTest {
 
   public StringArrayTest() {
     try {
       RCaller caller = new RCaller();
-      //caller.setRscriptExecutable("C:\\Program Files\\R\\R-2.12.0\\bin\\i386\\Rscript.exe");
-      caller.setRscriptExecutable("/usr/bin/Rscript");
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
       RCode code = new RCode();
       code.clear();
 
@@ -25,12 +29,12 @@ public class StringArrayTest {
       caller.runAndReturnResult("result");
 
       String[] v = caller.getParser().getAsStringArray("result");
-      for (int i = 0; i < v.length; i++) {
-        System.out.println(v[i]);
+      for (String aV : v) {
+        System.out.println(aV);
       }
 
     } catch (Exception e) {
-      System.out.println(e);
+      Logger.getLogger(StringArrayTest.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 

@@ -24,8 +24,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -49,51 +53,46 @@ public class Example2 {
   public Example2() {
     
     try {
-      /*
+      /**
        * Creating an instance of RCaller class
        */
       RCaller caller = new RCaller();
       RCode code = new RCode();
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
 
-      /*
-       * Where is the Rscript binary file (Rscript.exe in Windows) ?
-       * We must do this!
-       * 
-       */
-      caller.setRscriptExecutable("/usr/bin/Rscript");
-
-      /*
+      /**
        * Creating vectors x and y
        */
       double[] x = new double[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
       double[] y = new double[]{2, 4, 6, 8, 10, 12, 14, 16, 18, 30};
 
-      /*
+      /**
        * Converting Java arrays to R arrays
        */
       code.addDoubleArray("x", x);
       code.addDoubleArray("y", y);
 
-      /*
+      /**
        * R code for regression of y on x
        */
       code.addRCode("ols<-lm(y~x)");
 
-      /*
+      /**
        * Run all! Our regression code returns someting
        * and we want to handle the variable 'ols'
        */
       caller.setRCode(code);
       caller.runAndReturnResult("ols");
 
-      /*
+      /**
        * Getting names of components of the variable 'ols'
        */
       System.out.println("Available results from lm() object:");
       System.out.println(caller.getParser().getNames());
 
 
-      /*
+      /**
        * Getting ols$residulas, ols$coefficients and ols$fitted.values
        * The names after '$' are components of the lm() object in R language
        */
@@ -101,7 +100,7 @@ public class Example2 {
       double[] coefficients = caller.getParser().getAsDoubleArray("coefficients");
       double[] fitteds = caller.getParser().getAsDoubleArray("fitted_values");
 
-      /*
+      /**
        * Printing results
        */
       System.out.println("Coefficients:");
@@ -113,14 +112,19 @@ public class Example2 {
       for (int i = 0; i < residuals.length; i++) {
         System.out.println(i + " = " + residuals[i]);
       }
+
+      System.out.println("Fitted Values:");
+      for (int i = 0; i < fitteds.length; i++) {
+        System.out.println(i + " = " + fitteds[i]);
+      }
       
     } catch (Exception e) {
-      /*
+      /**
        * Note that, RCaller does some OS based works such as creating an external process and
        * reading files from temporary directories or creating images for plots. Those operations
        * may cause exceptions for those that user must handle the potential errors. 
        */
-      System.out.println(e.toString());
+      Logger.getLogger(Example2.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 }

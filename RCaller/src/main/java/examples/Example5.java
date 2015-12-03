@@ -28,8 +28,12 @@
  */
 package examples;
 
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.statistics.RandomNumberGenerator;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -43,33 +47,36 @@ public class Example5 {
 
     public Example5() {
         try {
-            /*
+            /**
              * RCaller instant
              */
             RCaller caller = new RCaller();
-            /*
+
+            /**
              * Rscript executable
              */
-            caller.setRscriptExecutable("/usr/bin/Rscript");
-            /*
+            Globals.detect_current_rscript();
+            caller.setRscriptExecutable(Globals.Rscript_current);
+
+            /**
              * Random Number Generator
              */
             RandomNumberGenerator rng = new RandomNumberGenerator(caller);
             
-            /*
+            /**
              * Generating random numbers from a normal distribution with 
              * zero mean and unit standard deviation
              */
             double[] d = rng.randomNormal(10, 0, 1);
             
-            /*
+            /**
              * Printing generated content
              */
-            for (int i = 0; i < d.length; i++) {
-                System.out.println(d[i]);
+            for (double aD : d) {
+                System.out.println(aD);
             }
         } catch (Exception e) {
-            System.out.println(e);
+            Logger.getLogger(Example5.class.getName()).log(Level.SEVERE, e.getMessage());
         }
     }
 }

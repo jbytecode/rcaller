@@ -1,8 +1,12 @@
 package examples;
 
-import java.util.Random;
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
+
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ForecastExample {
 
@@ -24,8 +28,8 @@ public class ForecastExample {
     try {
 
       RCaller caller = new RCaller();
-
-      caller.setRscriptExecutable("/usr/bin/Rscript");
+      Globals.detect_current_rscript();
+      caller.setRscriptExecutable(Globals.Rscript_current);
 
       RCode code = new RCode();
       code.clear();
@@ -40,7 +44,7 @@ public class ForecastExample {
       caller.setRCode(code);
       caller.runAndReturnResult("myResult");
 
-      /*
+      /**
        * It is good to have a look at the XML file
        * for having info about which variables are passed to result
        */
@@ -50,9 +54,12 @@ public class ForecastExample {
       double[] loValues = caller.getParser().getAsDoubleArray("lower");
       double[] fitted = caller.getParser().getAsDoubleArray("fitted");
 
-      System.out.println("success");
+      for (int i = 0; i < upValues.length; i++) {
+        System.out.println(i + ": upValues: " + upValues[i] + ", fitted: " + fitted[i] + ", loValues: " + loValues[i]);
+      }
+
     } catch (Exception e) {
-      System.out.println(e.toString());
+      Logger.getLogger(Example7.class.getName()).log(Level.SEVERE, e.getMessage());
     }
 
   }

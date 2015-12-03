@@ -1,26 +1,34 @@
 
 package examples;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.PrintWriter;
+import org.expr.rcaller.Globals;
 import org.expr.rcaller.RCaller;
 import org.expr.rcaller.RCode;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+
 
 public class DataFileExample {
-  
+
   public DataFileExample(){
-    
-    /* Creating a RCaller */
+
+    /**
+     *  Creating a RCaller
+     */
     RCaller caller = new RCaller();
-    caller.setRscriptExecutable("/usr/bin/Rscript");
-    
-    /* Creating a source code */
+    Globals.detect_current_rscript();
+    caller.setRscriptExecutable(Globals.Rscript_current);
+
+    /**
+     * Creating a source code
+     */
     RCode code = new RCode();
     code.clear();
-    
-    /* Creating an external data file 
+
+    /**
+     *  Creating an external data file
      * Suppose that the data file is like
      * X Y Z
      * 1 2 3
@@ -44,22 +52,32 @@ public class DataFileExample {
       System.out.println("Error while writing to external data file");
     }
     
-    /* Now, writing some R Code */
-    code.addRCode("data<-read.table(\""+f.getAbsoluteFile()+"\", header=TRUE)");
-    
-    /* Running the Code */
+    /**
+     * Now, writing some R Code
+     */
+    if (f != null) {
+      code.addRCode("data<-read.table(\""+f.getAbsoluteFile()+"\", header=TRUE)");
+    }
+
+    /**
+     *  Running the Code
+     */
     caller.setRCode(code);
     caller.runAndReturnResult("data");
     
-    /* Getting Results */
+    /**
+     * Getting Results
+     */
     double[] Z = caller.getParser().getAsDoubleArray("Z");
     
-    /* Printing Z */
-    for (int i=0;i<Z.length;i++){
-      System.out.println(Z[i]);
+    /**
+     * Printing Z
+     */
+    for (double aZ : Z) {
+      System.out.println(aZ);
     }
   }
-  
+
   public static void main(String[] args){
     new DataFileExample();
   }
