@@ -26,14 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.expr.rcaller;
 
-import org.expr.rcaller.graphics.GraphicsType;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import javax.swing.ImageIcon;
 import org.expr.rcaller.exception.ExecutionException;
+import org.expr.rcaller.graphics.GraphicsType;
+
+import javax.swing.*;
+import java.io.*;
 
 public class RCode {
 
@@ -112,8 +109,8 @@ public class RCode {
         CodeUtils.addLogicalArray(code, name, arr, false);
     }
 
-    public void addJavaObject(String name, Object o) throws IllegalAccessException {
-        CodeUtils.addJavaObject(code, name, o, false);
+    public void addJavaObject(Object o) throws IllegalAccessException {
+        CodeUtils.addJavaObject(code, o, false);
     }
 
     public void addDoubleMatrix(String name, double[][] matrix) {
@@ -191,8 +188,7 @@ public class RCode {
     }
 
     public ImageIcon getPlot(File f) {
-        ImageIcon img = new ImageIcon(f.toString());
-        return (img);
+        return (new ImageIcon(f.toString()));
     }
 
     public void showPlot(File f) {

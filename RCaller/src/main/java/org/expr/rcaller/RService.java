@@ -25,47 +25,45 @@ public class RService {
     }
     
     public Object[] get(String var, String command, String type){
-        //rcode.clear();
         rcode.addRCode(var + " <- " +command);
         rcaller.runAndReturnResultOnline(var);
-        if(type.equals(type_String)){
-            Object[] returnObject = rcaller.getParser().getAsStringArray(var);
-            return(returnObject);
-        }else if (type.equals(type_Integer)){
+        if (type.equals(type_String)) {
+            return(rcaller.getParser().getAsStringArray(var));
+        } else if (type.equals(type_Integer)) {
             int[] res = rcaller.getParser().getAsIntArray(var);
             Integer[] ints = new Integer[res.length];
             for (int i=0;i<res.length;i++){
-                ints[i] = new Integer(res[i]);
+                ints[i] = res[i];
             }
             return(ints);
-        }else if(type.equals(type_double)){
+        } else if (type.equals(type_double)) {
             double[] res = rcaller.getParser().getAsDoubleArray(var);
             Double[] dbls = new Double[res.length];
             for (int i=0;i<res.length;i++){
-                dbls[i] = new Double(res[i]);
+                dbls[i] = res[i];
             }
             return(dbls);
-        }else{
+        } else {
             return(null);
         }
     }
         
     
-    public String version(){
+    public String version() {
         Object[] result;
         result = this.get("version_string", "version", RService.type_String);
-        return(result[0].toString());
+        return result[0].toString();
     }
     
-    public String minor(){
+    public String minor() {
         Object[] result;
         result = this.get("minor", "version", type_String);
-        return(result[0].toString());
+        return result[0].toString();
     }
      
-    public String major(){
+    public String major() {
         Object[] result;
         result = this.get("major", "version", type_String);
-        return(result[0].toString());
+        return result[0].toString();
     }
 }

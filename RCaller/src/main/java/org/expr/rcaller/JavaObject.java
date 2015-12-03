@@ -77,47 +77,63 @@ public class JavaObject {
       className = f.getType().getCanonicalName();
       varName = f.getName();
       o = f.get(this.object);
-      if (className.equals("int") || className.equals("float") || className.equals("double")
-              || className.equals("long") || className.equals("short")) {
-        builder.append(varName).append("=").append(o);
-      } else if (className.equals("java.lang.String")) {
-        builder.append(varName).append("=").append("\"").append(o).append("\"");
-      } else if (className.equals("boolean")) {
-        builder.append(varName).append("=").append(o.toString().toUpperCase());
-      } else if (className.equals("int[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addIntArray(tempbuffer, varName, (int[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("double[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addDoubleArray(tempbuffer, varName, (double[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("float[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addFloatArray(tempbuffer, varName, (float[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("short[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addShortArray(tempbuffer, varName, (short[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("long[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addLongArray(tempbuffer, varName, (long[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("boolean[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addLogicalArray(tempbuffer, varName, (boolean[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("java.lang.String[]")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addStringArray(tempbuffer, varName, (java.lang.String[]) o, true);
-        builder.append(tempbuffer.toString());
-      } else if (className.equals("rcaller.JavaObject")) {
-        tempbuffer.setLength(0);
-        CodeUtils.addJavaObject(tempbuffer, varName, (org.expr.rcaller.JavaObject) o, true);
-        builder.append(tempbuffer.toString());
-      } else {
-        builder.append(varName).append("=").append("\"").append("Unsupported data type: ").append(className).append(" in JavaObject").append("\"");
+      switch (className) {
+        case "int":
+        case "float":
+        case "double":
+        case "long":
+        case "short":
+          builder.append(varName).append("=").append(o);
+          break;
+        case "java.lang.String":
+          builder.append(varName).append("=").append("\"").append(o).append("\"");
+          break;
+        case "boolean":
+          builder.append(varName).append("=").append(o.toString().toUpperCase());
+          break;
+        case "int[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addIntArray(tempbuffer, varName, (int[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "double[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addDoubleArray(tempbuffer, varName, (double[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "float[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addFloatArray(tempbuffer, varName, (float[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "short[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addShortArray(tempbuffer, varName, (short[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "long[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addLongArray(tempbuffer, varName, (long[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "boolean[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addLogicalArray(tempbuffer, varName, (boolean[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "java.lang.String[]":
+          tempbuffer.setLength(0);
+          CodeUtils.addStringArray(tempbuffer, varName, (String[]) o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        case "rcaller.JavaObject":
+          tempbuffer.setLength(0);
+          CodeUtils.addJavaObject(tempbuffer, o, true);
+          builder.append(tempbuffer.toString());
+          break;
+        default:
+          builder.append(varName).append("=").append("\"").append("Unsupported data type: ").append(className).append(" in JavaObject").append("\"");
+          break;
       }
 
       if (i < fields.length - 1) {

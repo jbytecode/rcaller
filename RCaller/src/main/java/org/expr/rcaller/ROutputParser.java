@@ -26,17 +26,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package org.expr.rcaller;
 
-import java.io.*;
-import java.util.ArrayList;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import org.expr.rcaller.exception.ParseException;
+import org.expr.rcaller.exception.XMLParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.expr.rcaller.exception.ParseException;
-import org.expr.rcaller.exception.XMLParseException;
 import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -67,8 +68,7 @@ public class ROutputParser {
     long filesize = XMLFile.length();
     char[] chars = new char[(int) filesize];
     reader.read(chars);
-    String result = new String(chars);
-    return (result);
+    return (new String(chars));
   }
 
   public void setXMLFile(File XMLFile) {
@@ -157,7 +157,7 @@ public class ROutputParser {
     if (nodes == null) {
       throw new ParseException("Variable " + name + " not found");
     }
-    ArrayList<String> values = new ArrayList<String>();
+    ArrayList<String> values = new ArrayList<>();
     for (int i = 0; i < nodes.getLength(); i++) {
       Node node = nodes.item(i);
       if (node.getNodeType() == Node.ELEMENT_NODE) {

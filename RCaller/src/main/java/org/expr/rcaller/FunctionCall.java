@@ -34,16 +34,16 @@ public class FunctionCall {
 
     public FunctionCall() {
         this.fname = "";
-        this.parameters = new ArrayList<FunctionParameter>();
+        this.parameters = new ArrayList<>();
     }
 
     public FunctionCall(String functionName) {
-        this.fname = "";
-        this.parameters = new ArrayList<FunctionParameter>();
+        this.fname = functionName;
+        this.parameters = new ArrayList<>();
     }
 
     public FunctionCall(String functionName, ArrayList<FunctionParameter> parameters) {
-        this.fname = functionName;
+        this(functionName);
         this.parameters = parameters;
     }
 

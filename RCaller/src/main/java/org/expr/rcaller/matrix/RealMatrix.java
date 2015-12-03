@@ -71,8 +71,7 @@ public class RealMatrix {
     public int[] getDimensions() {
         code.clearOnline();
         rcaller.runAndReturnResultOnline(this.name);
-        int[] dims = rcaller.getParser().getDimensions(this.name);
-        return (dims);
+        return (rcaller.getParser().getDimensions(this.name));
     }
 
     public double[][] getData() {

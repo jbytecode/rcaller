@@ -51,104 +51,70 @@ public class RandomNumberGenerator {
   }
 
   public double[] randomNormal(int n, double mean, double standardDeviation) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rnorm(").append(n).append(",").append(mean).append(",").append(standardDeviation).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rnorm(" + n + "," + mean + "," + standardDeviation + ")"));
   }
 
   public double[] randomLogNormal(int n, double logmean, double logStandardDeviation) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rlnorm(").append(n).append(",").append(logmean).append(",").append(logStandardDeviation).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rlnorm(" + n + "," + logmean + "," + logStandardDeviation + ")"));
   }
 
   public double[] randomUniform(int n, double min, double max) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-runif(").append(n).append(",").append(min).append(",").append(max).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-runif(" + n + "," + min + "," + max + ")"));
   }
 
   public double[] randomBeta(int n, double shape1, double shape2) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rbeta(").append(n).append(",").append(shape1).append(",").append(shape2).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rbeta(" + n + "," + shape1 + "," + shape2 + ")"));
   }
 
   public double[] randomCauchy(int n, double location, double scale) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rcauchy(").append(n).append(",").append(location).append(",").append(scale).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rcauchy(" + n + "," + location + "," + scale + ")"));
   }
 
   public double[] randomT(int n, int df) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rt(").append(n).append(",").append(df).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rt(" + n + "," + df + ")"));
   }
 
   public double[] randomChisqare(int n, int df) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rchisq(").append(n).append(",").append(df).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rchisq(" + n + "," + df + ")"));
   }
 
   public double[] randomF(int n, int df1, int df2) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rf(").append(n).append(",").append(df1).append(",").append(df2).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rf(" + n + "," + df1 + "," + df2 + ")"));
   }
 
   public double[] randomPoisson(int n, double lambda) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rpois(").append(n).append(",").append(lambda).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rpois(" + n + "," + lambda + ")"));
   }
 
   public double[] randomBinom(int n, int size, double p) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rbinom(").append(n).append(",").append(size).append(",").append(p).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rbinom(" + n + "," + size + "," + p + ")"));
   }
 
   public double[] randomNegativeBinom(int n, int size, double p) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rnbinom(").append(n).append(",").append(size).append(",").append(p).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rnbinom(" + n + "," + size + "," + p + ")"));
   }
 
   public double[] randomMultinomial(int n, int size, double p) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rmultinom(").append(n).append(",").append(size).append(",").append(p).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rmultinom(" + n + "," + size + "," + p + ")"));
   }
 
   public double[] randomGeometric(int n, double p) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rgeom(").append(n).append(",").append(p).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rgeom(" + n + "," + p + ")"));
   }
 
   public double[] randomWeibull(int n, double shape, double scale) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rweibull(").append(n).append(",").append(shape).append(",").append(scale).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rweibull(" + n + "," + shape + "," + scale + ")"));
   }
 
   public double[] randomHyperGeometric(int amount, int n, int m, int k) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rhyper(").append(amount).append(",").append(n).append(",").append(m).append(",").append(k).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rhyper(" + amount + "," + n + "," + m + "," + k + ")"));
   }
 
   public double[] randomExponential(int n, double theta) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rexp(").append(n).append(",").append(theta).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rexp(" + n + "," + theta + ")"));
   }
 
   public double[] randomGamma(int n, double shape, double rate, double scale) throws Exception {
-    StringBuilder code = new StringBuilder();
-    code.append("rcaller_data<-rgamma(").append(n).append(",").append(shape).append(",").append(rate).append(",").append(scale).append(")");
-    return (generateRandom(code.toString()));
+    return (generateRandom("rcaller_data<-rgamma(" + n + "," + shape + "," + rate + "," + scale + ")"));
   }
 }

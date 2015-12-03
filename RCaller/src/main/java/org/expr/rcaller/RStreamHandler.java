@@ -49,7 +49,7 @@ public class RStreamHandler implements Runnable {
         this.stream = stream;
         this.name = name;
         consumerThread = new Thread(this, name + "ProcessorThread");
-        this.eventHandlers = new ArrayList<EventHandler>();
+        this.eventHandlers = new ArrayList<>();
     }
 
     public void setStream(InputStream stream) {
@@ -65,8 +65,6 @@ public class RStreamHandler implements Runnable {
     }
 
     public void start() {
-//        this.consumerThread = new Thread(this);
-//        this.consumerThread.setName(this.name);
         this.consumerThread.start();
     }
 
@@ -81,8 +79,6 @@ public class RStreamHandler implements Runnable {
 
     public void run() {
         if (reader == null) {
-            //HACK: OS encoding may differ from default encoding (especially on Windows system) and it
-            //results in invalid output messages encoding
             Charset charset = Charset.forName(System.getProperty("sun.jnu.encoding", Charset.defaultCharset().name()));
             reader = new BufferedReader(new InputStreamReader(stream, charset));
         }

@@ -86,7 +86,7 @@ public class CodeUtils {
         }
     }
 
-    public static void addJavaObject(StringBuffer RCode, String name, Object o, boolean useEquals) throws IllegalAccessException {
+    public static void addJavaObject(StringBuffer RCode, Object o, boolean useEquals) throws IllegalAccessException {
         RCode.append(((org.expr.rcaller.JavaObject) o).produceRCode(useEquals));
         if (!useEquals) {
             RCode.append("\n");
@@ -94,7 +94,7 @@ public class CodeUtils {
     }
 
     public static void addDoubleMatrix(StringBuffer RCode, String name, double[][] matrix, boolean useEquals) {
-        int dim1 = matrix.length, dim2 = matrix[0].length;
+        int dim2 = matrix[0].length;
         int counter = 0;
         if (useEquals) {
             RCode.append(name).append("=").append("matrix(");
@@ -102,9 +102,9 @@ public class CodeUtils {
             RCode.append(name).append("<-").append("matrix(");
         }
         RCode.append("c(");
-        for (int i = 0; i < dim1; i++) {
+        for (double[] aMatrix : matrix) {
             for (int j = 0; j < dim2; j++) {
-                RCode.append(String.valueOf(matrix[i][j]));
+                RCode.append(String.valueOf(aMatrix[j]));
                 counter++;
                 if (counter < (matrix.length * matrix[0].length)) {
                     RCode.append(", ");
@@ -140,11 +140,7 @@ public class CodeUtils {
     public static void addBoolean(StringBuffer RCode, String name, boolean b, boolean useEquals) {
         addValue(RCode, name, String.valueOf(b).toUpperCase(), useEquals);
     }
-    
-    public static void addLogical(StringBuffer RCode, String name, boolean b, boolean useEquals){
-        addBoolean(RCode, name, b, useEquals);
-    }
-    
+
     public static void addString(StringBuffer RCode, String name, String value, boolean useEquals) {
         if (useEquals) {
             RCode.append(name).append("=")
