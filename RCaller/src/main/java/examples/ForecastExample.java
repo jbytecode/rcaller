@@ -1,8 +1,8 @@
 package examples;
 
-import org.expr.rcaller.Globals;
-import org.expr.rcaller.RCaller;
-import org.expr.rcaller.RCode;
+import com.github.rcaller.util.Globals;
+import com.github.rcaller.rStuff.RCaller;
+import com.github.rcaller.rStuff.RCode;
 
 import java.util.Random;
 import java.util.logging.Level;

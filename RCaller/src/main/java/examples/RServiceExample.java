@@ -1,8 +1,8 @@
 
 package examples;
 
-import org.expr.rcaller.Globals;
-import org.expr.rcaller.RService;
+import com.github.rcaller.util.Globals;
+import com.github.rcaller.rStuff.RService;
 
 public class RServiceExample {
 

@@ -3,10 +3,10 @@
  */
 package examples;
 
-import org.expr.rcaller.Globals;
-import org.expr.rcaller.RCaller;
-import org.expr.rcaller.RCode;
-import org.expr.rcaller.graphics.SkyTheme;
+import com.github.rcaller.util.Globals;
+import com.github.rcaller.rStuff.RCaller;
+import com.github.rcaller.rStuff.RCode;
+import com.github.rcaller.graphics.SkyTheme;
 
 import java.io.File;
 import java.util.logging.Level;
