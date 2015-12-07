@@ -32,8 +32,6 @@ import org.expr.rcaller.exception.RscriptExecutableNotFoundException;
 import org.expr.rcaller.graphics.GraphicsTheme;
 
 import java.io.*;
-import java.nio.charset.Charset;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -44,6 +42,8 @@ import java.util.logging.Logger;
  *
  */
 public class RCaller {
+
+    private static final Logger logger = Logger.getLogger(RCaller.class.getName());
 
     protected String RscriptExecutable;
     protected String RExecutable;
@@ -171,11 +171,10 @@ public class RCaller {
      * be created or written to
      */
     private File createRSourceFile() throws org.expr.rcaller.exception.ExecutionException {
-        File f = null;
+        File f;
         BufferedWriter writer = null;
 
         try {
-            //f = File.createTempFile("rcaller", "");
             f = tempFileService.createTempFile("rcaller", "");
         } catch (IOException e) {
             throw new ExecutionException("Can not open a temporary file for storing the R Code: " + e.toString());
@@ -189,8 +188,11 @@ public class RCaller {
             throw new ExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
         } finally {
             try {
-                writer.close();
-            } catch (IOException einner) {
+                if (writer != null) {
+                    writer.close();
+                }
+            } catch (IOException e) {
+                logger.log(Level.SEVERE, e.getMessage());
             }
         }
 
@@ -217,7 +219,7 @@ public class RCaller {
     private void runRCode() throws org.expr.rcaller.exception.ExecutionException {
         if (this.RscriptExecutable == null) {
             throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
-                + "to full path of Rscript executable binary file.");
+                    + "to full path of Rscript executable binary file.");
         }
 
         File rSourceFile = createRSourceFile();
@@ -249,99 +251,87 @@ public class RCaller {
      * @throws org.expr.rcaller.exception.ExecutionException if R cannot be started
      */
     public void runAndReturnResultOnline(String var) throws org.expr.rcaller.exception.ExecutionException {
-        this.retries = 0;//assumes only one of the run* methods of this class is 
-//        executing at any given time
+        this.retries = 0; //assumes only one of the run* methods of this class is executing at any given time
         boolean done = false;
-        try {
-            do {
-                if (getRetries() > 0) {
-                    Logger.getLogger(RCaller.class.getName()).log(Level.INFO, "Retrying online R execution");
+        do {
+            if (getRetries() > 0) {
+                logger.log(Level.INFO, "Retrying online R execution");
+            }
+
+            File outputFile;
+
+            if (this.RExecutable == null) {
+                if (handleRFailure("RExecutable is not defined.Please set this" + " variable to full path of R executable binary file.")) {
+                    continue;
                 }
+            }
 
-                File outputFile = null;
-
-                if (this.RExecutable == null) {
-                    if (handleRFailure("RExecutable is not defined.Please set this"
-                        + " variable to full path of R executable binary file.")) {
-                        continue;
-                    }
-                    //error handler says it's ok to try again
-
-//                throw new RCallerExecutionException("RExecutable is not defined."
-//                        + " Please set this variable to full path of R executable binary file.");
+            try {
+                outputFile = createOutputFile();
+            } catch (Exception e) {
+                if (handleRFailure("Can not create a temporary file for storing the R results: " + e.getMessage())) {
+                    continue;
+                } else {
+                    throw new RuntimeException("Output file couldn't be created!");
                 }
+            }
 
+            appendStandardCodeToAppend(outputFile, var);
+            if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
-                    //outputFile = File.createTempFile("Routput", "");
-                    outputFile = tempFileService.createTempFile("Routput", "");
-                } catch (IOException e) {
-                    if (handleRFailure("Can not create a tempopary file for storing the R results: "
-                        + e.toString())) {
-                        continue;
-                    }
-                }
+                    String commandline = RExecutable + " --vanilla";
+                    process = exec(commandline);
+                    rInput = process.getOutputStream();
+                    startStreamConsumers(process);
 
-                rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").
-                    append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
-                rcode.getCode().append("\n");
-                if (rInput == null || rOutput == null || rError == null || process == null) {
-                    try {
-                        String commandline = RExecutable + " --vanilla";
-                        process = exec(commandline);
-                        rInput = process.getOutputStream();
-                        startStreamConsumers(process);
-
-                    } catch (Exception e) {
-                        if (handleRFailure("Can not run " + RExecutable + ". Reason: "
+                } catch (Exception e) {
+                    if (handleRFailure("Can not run " + RExecutable + ". Reason: "
                             + e.toString())) {
-                            continue;
-                        }
-                    }
-                }
-
-                try {
-                    rInput.write(rcode.toString().getBytes());
-                    rInput.flush();
-                } catch (IOException e) {
-                    if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
                         continue;
                     }
                 }
+            }
 
-                long slept = 0;
-                boolean processKilled = false;
-                try {
-                    while (!processKilled && outputFile.length() < 1) {
-                        //TODO checking file length is wrong. R can still be writing to the file when
-                        //java attempts to read, resulting in an xml parse exception. We need to  put in
-                        //a lock file or something like that and only read when that is gone
-                        Thread.sleep(1);
-                        slept++;
-                        if (slept > this.maxWaitTime) {
-                            process.destroy();
-                            stopStreamConsumers();
-                            processKilled = true;
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();//quite lame, sorry
+            try {
+                rInput.write(rcode.toString().getBytes());
+                rInput.flush();
+            } catch (IOException e) {
+                if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
+                    continue;
                 }
+            }
 
-                parser.setXMLFile(outputFile);
-
-                try {
-                    parser.parse();
-                } catch (ParseException e) {
-                    if (handleRFailure("Can not handle R results due to : " + e.toString())) {
-                        continue;
+            long slept = 0;
+            boolean processKilled = false;
+            try {
+                while (!processKilled && outputFile.length() < 1) {
+                    //TODO checking file length is wrong. R can still be writing to the file when
+                    //java attempts to read, resulting in an xml parse exception. We need to  put in
+                    //a lock file or something like that and only read when that is gone
+                    Thread.sleep(1);
+                    slept++;
+                    if (slept > this.maxWaitTime) {
+                        process.destroy();
+                        stopStreamConsumers();
+                        processKilled = true;
                     }
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace(); //quite lame, sorry
+            }
 
-                done = true;//if we got to there, no exceptions occured
-            } while (!done);
-        } finally {
-            //stopStreamConsumers();
-        }
+            parser.setXMLFile(outputFile);
+
+            try {
+                parser.parse();
+            } catch (ParseException e) {
+                if (handleRFailure("Can not handle R results due to : " + e.toString())) {
+                    continue;
+                }
+            }
+
+            done = true; //if we got to there, no exceptions occurred
+        } while (!done);
     }
 
     public void StopRCallerOnline() {
@@ -351,6 +341,7 @@ public class RCaller {
                 process.getOutputStream().flush();
                 process.getOutputStream().close();
             } catch (Exception e) {
+                logger.log(Level.SEVERE, e.getMessage());
             }
             if(Globals.isWindows()){
                 process.destroy();
@@ -405,18 +396,8 @@ public class RCaller {
      * trace
      */
     public void runAndReturnResult(String var) throws org.expr.rcaller.exception.ExecutionException {
-        //TODO this method should throw different exceptions depending on why it has failed
-        File outputFile;
-
-        try {
-            //outputFile = File.createTempFile("Routput", "");
-            outputFile = tempFileService.createTempFile("Routput", "");
-        } catch (Exception e) {
-            throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
-        }
-
-        rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
-                append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
+        File outputFile = createOutputFile();
+        appendStandardCodeToAppend(outputFile, var);
         runRCode();
 
         parser.setXMLFile(outputFile);
@@ -424,13 +405,8 @@ public class RCaller {
             parser.parse();
         } catch (Exception e) {
             Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rcode.toString());
-            throw new ParseException("Can not handle R results due to : " + e.toString());
+            throw new ParseException("Can not handle R results due to : " + e.getMessage());
         }
-    }
-
-    public void redirectROutputToConsole() {
-        redirectROutputToStream(System.out);
-
     }
 
     public void redirectROutputToFile(String name, boolean appendToExisting) throws FileNotFoundException {
@@ -484,5 +460,18 @@ public class RCaller {
         RETRY_10, //retry at most 10 times
         RETRY_FOREVER,//retry until success
         CONTINUE//ignore the error and continue
+    }
+
+    private File createOutputFile() {
+        try {
+            return tempFileService.createTempFile("Routput", "");
+        } catch (Exception e) {
+            throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.getMessage());
+        }
+    }
+
+    private void appendStandardCodeToAppend(File outputFile, String var) {
+        rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
+                append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
     }
 }
