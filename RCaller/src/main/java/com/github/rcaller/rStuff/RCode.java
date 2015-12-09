@@ -65,7 +65,7 @@ public class RCode {
     public final void clear() {
         code.setLength(0);
         try {
-            InputStream is = this.getClass().getResourceAsStream("/runiversal.r");
+            InputStream is = this.getClass().getClassLoader().getResourceAsStream("runiversal.r");
             InputStreamReader reader = new InputStreamReader(is);
             BufferedReader breader = new BufferedReader(reader);
             while (true) {
