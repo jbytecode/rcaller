@@ -117,7 +117,7 @@
                     <serverId>ossrh</serverId>
                     <nexusUrl>https://oss.sonatype.org/</nexusUrl>
                     <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                    <stagingProfileId>7edbe315063867</stagingProfileId>
+                    <stagingProfileId>556e91e88ea7bc</stagingProfileId>
                     <tags>
                         <localUsername>${env.USER}</localUsername>
                         <javaVersion>${java.version}</javaVersion>
