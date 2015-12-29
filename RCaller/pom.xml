@@ -27,7 +27,7 @@
     <scm>
         <url>https://github.com/jbytecode/rcaller</url>
         <connection>scm:git:git://github.com/jbytecode/rcaller.git</connection>
-        <developerConnection>scm:git:git@github.com:/jbytecode/rcaller.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:jbytecode/rcaller.git</developerConnection>
     <tag>RCaller-2.7</tag>
   </scm>
 
