@@ -88,8 +88,7 @@ public class ROutputParser {
 
     try {
       FileInputStream in = new FileInputStream(XMLFile);
-      Reader reader = new InputStreamReader(in,"UTF-8");
-      InputSource is = new InputSource(reader);
+      InputSource is = new InputSource(in);
       is.setEncoding("UTF-8");
       document = builder.parse(is);
     } catch (Exception e) {
