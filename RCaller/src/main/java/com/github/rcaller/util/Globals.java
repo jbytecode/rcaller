@@ -28,6 +28,10 @@ package com.github.rcaller.util;
 import com.github.rcaller.graphics.DefaultTheme;
 import com.github.rcaller.graphics.GraphicsTheme;
 
+import java.io.File;
+import java.io.FileFilter;
+import java.util.Arrays;
+
 public class Globals {
 
     public static String cranRepos = "http://cran.r-project.org";
@@ -44,8 +48,35 @@ public class Globals {
     public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
     public final static String license = "LGPL v3.0";
 
+    static {
+        if (isWindows()) {
+            String programFiles = System.getenv("ProgramFiles");
+            if (programFiles == null) {
+                programFiles = "C:\\Program Files";
+            }
+            File rBase = new File(programFiles, "R");
+            File[] rVersions = rBase.listFiles(new FileFilter() {
+                @Override
+                public boolean accept(File pathname) {
+                    return pathname.isDirectory() && pathname.getName().startsWith("R-");
+                }
+            });
+            Arrays.sort(rVersions);
+            File rHome = rVersions[rVersions.length - 1];
+            File rBin = new File(rHome, "bin");
+            if ("amd64".equals(System.getProperty("os.arch"))) {
+                File rBin64 = new File(rBin, "x64");
+                if (rBin64.exists()) {
+                    rBin = rBin64;
+                }
+            }
+            R_Windows = new File(rBin, "R.exe").getAbsolutePath();
+            RScript_Windows = new File(rBin, "Rscript.exe").getAbsolutePath();
+        }
+    }
+
     public static void detect_current_rscript() {
-        if (System.getProperty("os.name").contains("Windows")) {
+        if (isWindows()) {
             Rscript_current = RScript_Windows;
             R_current = R_Windows;
         } else {
