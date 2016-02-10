@@ -33,6 +33,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * A class to handle R's standard output and error streams
@@ -40,7 +41,7 @@ import java.util.ArrayList;
  * @author <a href="mailto:mbatchkarov@gmail.com">Miroslav Batchkarov</a>
  */
 public class RStreamHandler implements Runnable {
-
+    private AtomicBoolean stillReading = new AtomicBoolean();
     private InputStream stream = null;
     private BufferedReader reader = null;
     private final Thread consumerThread;
@@ -71,7 +72,20 @@ public class RStreamHandler implements Runnable {
     }
 
     public void stop() {
-        this.consumerThread.interrupt();
+        try {
+            while (true) {
+                stillReading.set(false);
+                this.consumerThread.join(100);
+                if (!this.consumerThread.isAlive()) {
+                    break;
+                } else if (!stillReading.get()) {
+                    this.consumerThread.interrupt();
+                    break;
+                }
+            }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 
     public boolean isAlive() {
@@ -84,15 +98,18 @@ public class RStreamHandler implements Runnable {
             reader = new BufferedReader(new InputStreamReader(stream, charset));
         }
         try {
-            String s = reader.readLine();
-            while (s != null) {
+            while (true) {
+                String s = reader.readLine();
+                stillReading.set(true);
+                if (s == null)
+                    break;
                 for (EventHandler eventHandler : eventHandlers) {
                     eventHandler.messageReceived(name, s);
                 }
-                s = reader.readLine();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        stillReading.set(false);
     }
 }

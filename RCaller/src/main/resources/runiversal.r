@@ -39,7 +39,7 @@ makevectorxml<-function(code,objt,name=""){
     if(is.vector(obj) && is.character(obj)){
         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
         for (i in obj){
-            xmlcode<-paste(xmlcode,"<v>",toString(i),"</v>",sep="")
+            xmlcode<-paste(xmlcode,"<v>",iconv(toString(i), to="UTF-8"),"</v>",sep="")
         }
         xmlcode<-paste(xmlcode,"</variable>\n")
     }

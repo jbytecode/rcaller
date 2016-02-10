@@ -162,7 +162,7 @@ public class RunOnlineTest {
         rcaller.setRExecutable(Globals.R_current);
 
         code.clear();
-        code.addRCode("a<-1:10");
+        code.addRCode("a<-1:100000");
 
         rcaller.setRCode(code);
 
