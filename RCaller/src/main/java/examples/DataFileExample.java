@@ -2,8 +2,8 @@
 package examples;
 
 import com.github.rcaller.util.Globals;
-import com.github.rcaller.rStuff.RCaller;
-import com.github.rcaller.rStuff.RCode;
+import com.github.rcaller.rstuff.RCaller;
+import com.github.rcaller.rstuff.RCode;
 
 import java.io.File;
 import java.io.FileWriter;

@@ -27,8 +27,8 @@ package com.github.rcaller;
 
 import java.io.File;
 
-import com.github.rcaller.rStuff.RCaller;
-import com.github.rcaller.rStuff.RCode;
+import com.github.rcaller.rstuff.RCaller;
+import com.github.rcaller.rstuff.RCode;
 import com.github.rcaller.util.Globals;
 import org.junit.After;
 import org.junit.AfterClass;

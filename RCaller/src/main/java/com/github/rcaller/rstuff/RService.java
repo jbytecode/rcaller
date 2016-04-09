@@ -1,4 +1,4 @@
-package com.github.rcaller.rStuff;
+package com.github.rcaller.rstuff;
 
 
 public class RService {

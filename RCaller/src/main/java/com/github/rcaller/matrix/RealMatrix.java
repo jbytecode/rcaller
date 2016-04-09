@@ -25,9 +25,9 @@
  */
 package com.github.rcaller.matrix;
 
-import com.github.rcaller.rStuff.RCaller;
-import com.github.rcaller.rStuff.RCode;
-import com.github.rcaller.rStuff.RService;
+import com.github.rcaller.rstuff.RCaller;
+import com.github.rcaller.rstuff.RCode;
+import com.github.rcaller.rstuff.RService;
 import com.github.rcaller.exception.ExecutionException;
 
 public class RealMatrix {

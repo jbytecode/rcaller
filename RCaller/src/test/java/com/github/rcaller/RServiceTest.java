@@ -1,6 +1,6 @@
 package com.github.rcaller;
 
-import com.github.rcaller.rStuff.RService;
+import com.github.rcaller.rstuff.RService;
 import com.github.rcaller.util.Globals;
 import org.junit.After;
 import org.junit.Assert;

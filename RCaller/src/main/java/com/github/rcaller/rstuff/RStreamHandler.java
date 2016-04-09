@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-package com.github.rcaller.rStuff;
+package com.github.rcaller.rstuff;
 
 import com.github.rcaller.EventHandler;
 

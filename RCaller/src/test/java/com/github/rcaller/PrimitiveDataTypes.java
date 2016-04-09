@@ -27,7 +27,7 @@
 package com.github.rcaller;
 
 
-import com.github.rcaller.rStuff.RCode;
+import com.github.rcaller.rstuff.RCode;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

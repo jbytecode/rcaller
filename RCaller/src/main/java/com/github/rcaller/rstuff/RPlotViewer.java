@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
 
-package com.github.rcaller.rStuff;
+package com.github.rcaller.rstuff;
 
 import javax.swing.*;
 import java.awt.*;

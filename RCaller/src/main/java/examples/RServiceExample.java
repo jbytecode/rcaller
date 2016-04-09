@@ -2,7 +2,7 @@
 package examples;
 
 import com.github.rcaller.util.Globals;
-import com.github.rcaller.rStuff.RService;
+import com.github.rcaller.rstuff.RService;
 
 public class RServiceExample {
 
