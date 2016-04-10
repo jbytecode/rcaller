@@ -30,6 +30,7 @@ import com.github.rcaller.TempFileService;
 import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.rstuff.ROutputParser;
 import com.github.rcaller.rstuff.RStreamHandler;
+import com.github.rcaller.util.CodeUtils;
 import com.github.rcaller.util.Globals;
 import java.io.BufferedReader;
 import java.io.File;
@@ -186,8 +187,20 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
     }
 
     @Override
-    public void put(String string, Object o) {
-
+    public void put(String name, Object o) {
+        StringBuffer code = new StringBuffer();
+        if(o instanceof double[]){
+            CodeUtils.addDoubleArray(code, name, (double[])o, false);
+        }
+        
+        if(code.toString().length()>0){
+            try{
+                this.eval(code.toString());
+            }catch(ScriptException e){
+                throw new RuntimeException("Error while putting "+name+" into R, "+code.toString()+" : "+e.toString());
+            }
+        }
+                
     }
 
     @Override

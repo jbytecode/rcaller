@@ -88,6 +88,17 @@ public class RCallerScriptEngineTest{
         assertEquals(1000, result.length);
         assertEquals(1000.0, result[result.length-1],delta);
     }
+    
+    @Test
+    public void getPutTest() throws ScriptException{
+        double[] a = new double[]{19.0, 17.0, 23.0};
+        engine.put("a", a);
+        engine.eval("a <- sort(a)");
+        double[] result = (double[])engine.get("a");
+        assertEquals(result[0], 17.0, delta);
+        assertEquals(result[1], 19.0, delta);
+        assertEquals(result[2], 23.0, delta);
+    }
 
     
 }
