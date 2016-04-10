@@ -100,6 +100,7 @@ public class RStreamHandler implements Runnable {
         try {
             while (true) {
                 String s = reader.readLine();
+                //System.out.println(name+": "+s);
                 stillReading.set(true);
                 if (s == null)
                     break;

@@ -28,14 +28,16 @@ package com.github.rcaller;
 
 import com.github.rcaller.scriptengine.RCallerScriptEngine;
 import com.github.rcaller.util.Globals;
+import javax.script.ScriptException;
 import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.Test;
 
 
-public class RCallerScriptEngineTest {
+public class RCallerScriptEngineTest{
     
     RCallerScriptEngine engine = null;
+    double delta = 1/100000;
     
     @Before
     @Test
@@ -44,5 +46,24 @@ public class RCallerScriptEngineTest {
         engine = new RCallerScriptEngine();
         assertNotNull(engine);
     }
+    
+    @Test
+    public void sendCommandBasicTest() throws ScriptException {
+        engine.eval("a <- 5");
+        engine.eval("b <- 3");
+        engine.eval("d <- a+b");
+        double[] result = (double[]) engine.get("d");
+        assertEquals(1, result.length);
+        assertEquals(8.0, result[0], delta);
+    }
+    
+    @Test
+    public void sendReceiveMatrixTest() throws ScriptException {
+        engine.eval("m <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)");
+        engine.eval("print(m)");
+        Object result = engine.get("m");
+        System.out.println(result);
+    }
+
     
 }
