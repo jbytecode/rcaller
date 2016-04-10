@@ -47,7 +47,7 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 
-public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
+public class RCallerScriptEngine implements ScriptEngine, EventHandler {
 
     Process rprocess = null;
     boolean needXmlUpdate = false;
@@ -68,10 +68,10 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
             inputStreamHandler = new RStreamHandler(rprocess.getInputStream(), "R: ");
             inputStreamHandler.start();
             rout = rprocess.getOutputStream();
-            
+
             errorStreamHandler = new RStreamHandler(rprocess.getErrorStream(), "R(err): ");
             errorStreamHandler.start();
-            
+
             this.sendOkay();
             this.waitForOkay();
         } catch (IOException ioe) {
@@ -104,10 +104,10 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
         } catch (IOException e) {
             throw new ScriptException("Cannot run RCaller basic code in R : " + e.toString());
         }
-        try{
+        try {
             Thread.sleep(1000);
-        }catch (Exception e){
-            
+        } catch (Exception e) {
+
         }
 
     }
@@ -124,32 +124,32 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
             throw new ScriptException("Error sending command (" + code + "): " + ioe.toString());
         }
     }
-    
-    private void waitForOkay(){
+
+    private void waitForOkay() {
         Thread threadOkayDetect = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
-                    if(inputStreamHandler.isOKAYdetected()){
+                while (true) {
+                    if (inputStreamHandler.isOKAYdetected()) {
                         break;
                     }
                     try {
                         Thread.yield();
                     } catch (Exception ex) {
-                        
+
                     }
                 }
             }
         });
         threadOkayDetect.start();
-        try{
+        try {
             threadOkayDetect.join();
-        }catch(Exception e){
-            
+        } catch (Exception e) {
+
         }
     }
-    
-    private void sendOkay() throws IOException{
+
+    private void sendOkay() throws IOException {
         rout.write("print('OKAY!')\n".getBytes());
         rout.flush();
     }
@@ -189,18 +189,42 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
     @Override
     public void put(String name, Object o) {
         StringBuffer code = new StringBuffer();
-        if(o instanceof double[]){
-            CodeUtils.addDoubleArray(code, name, (double[])o, false);
+        if (o instanceof double[]) {
+            CodeUtils.addDoubleArray(code, name, (double[]) o, false);
+        } else if (o instanceof int[]) {
+            CodeUtils.addIntArray(code, name, (int[]) o, false);
+        } else if (o instanceof float[]) {
+            CodeUtils.addFloatArray(code, name, (float[]) o, false);
+        } else if (o instanceof boolean[]) {
+            CodeUtils.addLogicalArray(code, name, (boolean[]) o, false);
+        } else if (o instanceof long[]) {
+            CodeUtils.addLongArray(code, name, (long[]) o, false);
+        } else if (o instanceof String[]) {
+            CodeUtils.addStringArray(code, name, (String[]) o, false);
+        } else if (o instanceof short[]) {
+            CodeUtils.addShortArray(code, name, (short[]) o, false);
+        } else if (o instanceof Double) {
+            CodeUtils.addDouble(code, name, (Double) o, false);
+        } else if (o instanceof Integer) {
+            CodeUtils.addInt(code, name, (Integer) o, false);
+        } else if (o instanceof Long) {
+            CodeUtils.addLong(code, name, (Long) o, false);
+        } else if (o instanceof Short) {
+            CodeUtils.addShort(code, name, (Short) o, false);
+        } else if (o instanceof String) {
+            CodeUtils.addString(code, name, (String) o, false);
+        } else if (o instanceof double[][]) {
+            CodeUtils.addDoubleMatrix(code, name, (double[][]) o, false);
         }
-        
-        if(code.toString().length()>0){
-            try{
+
+        if (code.toString().length() > 0) {
+            try {
                 this.eval(code.toString());
-            }catch(ScriptException e){
-                throw new RuntimeException("Error while putting "+name+" into R, "+code.toString()+" : "+e.toString());
+            } catch (ScriptException e) {
+                throw new RuntimeException("Error while putting " + name + " into R, " + code.toString() + " : " + e.toString());
             }
         }
-                
+
     }
 
     @Override
@@ -222,22 +246,21 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
         } catch (IOException ioe) {
             throw new ExecutionException("Cannot send makexml command to R while getting variable " + var + " : " + ioe.toString());
         }
-        
+
         this.waitForOkay();
-        
 
         ROutputParser parser = new ROutputParser(tmpfile);
         parser.parse();
         int[] dimension = parser.getDimensions(var);
         String vartype = parser.getType(var);
-        if(dimension[0] >1 && dimension[1]>1){
-            return(parser.getAsDoubleMatrix(var));
-        }else if(vartype.equals("numeric")){
-            return(parser.getAsDoubleArray(var));
-        }else if(vartype.equals("character")){
-            return(parser.getAsStringArray(var));
-        }else{
-            return(parser.getAsStringArray(var)); // :o
+        if (dimension[0] > 1 && dimension[1] > 1) {
+            return (parser.getAsDoubleMatrix(var));
+        } else if (vartype.equals("numeric")) {
+            return (parser.getAsDoubleArray(var));
+        } else if (vartype.equals("character")) {
+            return (parser.getAsStringArray(var));
+        } else {
+            return (parser.getAsStringArray(var)); // :o
         }
     }
 
@@ -273,7 +296,7 @@ public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
 
     @Override
     public void messageReceived(String senderName, String msg) {
-        System.out.println("MSG: ("+senderName+") - "+msg);
+        System.out.println("MSG: (" + senderName + ") - " + msg);
     }
 
 }
