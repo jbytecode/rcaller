@@ -47,13 +47,24 @@ public class RStreamHandler implements Runnable {
     private final Thread consumerThread;
     private String name = null;
     private ArrayList<EventHandler> eventHandlers = null;
-
+    private boolean OKAYdetected = false;
+    
     public RStreamHandler(InputStream stream, String name) {
         this.stream = stream;
         this.name = name;
         consumerThread = new Thread(this, name + "ProcessorThread");
         this.eventHandlers = new ArrayList<>();
     }
+
+    public boolean isOKAYdetected() {
+        return OKAYdetected;
+    }
+
+    public void setOKAYdetected(boolean OKAYdetected) {
+        this.OKAYdetected = OKAYdetected;
+    }
+    
+    
 
     public void setStream(InputStream stream) {
         this.stream = stream;
@@ -101,9 +112,14 @@ public class RStreamHandler implements Runnable {
             while (true) {
                 String s = reader.readLine();
                 //System.out.println(name+": "+s);
+                OKAYdetected = false;
                 stillReading.set(true);
-                if (s == null)
+                if (s == null){
                     break;
+                }
+                if(s.contains("OKAY!")){
+                    this.OKAYdetected = true;
+                }
                 for (EventHandler eventHandler : eventHandlers) {
                     eventHandler.messageReceived(name, s);
                 }

@@ -26,6 +26,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.github.rcaller;
 
-public abstract class EventHandler {
-    public abstract void messageReceived(String senderName, String msg);
+public interface EventHandler {
+    public void messageReceived(String senderName, String msg);
 }

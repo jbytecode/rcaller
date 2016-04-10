@@ -25,12 +25,11 @@
  */
 package com.github.rcaller.scriptengine;
 
+import com.github.rcaller.EventHandler;
 import com.github.rcaller.TempFileService;
 import com.github.rcaller.exception.ExecutionException;
-import com.github.rcaller.exception.RExecutableNotFoundException;
 import com.github.rcaller.rstuff.ROutputParser;
 import com.github.rcaller.rstuff.RStreamHandler;
-import com.github.rcaller.util.CodeUtils;
 import com.github.rcaller.util.Globals;
 import java.io.BufferedReader;
 import java.io.File;
@@ -39,13 +38,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.Bindings;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
 
-public class RCallerScriptEngine implements ScriptEngine {
+public class RCallerScriptEngine  implements ScriptEngine , EventHandler{
 
     Process rprocess = null;
     boolean needXmlUpdate = false;
@@ -70,9 +71,8 @@ public class RCallerScriptEngine implements ScriptEngine {
             errorStreamHandler = new RStreamHandler(rprocess.getErrorStream(), "R(err): ");
             errorStreamHandler.start();
             
-            Thread.sleep(200);
-        } catch (InterruptedException inte) {
-            System.out.println("rprocess create error " + inte.toString());
+            this.sendOkay();
+            this.waitForOkay();
         } catch (IOException ioe) {
             System.out.println("rprocess create error " + ioe.toString());
         }
@@ -123,6 +123,35 @@ public class RCallerScriptEngine implements ScriptEngine {
             throw new ScriptException("Error sending command (" + code + "): " + ioe.toString());
         }
     }
+    
+    private void waitForOkay(){
+        Thread threadOkayDetect = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(true){
+                    if(inputStreamHandler.isOKAYdetected()){
+                        break;
+                    }
+                    try {
+                        Thread.yield();
+                    } catch (Exception ex) {
+                        
+                    }
+                }
+            }
+        });
+        threadOkayDetect.start();
+        try{
+            threadOkayDetect.join();
+        }catch(Exception e){
+            
+        }
+    }
+    
+    private void sendOkay() throws IOException{
+        rout.write("print('OKAY!')\n".getBytes());
+        rout.flush();
+    }
 
     @Override
     public Object eval(String string, ScriptContext sc) throws ScriptException {
@@ -137,7 +166,7 @@ public class RCallerScriptEngine implements ScriptEngine {
     @Override
     public Object eval(String code) throws ScriptException {
         this.evalwrapper(code);
-        System.out.println("Sent code: " + code);
+        //System.out.println("Sent code: " + code);
         return (true);
     }
 
@@ -176,19 +205,27 @@ public class RCallerScriptEngine implements ScriptEngine {
         try {
             this.rout.write(rcode.toString().getBytes());
             this.rout.flush();
+            this.sendOkay();
         } catch (IOException ioe) {
             throw new ExecutionException("Cannot send makexml command to R while getting variable " + var + " : " + ioe.toString());
         }
+        
+        this.waitForOkay();
+        
 
         ROutputParser parser = new ROutputParser(tmpfile);
         parser.parse();
-        switch(parser.getType(var)){
-            case "character":
-                return(parser.getAsStringArray(var));
-            case "numeric":
-                return(parser.getAsDoubleArray(var));
+        int[] dimension = parser.getDimensions(var);
+        String vartype = parser.getType(var);
+        if(dimension[0] >1 && dimension[1]>1){
+            return(parser.getAsDoubleMatrix(var));
+        }else if(vartype.equals("numeric")){
+            return(parser.getAsDoubleArray(var));
+        }else if(vartype.equals("character")){
+            return(parser.getAsStringArray(var));
+        }else{
+            return(parser.getAsStringArray(var)); // :o
         }
-        return (parser.getAsStringArray(var));
     }
 
     @Override
@@ -219,6 +256,11 @@ public class RCallerScriptEngine implements ScriptEngine {
     @Override
     public ScriptEngineFactory getFactory() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void messageReceived(String senderName, String msg) {
+        System.out.println("MSG: ("+senderName+") - "+msg);
     }
 
 }

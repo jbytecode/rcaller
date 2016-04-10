@@ -59,10 +59,34 @@ public class RCallerScriptEngineTest{
     
     @Test
     public void sendReceiveMatrixTest() throws ScriptException {
-        engine.eval("m <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)");
-        engine.eval("print(m)");
-        Object result = engine.get("m");
-        System.out.println(result);
+        engine.eval("m <- matrix(1:9, nrow = 3, ncol = 3)");
+        double[][] result = (double[][])engine.get("m");
+        assertEquals(1, result[0][0], delta);
+        assertEquals(2, result[0][1], delta);
+        assertEquals(3, result[0][2], delta);
+        assertEquals(4, result[1][0], delta);
+        assertEquals(5, result[1][1], delta);
+        assertEquals(6, result[1][2], delta);
+        assertEquals(7, result[2][0], delta);
+        assertEquals(8, result[2][1], delta);
+        assertEquals(9, result[2][2], delta);       
+    }
+    
+    @Test
+    public void longTimeProcessTest() throws ScriptException {
+        engine.eval("a <- 1:100");
+        engine.eval("s <- sum(a)");
+        engine.eval("Sys.sleep(1)");
+        double[] result = (double[])engine.get("s");
+        assertEquals((100.0 * 101.0)/2, result[0],delta);
+    }
+    
+    @Test
+    public void longVectorResultTest() throws ScriptException{
+        engine.eval("a <- 1:1000");
+        double[] result = (double[])engine.get("a");
+        assertEquals(1000, result.length);
+        assertEquals(1000.0, result[result.length-1],delta);
     }
 
     
