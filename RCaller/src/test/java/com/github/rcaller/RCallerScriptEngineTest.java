@@ -37,9 +37,14 @@ public class RCallerScriptEngineTest {
     RCallerScriptEngine engine = null;
     double delta = 1 / 100000;
 
+    public static void message(String text) {
+        System.out.println("* " + text);
+    }
+
     @Before
     @Test
     public void init() {
+        message("Init...");
         Globals.detect_current_rscript();
         engine = new RCallerScriptEngine();
         assertNotNull(engine);
@@ -47,6 +52,7 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void sendCommandBasicTest() throws ScriptException {
+        message("sendCommandBasic...");
         engine.eval("a <- 5");
         engine.eval("b <- 3");
         engine.eval("d <- a+b");
@@ -57,6 +63,7 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void sendReceiveMatrixTest() throws ScriptException {
+        message("sendReceive 3x3 Matrix...");
         engine.eval("m <- matrix(1:9, nrow = 3, ncol = 3)");
         double[][] result = (double[][]) engine.get("m");
         assertEquals(1, result[0][0], delta);
@@ -72,6 +79,7 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void longTimeProcessTest() throws ScriptException {
+        message("LongTimeProcess...");
         engine.eval("a <- 1:100");
         engine.eval("s <- sum(a)");
         engine.eval("Sys.sleep(1)");
@@ -81,6 +89,7 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void longVectorResultTest() throws ScriptException {
+        message("Long vector(size of 1000)...");
         engine.eval("a <- 1:1000");
         double[] result = (double[]) engine.get("a");
         assertEquals(1000, result.length);
@@ -89,6 +98,7 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void PutDobleArrayTest() throws ScriptException {
+        message("Passing and retrieving double array to R...");
         double[] a = new double[]{19.0, 17.0, 23.0};
         engine.put("a", a);
         engine.eval("a <- sort(a)");
@@ -100,6 +110,7 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void PutIntArrayTest() throws ScriptException {
+        message("Pass & Retreive integer array...");
         int[] a = new int[]{19, 17, 23};
         engine.put("a", a);
         engine.eval("a <- sort(a)");
@@ -108,6 +119,21 @@ public class RCallerScriptEngineTest {
         assertEquals(result[1], 19.0, delta);
         assertEquals(result[2], 23.0, delta);
     }
-      
+
+    @Test
+    public void PutDoubleMatrix() throws ScriptException {
+        message("Send and retrieve double matrix...");
+        double[][] mat = new double[][]{{1, 2, 3}, {4, 5, 6}};
+        engine.put("a", mat);
+        double[][] result = (double[][]) engine.get("a");
+        assertEquals(2, result.length);
+        assertEquals(3, result[0].length);
+        assertEquals(1.0, mat[0][0], delta);
+        assertEquals(2.0, mat[0][1], delta);
+        assertEquals(3.0, mat[0][2], delta);
+        assertEquals(4.0, mat[1][0], delta);
+        assertEquals(5.0, mat[1][1], delta);
+        assertEquals(6.0, mat[1][2], delta);
+    }
 
 }
