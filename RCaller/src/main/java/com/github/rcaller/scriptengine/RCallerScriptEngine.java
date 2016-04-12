@@ -178,5 +178,9 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler {
     public void messageReceived(String senderName, String msg) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public void close(){
+        this.rcaller.StopRCallerOnline();
+    }
 
 }
