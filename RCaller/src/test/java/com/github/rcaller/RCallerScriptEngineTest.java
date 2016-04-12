@@ -25,6 +25,7 @@
  */
 package com.github.rcaller;
 
+
 import com.github.rcaller.scriptengine.RCallerScriptEngine;
 import com.github.rcaller.util.Globals;
 import javax.script.ScriptException;
@@ -34,7 +35,7 @@ import org.junit.Test;
 
 public class RCallerScriptEngineTest {
 
-    RCallerScriptEngine engine = null;
+    static RCallerScriptEngine engine = null;
     double delta = 1 / 100000;
 
     public static void message(String text) {
@@ -44,10 +45,11 @@ public class RCallerScriptEngineTest {
     @Before
     @Test
     public void init() {
-        message("Init...");
-        Globals.detect_current_rscript();
-        engine = new RCallerScriptEngine();
-        assertNotNull(engine);
+        if (engine == null) {
+            message("Init...");
+            Globals.detect_current_rscript();
+            engine = new RCallerScriptEngine();
+        }
     }
 
     @Test
