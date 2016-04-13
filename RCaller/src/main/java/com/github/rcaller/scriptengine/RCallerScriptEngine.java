@@ -126,12 +126,17 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler {
 
     @Override
     public Object get(String var) {
+        int[] dimension;
         rcode.clearOnline();
         rcode.addRCode("result <- ls()");
         rcaller.runAndReturnResultOnline(var);
         parser = rcaller.getParser();
         parser.parse();
-        int[] dimension = parser.getDimensions(var);
+        try{
+            dimension = parser.getDimensions(var);
+        }catch (Exception e){
+            return(parser.getAsStringArray(var));
+        }
         String vartype = parser.getType(var);
         if (dimension[0] > 1 && dimension[1] > 1) {
             return (parser.getAsDoubleMatrix(var));

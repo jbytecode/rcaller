@@ -122,6 +122,17 @@ public class RCallerScriptEngineTest {
         assertEquals(result[2], 23.0, delta);
     }
 
+	@Test
+    public void PutStringArrayTest() throws ScriptException {
+        message("Pass & Retreive String array...");
+        String[] a = new String[]{"19", "17", "23"};
+        engine.put("a", a);
+        String[] result = (String[]) engine.get("a");
+        assertEquals(result[0], "19");
+        assertEquals(result[1], "17");
+        assertEquals(result[2], "23");
+    }
+
     @Test
     public void PutDoubleMatrix() throws ScriptException {
         message("Send and retrieve double matrix...");
