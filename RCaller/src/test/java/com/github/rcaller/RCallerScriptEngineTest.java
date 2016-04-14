@@ -91,11 +91,11 @@ public class RCallerScriptEngineTest {
 
     @Test
     public void longVectorResultTest() throws ScriptException {
-        message("Long vector(size of 1000)...");
-        engine.eval("a <- 1:1000");
+        message("Long vector(size of 10000)...");
+        engine.eval("a <- 1:10000");
         double[] result = (double[]) engine.get("a");
-        assertEquals(1000, result.length);
-        assertEquals(1000.0, result[result.length - 1], delta);
+        assertEquals(10000, result.length);
+        assertEquals(10000.0, result[result.length - 1], delta);
     }
 
     @Test
@@ -114,6 +114,30 @@ public class RCallerScriptEngineTest {
     public void PutIntArrayTest() throws ScriptException {
         message("Pass & Retreive integer array...");
         int[] a = new int[]{19, 17, 23};
+        engine.put("a", a);
+        engine.eval("a <- sort(a)");
+        double[] result = (double[]) engine.get("a");
+        assertEquals(result[0], 17.0, delta);
+        assertEquals(result[1], 19.0, delta);
+        assertEquals(result[2], 23.0, delta);
+    }
+    
+    @Test
+    public void PutLongArrayTest() throws ScriptException {
+        message("Pass & Retreive long array...");
+        long[] a = new long[]{19L, 17L, 23L};
+        engine.put("a", a);
+        engine.eval("a <- sort(a)");
+        double[] result = (double[]) engine.get("a");
+        assertEquals(result[0], 17.0, delta);
+        assertEquals(result[1], 19.0, delta);
+        assertEquals(result[2], 23.0, delta);
+    }
+    
+    @Test
+    public void PutShortArrayTest() throws ScriptException {
+        message("Pass & Retreive short array...");
+        short[] a = new short[]{19, 17, 23};
         engine.put("a", a);
         engine.eval("a <- sort(a)");
         double[] result = (double[]) engine.get("a");
