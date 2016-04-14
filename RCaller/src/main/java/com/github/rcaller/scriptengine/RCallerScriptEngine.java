@@ -34,12 +34,15 @@ import com.github.rcaller.util.Globals;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.Writer;
+import java.util.List;
 import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import org.apache.commons.lang.ArrayUtils;
 
 public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocable {
@@ -47,11 +50,12 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     RCaller rcaller;
     RCode rcode;
     ROutputParser parser;
-
+    
+    
     public RCallerScriptEngine() {
         rcaller = new RCaller();
         rcode = new RCode();
-
+                
         rcaller.setRExecutable(Globals.R_current);
 
         rcode.addRCode("result <- list(a=0)");
@@ -59,6 +63,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcaller.runAndReturnResultOnline("result");
     }
 
+    
     @Override
     public Object eval(String code, ScriptContext sc) throws ScriptException {
         return (this.eval(code));
@@ -240,5 +245,6 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     public <T> T getInterface(Object o, Class<T> type) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+ 
 
 }

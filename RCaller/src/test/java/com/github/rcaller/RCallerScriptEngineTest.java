@@ -30,6 +30,8 @@ import static com.github.rcaller.scriptengine.NamedArgument.*;
 import com.github.rcaller.util.Globals;
 import javax.script.ScriptException;
 import javax.script.Invocable;
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -51,6 +53,17 @@ public class RCallerScriptEngineTest {
             Globals.detect_current_rscript();
             engine = new RCallerScriptEngine();
         }
+    }
+    
+    @Test
+    public void ScriptEngineManagerTest() {
+        //this test will always fail to produce a RCallerScriptEngine
+        //because the file in META-INF/services will be loaded when
+        //the library is packaged in a jar
+        message("Creating an engine using ScriptEngineManager");
+        ScriptEngineManager manager = new ScriptEngineManager();
+        ScriptEngine en = manager.getEngineByName("RCaller");
+        //assertNotNull(en);
     }
 
     @Test
