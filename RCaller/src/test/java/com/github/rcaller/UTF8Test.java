@@ -3,6 +3,10 @@ package com.github.rcaller;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 import com.github.rcaller.util.Globals;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -26,6 +30,31 @@ public class UTF8Test {
 
         String[] result = caller.getParser().getAsStringArray("s");
         assertTrue(result[0].equals(s));
+    }
+    
+    @Test
+    public void VariableNameContainsAndCharacterTest() throws IOException{
+        RCode code = new RCode();
+        RCaller caller = new RCaller();
+        Globals.detect_current_rscript();
+        caller.setRscriptExecutable(Globals.Rscript_current);
+
+        caller.setRCode(code);
+        
+        TempFileService tmpservice = new TempFileService();
+        File tmpfile = tmpservice.createTempFile("csv", "");
+        
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tmpfile));
+        writer.write("ID,Feature1,Feature2,Feature3\n");
+        writer.write("a&b,1,0.01,0.65\n");
+        writer.flush();
+        writer.close();
+        
+        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        caller.runAndReturnResult("predictions");
+        
+        String[] result = caller.getParser().getAsStringArray("ID");
+        assertEquals("a&b", result[0]);
     }
 
 }

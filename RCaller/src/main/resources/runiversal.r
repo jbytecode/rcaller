@@ -8,7 +8,13 @@ cleanNames<-function(names){
     cleanNames<-paste(unlist(strsplit(cleanNames,"\\[")),collapse="")
     cleanNames<-paste(unlist(strsplit(cleanNames,"\\]")),collapse="")
     cleanNames<-paste(unlist(strsplit(cleanNames,"\\*")),collapse="")
+    cleanNames<-paste(unlist(strsplit(cleanNames,"&")),collapse="")
     return(cleanNames)
+}
+
+replaceXMLchars <- function(aStr){
+    cln <-paste(unlist(strsplit(aStr,"&")),collapse="&amp;")
+    return(cln)	
 }
 
 makevectorxml<-function(code,objt,name=""){
@@ -39,7 +45,7 @@ makevectorxml<-function(code,objt,name=""){
     if(is.vector(obj) && is.character(obj)){
         xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
         for (i in obj){
-            xmlcode<-paste(xmlcode,"<v>",iconv(toString(i), to="UTF-8"),"</v>",sep="")
+            xmlcode<-paste(xmlcode,"<v>",iconv(replaceXMLchars(toString(i)), to="UTF-8"),"</v>",sep="")
         }
         xmlcode<-paste(xmlcode,"</variable>\n")
     }
@@ -50,7 +56,7 @@ makevectorxml<-function(code,objt,name=""){
 makexml<-function(obj,name=""){
     xmlcode<-"<?xml version=\"1.0\"?>\n<root>\n"
     if(!is.list(obj)){
-        xmlcode<-makevectorxml(xmlcode,obj,name)
+        xmlcode<-makevectorxml(xmlcode,obj,cleanNames(name))
     }else{
         objnames<-names(obj)
         for (i in 1:length(obj)){
