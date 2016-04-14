@@ -1,15 +1,15 @@
 cleanNames<-function(names){
-    cleanNames<-paste(unlist(strsplit(names,"\\.")),collapse="_")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"<")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,">")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames," ")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"\\(")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"\\)")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"\\[")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"\\]")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"\\*")),collapse="")
-    cleanNames<-paste(unlist(strsplit(cleanNames,"&")),collapse="")
-    return(cleanNames)
+    cln<-paste(unlist(strsplit(names,"\\.")),collapse="_")
+    cln<-paste(unlist(strsplit(cln,"<")),collapse="")
+    cln<-paste(unlist(strsplit(cln,">")),collapse="")
+    cln<-paste(unlist(strsplit(cln," ")),collapse="")
+    cln<-paste(unlist(strsplit(cln,"\\(")),collapse="")
+    cln<-paste(unlist(strsplit(cln,"\\)")),collapse="")
+    cln<-paste(unlist(strsplit(cln,"\\[")),collapse="")
+    cln<-paste(unlist(strsplit(cln,"\\]")),collapse="")
+    cln<-paste(unlist(strsplit(cln,"\\*")),collapse="")
+    cln<-paste(unlist(strsplit(cln,"&")),collapse="")
+    return(cln)
 }
 
 replaceXMLchars <- function(aStr){
