@@ -25,10 +25,11 @@
  */
 package com.github.rcaller;
 
-
 import com.github.rcaller.scriptengine.RCallerScriptEngine;
+import static com.github.rcaller.scriptengine.NamedArgument.*;
 import com.github.rcaller.util.Globals;
 import javax.script.ScriptException;
+import javax.script.Invocable;
 import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.Test;
@@ -121,7 +122,7 @@ public class RCallerScriptEngineTest {
         assertEquals(result[1], 19.0, delta);
         assertEquals(result[2], 23.0, delta);
     }
-    
+
     @Test
     public void PutLongArrayTest() throws ScriptException {
         message("Pass & Retreive long array...");
@@ -133,7 +134,7 @@ public class RCallerScriptEngineTest {
         assertEquals(result[1], 19.0, delta);
         assertEquals(result[2], 23.0, delta);
     }
-    
+
     @Test
     public void PutShortArrayTest() throws ScriptException {
         message("Pass & Retreive short array...");
@@ -146,7 +147,7 @@ public class RCallerScriptEngineTest {
         assertEquals(result[2], 23.0, delta);
     }
 
-	@Test
+    @Test
     public void PutStringArrayTest() throws ScriptException {
         message("Pass & Retreive String array...");
         String[] a = new String[]{"19", "17", "23"};
@@ -171,6 +172,85 @@ public class RCallerScriptEngineTest {
         assertEquals(4.0, mat[1][0], delta);
         assertEquals(5.0, mat[1][1], delta);
         assertEquals(6.0, mat[1][2], delta);
+    }
+
+    @Test
+    public void InvokeRunifTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke 'runif' ...");
+        Invocable invocable = (Invocable) engine;
+        Object result = invocable.invokeFunction("runif",
+                Named("n", 5),
+                Named("min", 0),
+                Named("max", 100)
+        );
+        double[] dresult = (double[]) result;
+        assertEquals(5, dresult.length);
+        assertTrue(dresult[0] > 0 && dresult[0] < 100);
+        assertTrue(dresult[1] > 0 && dresult[0] < 100);
+        assertTrue(dresult[2] > 0 && dresult[0] < 100);
+        assertTrue(dresult[3] > 0 && dresult[0] < 100);
+        assertTrue(dresult[4] > 0 && dresult[0] < 100);
+    }
+
+    @Test
+    public void InvokeSqrtTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke 'sqrt' ...");
+        Invocable invocable = (Invocable) engine;
+        Object result = invocable.invokeFunction("sqrt", Named("", 25.0));
+        double[] dresult = (double[]) result;
+        assertEquals(5.0, dresult[0], delta);
+    }
+
+    @Test
+    public void InvokeRNormWithoutNamesTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke 'rnorm' without argument names");
+        Invocable invocable = (Invocable) engine;
+        Object result
+                = invocable.invokeFunction(
+                        "rnorm", // function name
+                        Named("", 100), // for n
+                        Named("", 0), // for mean
+                        Named("", 2));  // for standard deviation
+        double[] dresult = (double[]) result;
+        assertEquals(100, dresult.length);
+        assertTrue(dresult[0] < 0 + 2 * 5 && dresult[0] > 0 - 2 * 5);
+        assertTrue(dresult[1] < 0 + 2 * 5 && dresult[1] > 0 - 2 * 5);
+    }
+
+    @Test
+    public void InvokePassDoubleArrayToRFunctionTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke 'mean' on a Java double[] without argument names");
+        Invocable invocable = (Invocable) engine;
+        double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+        Object result
+                = invocable.invokeFunction(
+                        "mean", // function name
+                        Named("", x)
+                );
+        double[] dresult = (double[]) result;
+        assertEquals(1, dresult.length);
+        assertEquals(5.0, dresult[0], delta);
+    }
+
+    @Test
+    public void InvokeUserDefinedFunctionOnAVectorTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke user defined R function on a Java double[] array");
+        Invocable invocable = (Invocable) engine;
+        double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+        engine.put("x", x);
+        engine.eval("f <- function(a){return(a^2)}");
+        Object result = invocable.invokeFunction("f", Named("a", x));
+        double[] dresult = (double[]) result;
+        assertEquals(9, dresult.length);
+        assertEquals(1.0, dresult[0], delta);
+        assertEquals(4.0, dresult[1], delta);
+        assertEquals(9.0, dresult[2], delta);
+        assertEquals(16.0, dresult[3], delta);
+        assertEquals(25.0, dresult[4], delta);
+        assertEquals(36.0, dresult[5], delta);
+        assertEquals(49.0, dresult[6], delta);
+        assertEquals(64.0, dresult[7], delta);
+        assertEquals(81.0, dresult[8], delta);
     }
 
 }

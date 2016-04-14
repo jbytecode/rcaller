@@ -23,7 +23,6 @@
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-
 package com.github.rcaller.util;
 
 import com.github.rcaller.JavaObject;
@@ -38,8 +37,7 @@ public class CodeUtils {
     public static void addLongArray(StringBuffer RCode, String name, long[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
-    
-    
+
     public static void addFloatArray(StringBuffer RCode, String name, float[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
@@ -65,11 +63,15 @@ public class CodeUtils {
     }
 
     public static <T> void addArray(StringBuffer RCode, String name, T[] array, boolean useEquals, boolean isString) {
-        if (useEquals) {
-            RCode.append(name).append("=").append("c(");
-        } else {
-            RCode.append(name).append("<-").append("c(");
+        if (!name.equals("")) {
+            if (useEquals) {
+                RCode.append(name).append("=");
+            } else {
+                RCode.append(name).append("<-");
+            }
         }
+        RCode.append("c(");
+
         for (int i = 0; i < array.length; i++) {
             if (isString) {
                 RCode.append("\"").append(array[i]).append("\"");
@@ -97,12 +99,14 @@ public class CodeUtils {
     public static void addDoubleMatrix(StringBuffer RCode, String name, double[][] matrix, boolean useEquals) {
         int dim2 = matrix[0].length;
         int counter = 0;
-        if (useEquals) {
-            RCode.append(name).append("=").append("matrix(");
-        } else {
-            RCode.append(name).append("<-").append("matrix(");
+        if (!name.equals("")) {
+            if (useEquals) {
+                RCode.append(name).append("=");
+            } else {
+                RCode.append(name).append("<-");
+            }
         }
-        RCode.append("c(");
+        RCode.append("matrix(").append("c(");
         for (double[] aMatrix : matrix) {
             for (int j = 0; j < dim2; j++) {
                 RCode.append(String.valueOf(aMatrix[j]));
@@ -125,43 +129,81 @@ public class CodeUtils {
     public static void addInt(StringBuffer RCode, String name, int i, boolean useEquals) {
         addValue(RCode, name, i, useEquals);
     }
-    
+
     public static void addLong(StringBuffer RCode, String name, long l, boolean useEquals) {
         addValue(RCode, name, l, useEquals);
     }
-    
+
     public static void addFloat(StringBuffer RCode, String name, float f, boolean useEquals) {
         addValue(RCode, name, String.valueOf(f).toUpperCase(), useEquals);
     }
-    
+
     public static void addShort(StringBuffer RCode, String name, short s, boolean useEquals) {
         addValue(RCode, name, s, useEquals);
     }
-    
+
     public static void addBoolean(StringBuffer RCode, String name, boolean b, boolean useEquals) {
         addValue(RCode, name, String.valueOf(b).toUpperCase(), useEquals);
     }
 
     public static void addString(StringBuffer RCode, String name, String value, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=")
-                    .append("\"")
-                    .append(value)
-                    .append("\"");
+        if (!name.equals("")) {
+            if (useEquals) {
+                RCode.append(name).append("=");
+            } else {
+                RCode.append(name).append("<-");
+            }
+        } else if (useEquals) {
+
+            RCode.append("\"").append(value).append("\"");
         } else {
-            RCode.append(name).append("<-")
-                    .append("\"")
-                    .append(value)
-                    .append("\"")
-                    .append("\n");
+
+            RCode.append("\"").append(value).append("\"").append("\n");
         }
     }
 
     private static void addValue(StringBuffer RCode, String name, Object value, boolean useEquals) {
-        if (useEquals) {
-            RCode.append(name).append("=").append(value);
+        if (!name.equals("")) {
+            if (useEquals) {
+                RCode.append(name).append("=").append(value);
+            } else {
+                RCode.append(name).append("<-").append(value).append("\n");
+            }
+        } else if (useEquals) {
+            RCode.append(value);
         } else {
-            RCode.append(name).append("<-").append(value).append("\n");
+            RCode.append(value).append("\n");
         }
+    }
+
+    public static void addRespectToType(StringBuffer code, String name, Object o, boolean useEquals) {
+        if (o instanceof double[]) {
+            CodeUtils.addDoubleArray(code, name, (double[]) o, useEquals);
+        } else if (o instanceof int[]) {
+            CodeUtils.addIntArray(code, name, (int[]) o, useEquals);
+        } else if (o instanceof float[]) {
+            CodeUtils.addFloatArray(code, name, (float[]) o, useEquals);
+        } else if (o instanceof boolean[]) {
+            CodeUtils.addLogicalArray(code, name, (boolean[]) o, useEquals);
+        } else if (o instanceof long[]) {
+            CodeUtils.addLongArray(code, name, (long[]) o, useEquals);
+        } else if (o instanceof String[]) {
+            CodeUtils.addStringArray(code, name, (String[]) o, useEquals);
+        } else if (o instanceof short[]) {
+            CodeUtils.addShortArray(code, name, (short[]) o, useEquals);
+        } else if (o instanceof Double) {
+            CodeUtils.addDouble(code, name, (Double) o, useEquals);
+        } else if (o instanceof Integer) {
+            CodeUtils.addInt(code, name, (Integer) o, useEquals);
+        } else if (o instanceof Long) {
+            CodeUtils.addLong(code, name, (Long) o, useEquals);
+        } else if (o instanceof Short) {
+            CodeUtils.addShort(code, name, (Short) o, useEquals);
+        } else if (o instanceof String) {
+            CodeUtils.addString(code, name, (String) o, useEquals);
+        } else if (o instanceof double[][]) {
+            CodeUtils.addDoubleMatrix(code, name, (double[][]) o, useEquals);
+        }
+
     }
 }
