@@ -47,14 +47,14 @@ public class EventHandlerTest {
         code.addRCode("x<-1:1000");
         code.addRCode("m<-median(x)");
         caller.setRCode(code);
-        System.out.println("running code");
-        System.out.println(code);
+        //System.out.println("running code");
+        //System.out.println(code);
         caller.runAndReturnResultOnline("m");
 
         code.clear();
         code.addRCode("cat(\"This message might be catched by the event handler\")");
         caller.runAndReturnResultOnline("m");
-        System.out.println("stopping consumers");
+        //System.out.println("stopping consumers");
         caller.stopStreamConsumers();
 
         caller.deleteTempFiles();

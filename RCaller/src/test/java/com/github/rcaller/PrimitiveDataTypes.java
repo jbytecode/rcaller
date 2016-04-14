@@ -37,7 +37,7 @@ public class PrimitiveDataTypes {
     public void testDouble(){
         RCode code = new RCode();
         code.addDouble("d", 3.141592);
-        System.out.println(code);
+        //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3.141592\n"));
     }
     
@@ -45,7 +45,7 @@ public class PrimitiveDataTypes {
     public void testInt(){
         RCode code = new RCode();
         code.addInt("d", 3);
-        System.out.println(code);
+        //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3\n"));
     }
     
@@ -53,7 +53,7 @@ public class PrimitiveDataTypes {
     public void testLong(){
         RCode code = new RCode();
         code.addLong("d", 3);
-        System.out.println(code);
+        //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3\n"));
     }
     
@@ -61,7 +61,7 @@ public class PrimitiveDataTypes {
     public void testFloat(){
         RCode code = new RCode();
         code.addFloat("d", 3.141592f);
-        System.out.println(code);
+        //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3.141592\n"));
     }
 
@@ -69,7 +69,7 @@ public class PrimitiveDataTypes {
     public void testShort(){
         RCode code = new RCode();
         code.addShort("d", (short)3);
-        System.out.println(code);
+        //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3\n"));
     }
     
@@ -77,7 +77,7 @@ public class PrimitiveDataTypes {
     public void testBoolean(){
         RCode code = new RCode();
         code.addBoolean("d", true);
-        System.out.println(code);
+        //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-TRUE\n"));
     }
     

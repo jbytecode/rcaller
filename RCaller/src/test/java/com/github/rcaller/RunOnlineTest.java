@@ -19,6 +19,7 @@ public class RunOnlineTest {
      * We set it to 20 for faster tests.
      */
     private int numTrials = 20;
+    private double delta = 1 / 10000;
 
     @Test
     public void testMatrixOnline() {
@@ -35,23 +36,26 @@ public class RunOnlineTest {
         rcaller.setRCode(code);
         rcaller.runAndReturnResultOnline("result");
         double mean = rcaller.getParser().getAsDoubleArray("result")[0];
-        System.out.println("mean: " + mean);
+        assertEquals(12.0, mean, delta);
+        //System.out.println("mean: " + mean);
 
         code.clear();
         code.addRCode("result <- sd(x)");
         rcaller.runAndReturnResultOnline("result");
         double sd = rcaller.getParser().getAsDoubleArray("result")[0];
-        System.out.println("sd: " + sd);
+        assertEquals(21.2720473861826, sd, delta);
+        //System.out.println("sd: " + sd);
 
         code.clear();
         code.addRCode("result <- mad(x)");
         rcaller.runAndReturnResultOnline("result");
         double mad = rcaller.getParser().getAsDoubleArray("result")[0];
-        System.out.println("mad: " + mad);
+        assertEquals(1.4826, mad, delta);
+        //System.out.println("mad: " + mad);
 
-        System.out.println("Deleting temp files:");
+        //System.out.println("Deleting temp files:");
         rcaller.deleteTempFiles();
-        System.out.println("Stopping RCaller online");
+        //System.out.println("Stopping RCaller online");
         rcaller.StopRCallerOnline();
     }
 

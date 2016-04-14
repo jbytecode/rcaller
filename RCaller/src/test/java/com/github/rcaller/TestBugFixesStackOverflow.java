@@ -24,7 +24,7 @@ public class TestBugFixesStackOverflow {
         StringBuffer s = new StringBuffer(x);
         code.setCode(s);
 
-        System.out.println(x);
+        //System.out.println(x);
         caller.setRCode(code);
         //caller.redirectROutputToConsole();
         //caller.runOnly();
@@ -56,8 +56,9 @@ public class TestBugFixesStackOverflow {
 
         double pvalue = caller.getParser().getAsDoubleArray("pval")[0];
         double df = caller.getParser().getAsDoubleArray("df")[0];
-        System.out.println("Pvalue is : " + pvalue);
-        System.out.println("Df is : " + df);
+        
+        Assert.assertTrue(pvalue >=0 && pvalue <= 1.0);
+        Assert.assertTrue(df >=0 && pvalue <= 100.0);
         caller.deleteTempFiles();
     }
 }

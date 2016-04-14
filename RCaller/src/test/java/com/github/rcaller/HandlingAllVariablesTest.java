@@ -56,10 +56,10 @@ public class HandlingAllVariablesTest {
         caller.runAndReturnResult("result");
 
         ArrayList<String> names = caller.getParser().getNames();
-        System.out.println("Names : " + names);
+        //System.out.println("Names : " + names);
 
-        System.out.println("x is " + caller.getParser().getAsDoubleArray("x")[0]);
-        System.out.println("y is " + caller.getParser().getAsDoubleArray("y")[0]);
+        //System.out.println("x is " + caller.getParser().getAsDoubleArray("x")[0]);
+        //System.out.println("y is " + caller.getParser().getAsDoubleArray("y")[0]);
 
         Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[0], 5.65, delta);
         Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[0], 8.96, delta);
@@ -82,10 +82,10 @@ public class HandlingAllVariablesTest {
         caller.runAndReturnResult("result");
 
         ArrayList<String> names = caller.getParser().getNames();
-        System.out.println("Names : " + names);
+        //System.out.println("Names : " + names);
 
-        System.out.println("x[4] is " + caller.getParser().getAsDoubleArray("x")[4]);
-        System.out.println("y[4] is " + caller.getParser().getAsDoubleArray("y")[4]);
+        //System.out.println("x[4] is " + caller.getParser().getAsDoubleArray("x")[4]);
+        //System.out.println("y[4] is " + caller.getParser().getAsDoubleArray("y")[4]);
 
         Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[4], 5, delta);
         Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[4], 10, delta);

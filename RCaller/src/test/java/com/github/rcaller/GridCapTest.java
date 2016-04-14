@@ -25,7 +25,7 @@ public class GridCapTest {
         caller.setRCode(code);
         caller.runAndReturnResult("returns");
         int[] dims = caller.getParser().getDimensions("cap");
-        System.out.println("Names: " + caller.getParser().getNames());
-        System.out.println("Returned matrix dimensions: "+dims[0]+" - "+dims[1]);
+        //System.out.println("Names: " + caller.getParser().getNames());
+        //System.out.println("Returned matrix dimensions: "+dims[0]+" - "+dims[1]);
     }
 }
