@@ -150,15 +150,17 @@ public class CodeUtils {
         if (!name.equals("")) {
             if (useEquals) {
                 RCode.append(name).append("=");
+                RCode.append("\"").append(value).append("\"");
             } else {
                 RCode.append(name).append("<-");
+                RCode.append("\"").append(value).append("\"").append("\n");
             }
-        } else if (useEquals) {
-
-            RCode.append("\"").append(value).append("\"");
-        } else {
-
-            RCode.append("\"").append(value).append("\"").append("\n");
+        } else if (name.equals("")) {
+            if (useEquals) {
+                RCode.append("\"").append(value).append("\"");
+            } else {
+                RCode.append("\"").append(value).append("\"").append("\n");
+            }
         }
     }
 
@@ -169,10 +171,12 @@ public class CodeUtils {
             } else {
                 RCode.append(name).append("<-").append(value).append("\n");
             }
-        } else if (useEquals) {
-            RCode.append(value);
-        } else {
-            RCode.append(value).append("\n");
+        } else if (name.equals("")) {
+            if (useEquals) {
+                RCode.append(value);
+            } else {
+                RCode.append(value).append("\n");
+            }
         }
     }
 

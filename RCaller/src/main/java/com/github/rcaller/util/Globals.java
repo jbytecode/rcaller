@@ -1,7 +1,7 @@
 /*
  *
  RCaller, A solution for calling R from Java
- Copyright (C) 2010-2014  Mehmet Hakan Satman
+ Copyright (C) 2010-2016  Mehmet Hakan Satman
 
  This program is free software: you can redistribute it and/or modify
  it under the terms of the GNU Lesser General Public License as published by
@@ -44,7 +44,7 @@ public class Globals {
 
     public static GraphicsTheme theme = new DefaultTheme();
 
-    public final static String version = "RCaller 2.0";
+    public final static String version = "RCaller 3.0";
     public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
     public final static String license = "LGPL v3.0";
 

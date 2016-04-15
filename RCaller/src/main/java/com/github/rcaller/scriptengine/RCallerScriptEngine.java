@@ -35,7 +35,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.script.Bindings;
 import javax.script.Invocable;
 import javax.script.ScriptContext;
@@ -50,12 +53,11 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     RCaller rcaller;
     RCode rcode;
     ROutputParser parser;
-    
-    
+
     public RCallerScriptEngine() {
         rcaller = new RCaller();
         rcode = new RCode();
-                
+
         rcaller.setRExecutable(Globals.R_current);
 
         rcode.addRCode("result <- list(a=0)");
@@ -63,7 +65,6 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcaller.runAndReturnResultOnline("result");
     }
 
-    
     @Override
     public Object eval(String code, ScriptContext sc) throws ScriptException {
         return (this.eval(code));
@@ -203,7 +204,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
 
     @Override
     public Object invokeFunction(String fname, Object... arguments) throws ScriptException, NoSuchMethodException {
-        int[] dimension;
+        int[] dimension = null;
         String var = "fresult";
 
         rcode.clearOnline();
@@ -219,21 +220,28 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcaller.setRCode(rcode);
         //System.out.println("Invoking: "+rcode.getCode().toString());
         rcaller.runAndReturnResultOnline(var);
-        try {
-            dimension = parser.getDimensions(var);
-        } catch (Exception e) {
-            return (parser.getAsStringArray(var));
+        //System.out.println("Names: "+rcaller.getParser().getNames());
+        ArrayList<NamedArgument> namedResults = new ArrayList<>();
+        ArrayList<String> names = rcaller.getParser().getNames();
+        for (int i = 0; i < names.size(); i++) {
+            var = names.get(i);
+            try {
+                dimension = parser.getDimensions(var);
+            } catch (Exception e) {
+                namedResults.add(NamedArgument.Named(var, parser.getAsStringArray(var)));
+            }
+            String vartype = parser.getType(var);
+            if (dimension[0] > 1 && dimension[1] > 1) {
+                namedResults.add(NamedArgument.Named(var, parser.getAsDoubleMatrix(var)));
+            } else if (vartype.equals("numeric")) {
+                namedResults.add(NamedArgument.Named(var, parser.getAsDoubleArray(var)));
+            } else if (vartype.equals("character")) {
+                namedResults.add(NamedArgument.Named(var, parser.getAsStringArray(var)));
+            } else {
+                namedResults.add(NamedArgument.Named(var, parser.getAsStringArray(var)));
+            }
         }
-        String vartype = parser.getType(var);
-        if (dimension[0] > 1 && dimension[1] > 1) {
-            return (parser.getAsDoubleMatrix(var));
-        } else if (vartype.equals("numeric")) {
-            return (parser.getAsDoubleArray(var));
-        } else if (vartype.equals("character")) {
-            return (parser.getAsStringArray(var));
-        } else {
-            return (parser.getAsStringArray(var)); // :o
-        }
+        return (namedResults);
     }
 
     @Override
@@ -245,6 +253,5 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     public <T> T getInterface(Object o, Class<T> type) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
- 
 
 }

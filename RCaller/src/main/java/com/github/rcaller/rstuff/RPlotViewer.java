@@ -26,6 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.github.rcaller.rstuff;
 
+import com.github.rcaller.util.Globals;
 import javax.swing.*;
 import java.awt.*;
 
@@ -49,7 +50,7 @@ public class RPlotViewer extends JFrame {
     this.img = img;
     this.setSize(img.getIconWidth() + 20, img.getIconHeight() + 60);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.setTitle("RCaller 2.0 - Generated Plot");
+    this.setTitle(Globals.version + " - Generated Plot");
     repaint();
   }
 

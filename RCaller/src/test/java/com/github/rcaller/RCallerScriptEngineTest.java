@@ -25,9 +25,11 @@
  */
 package com.github.rcaller;
 
+import com.github.rcaller.scriptengine.NamedArgument;
 import com.github.rcaller.scriptengine.RCallerScriptEngine;
 import static com.github.rcaller.scriptengine.NamedArgument.*;
 import com.github.rcaller.util.Globals;
+import java.util.ArrayList;
 import javax.script.ScriptException;
 import javax.script.Invocable;
 import javax.script.ScriptEngine;
@@ -54,7 +56,7 @@ public class RCallerScriptEngineTest {
             engine = new RCallerScriptEngine();
         }
     }
-    
+
     @Test
     public void ScriptEngineManagerTest() {
         //this test will always fail to produce a RCallerScriptEngine
@@ -196,8 +198,10 @@ public class RCallerScriptEngineTest {
                 Named("min", 0),
                 Named("max", 100)
         );
-        double[] dresult = (double[]) result;
-        assertEquals(5, dresult.length);
+        ArrayList<NamedArgument> allresults = (ArrayList<NamedArgument>) result;
+        assertEquals(1, allresults.size());
+
+        double[] dresult = (double[]) allresults.get(0).getO();
         assertTrue(dresult[0] > 0 && dresult[0] < 100);
         assertTrue(dresult[1] > 0 && dresult[0] < 100);
         assertTrue(dresult[2] > 0 && dresult[0] < 100);
@@ -209,8 +213,8 @@ public class RCallerScriptEngineTest {
     public void InvokeSqrtTest() throws ScriptException, NoSuchMethodException {
         message("Invoke 'sqrt' ...");
         Invocable invocable = (Invocable) engine;
-        Object result = invocable.invokeFunction("sqrt", Named("", 25.0));
-        double[] dresult = (double[]) result;
+        ArrayList<NamedArgument> allresults = (ArrayList<NamedArgument>) invocable.invokeFunction("sqrt", Named("", 25.0));
+        double[] dresult = (double[]) allresults.get(0).getO();
         assertEquals(5.0, dresult[0], delta);
     }
 
@@ -218,13 +222,14 @@ public class RCallerScriptEngineTest {
     public void InvokeRNormWithoutNamesTest() throws ScriptException, NoSuchMethodException {
         message("Invoke 'rnorm' without argument names");
         Invocable invocable = (Invocable) engine;
-        Object result
-                = invocable.invokeFunction(
+        ArrayList<NamedArgument> allresults
+                = (ArrayList<NamedArgument>) invocable.invokeFunction(
                         "rnorm", // function name
                         Named("", 100), // for n
                         Named("", 0), // for mean
                         Named("", 2));  // for standard deviation
-        double[] dresult = (double[]) result;
+
+        double[] dresult = (double[]) allresults.get(0).getO();
         assertEquals(100, dresult.length);
         assertTrue(dresult[0] < 0 + 2 * 5 && dresult[0] > 0 - 2 * 5);
         assertTrue(dresult[1] < 0 + 2 * 5 && dresult[1] > 0 - 2 * 5);
@@ -235,12 +240,12 @@ public class RCallerScriptEngineTest {
         message("Invoke 'mean' on a Java double[] without argument names");
         Invocable invocable = (Invocable) engine;
         double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
-        Object result
-                = invocable.invokeFunction(
+        ArrayList<NamedArgument> allresults
+                = (ArrayList<NamedArgument>) invocable.invokeFunction(
                         "mean", // function name
                         Named("", x)
                 );
-        double[] dresult = (double[]) result;
+        double[] dresult = (double[]) allresults.get(0).getO();
         assertEquals(1, dresult.length);
         assertEquals(5.0, dresult[0], delta);
     }
@@ -250,10 +255,9 @@ public class RCallerScriptEngineTest {
         message("Invoke user defined R function on a Java double[] array");
         Invocable invocable = (Invocable) engine;
         double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
-        engine.put("x", x);
         engine.eval("f <- function(a){return(a^2)}");
-        Object result = invocable.invokeFunction("f", Named("a", x));
-        double[] dresult = (double[]) result;
+        ArrayList<NamedArgument> allresults = (ArrayList<NamedArgument>) invocable.invokeFunction("f", Named("a", x));
+        double[] dresult = (double[]) allresults.get(0).getO();
         assertEquals(9, dresult.length);
         assertEquals(1.0, dresult[0], delta);
         assertEquals(4.0, dresult[1], delta);
@@ -266,4 +270,30 @@ public class RCallerScriptEngineTest {
         assertEquals(81.0, dresult[8], delta);
     }
 
+    @Test
+    public void InvokeUserDefinedFunctionOnAMatrixTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke user defined R function on a Java double[][] array");
+        Invocable invocable = (Invocable) engine;
+        double[][] x = new double[][]{{1.0, 2.0, 3.0}, {4.0, 5.0, 6.0}, {7.0, 8.0, 9.0}};
+        engine.eval("mydet <- function(a){round(det(a))}");
+        ArrayList<NamedArgument> allresults
+                = (ArrayList<NamedArgument>) invocable.invokeFunction("mydet", Named("a", x));
+        double[] dresult = (double[]) allresults.get(0).getO();
+        assertEquals(1, dresult.length);
+        assertEquals(0.0, dresult[0], delta);
+    }
+
+    @Test
+    public void InvokeLmTest() throws ScriptException, NoSuchMethodException {
+        message("Invoke 'lm()' on Java arrays x[] and y[]");
+        Invocable invocable = (Invocable) engine;
+        double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+        double[] y = new double[]{2.0, 4.0, 6.0, 8.0, 10.0, 12.0, 14.0, 16.0, 18.0};
+        engine.put("x", x);
+        engine.put("y", y);
+        ArrayList<NamedArgument> allresults
+                = (ArrayList<NamedArgument>) invocable.invokeFunction("lm", Named("formula", "y~x"));
+        assertEquals("coefficients", allresults.get(0).getName());
+        assertArrayEquals(new double[]{2.368475785867E-15, 2.0}, (double[]) allresults.get(0).getO(), delta);
+    }
 }
