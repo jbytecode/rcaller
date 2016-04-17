@@ -11,7 +11,7 @@ public class TestBugFixesStackOverflow {
     @Test
     public void testStack1() {
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         String x = "is.installed <- function(mypkg){ \n"
                 + "is.element(mypkg, installed.packages()[,1])\n"
@@ -39,7 +39,7 @@ public class TestBugFixesStackOverflow {
             {59.052, 37.24, 19.019, 17.689}
         };
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addDoubleMatrix("mydata", data);
         code.addRCode("result <- chisq.test(mydata)");

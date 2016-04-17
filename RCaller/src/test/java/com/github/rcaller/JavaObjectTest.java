@@ -58,7 +58,7 @@ public class JavaObjectTest {
 
 
     RCaller rcaller = RCaller.create();
-    RCode code = new RCode();
+    RCode code = RCode.create();
 
     code.addRCode(jo.produceRCode(false));
 
@@ -79,7 +79,7 @@ public class JavaObjectTest {
     JavaObject jo = new JavaObject("tcwa", tcwa);
 
     RCaller rcaller = RCaller.create();
-    RCode code = new RCode();
+    RCode code = RCode.create();
 
     code.addRCode(jo.produceRCode(false));
 
@@ -113,7 +113,7 @@ public class JavaObjectTest {
     JavaObject jo = new JavaObject("tcwa", tcwa);
 
     RCaller rcaller = RCaller.create();
-    RCode code = new RCode();
+    RCode code = RCode.create();
 
     code.addRCode(jo.produceRCode(false));
     code.addRCode("result <- quantile(tcwa$da, 0.95)");

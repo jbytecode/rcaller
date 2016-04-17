@@ -11,7 +11,7 @@ public class StringArrayTest {
   public StringArrayTest() {
     try {
       RCaller caller = RCaller.create();
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       String[] str11 = new String[]{"a", "b", "c", "d", "e", "f", "g", "s", "c"};
       String[] str22 = new String[]{"d", "b", "a", "l", "m", "a", "f", "r", "s"};

@@ -21,7 +21,7 @@ public class GetMatrixDimensionsTest {
         }
         RCaller caller = RCaller.create();
 
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addDoubleMatrix("x", data);
         caller.setRCode(code);
         
@@ -44,7 +44,7 @@ public class GetMatrixDimensionsTest {
         }
         RCaller caller = RCaller.create();
 
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addDoubleArray("x", data);
         caller.setRCode(code);
         

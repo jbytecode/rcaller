@@ -13,7 +13,7 @@ public class FunctionCallTest {
     @Test
     public void LmCall() {
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addDoubleArray("x", new double[]{1, 2, 3, 4, 5});
         code.addDoubleArray("y", new double[]{2, 4, 6, 8, 10});

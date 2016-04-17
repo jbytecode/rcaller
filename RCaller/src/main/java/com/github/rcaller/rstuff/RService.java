@@ -11,7 +11,7 @@ public class RService {
 
     public RService(){
         rcaller = RCaller.create();
-        rcode = new RCode();
+        rcode = RCode.create();
         rcaller.setRCode(rcode);
     }
     

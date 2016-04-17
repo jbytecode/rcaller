@@ -29,7 +29,7 @@ public class ForecastExample {
 
       RCaller caller = RCaller.create();
 
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       code.addDoubleArray("x", stockClosePrices);
       code.R_require("forecast");

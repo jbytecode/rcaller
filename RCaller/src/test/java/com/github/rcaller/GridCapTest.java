@@ -11,7 +11,7 @@ public class GridCapTest {
     @Test
     public void GridCapTest(){
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.R_require("grid");
         code.addRCode("dev.new(width=.5, height=.5)");

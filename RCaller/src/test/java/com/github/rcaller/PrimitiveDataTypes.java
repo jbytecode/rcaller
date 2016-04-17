@@ -35,7 +35,7 @@ public class PrimitiveDataTypes {
     
     @Test
     public void testDouble(){
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addDouble("d", 3.141592);
         //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3.141592\n"));
@@ -43,7 +43,7 @@ public class PrimitiveDataTypes {
     
     @Test
     public void testInt(){
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addInt("d", 3);
         //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3\n"));
@@ -51,7 +51,7 @@ public class PrimitiveDataTypes {
     
     @Test
     public void testLong(){
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addLong("d", 3);
         //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3\n"));
@@ -59,7 +59,7 @@ public class PrimitiveDataTypes {
     
     @Test
     public void testFloat(){
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addFloat("d", 3.141592f);
         //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3.141592\n"));
@@ -67,7 +67,7 @@ public class PrimitiveDataTypes {
 
     @Test
     public void testShort(){
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addShort("d", (short)3);
         //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-3\n"));
@@ -75,7 +75,7 @@ public class PrimitiveDataTypes {
     
     @Test
     public void testBoolean(){
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addBoolean("d", true);
         //System.out.println(code);
         assertEquals(true, code.toString().contains("d<-TRUE\n"));
@@ -84,7 +84,7 @@ public class PrimitiveDataTypes {
     @Test
     public void testString(){
         String msg = "Hello R!";
-        RCode code = new RCode();
+        RCode code = RCode.create();
         code.addString("s", msg);
         assertEquals(true, code.toString().contains("s<-\"Hello R!\"\n"));
     }

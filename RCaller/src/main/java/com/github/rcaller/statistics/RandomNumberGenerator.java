@@ -34,12 +34,12 @@ import com.github.rcaller.rstuff.RCode;
  */
 public class RandomNumberGenerator {
 
-  RCaller caller;
-  RCode code;
+  private RCaller caller;
+  private RCode code;
 
   public RandomNumberGenerator(RCaller rcaller) {
     this.caller = rcaller;
-    this.code = new RCode();
+    this.code = RCode.create();
   }
 
   private double[] generateRandom(String strcode) throws Exception {

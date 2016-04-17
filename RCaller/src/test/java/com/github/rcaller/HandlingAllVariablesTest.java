@@ -41,7 +41,7 @@ public class HandlingAllVariablesTest {
     @Test
     public void GetAllVariablesInEnvironmentTest() {
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addDouble("x", 5.65);
         code.addDouble("y", 8.96);
@@ -60,7 +60,7 @@ public class HandlingAllVariablesTest {
     @Test
     public void GetAllVectorsInEnvironmentTest() {
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addDoubleArray("x", new double[]{1,2,3,4,5});
         code.addDoubleArray("y", new double[]{2,4,6,8,10});

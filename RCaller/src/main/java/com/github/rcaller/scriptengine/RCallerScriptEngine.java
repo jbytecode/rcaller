@@ -45,7 +45,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
 
     public RCallerScriptEngine() {
         rcaller = RCaller.create();
-        rcode = new RCode();
+        rcode = RCode.create();
 
         rcode.addRCode("result <- list(a=0)");
         rcaller.setRCode(rcode);

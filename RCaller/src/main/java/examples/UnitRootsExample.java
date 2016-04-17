@@ -37,7 +37,7 @@ public class UnitRootsExample {
       }
       RCaller caller = RCaller.create();
 
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       code.addDoubleArray("x", stockClosePrices);
 

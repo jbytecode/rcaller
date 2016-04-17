@@ -57,7 +57,7 @@ public class RCaller {
     private TempFileService tempFileService;
     private RCallerOptions rCallerOptions;
 
-    public RCaller(RCode rCode,
+    protected RCaller(RCode rCode,
                    ROutputParser parser,
                    RStreamHandler rOutput,
                    RStreamHandler rError,
@@ -73,7 +73,6 @@ public class RCaller {
         this.rCallerOptions = rCallerOptions;
 
         this.rError.addEventHandler(errorMessageSaver);
-        cleanRCode();
     }
 
     /**
@@ -81,11 +80,11 @@ public class RCaller {
      * @return default RCaller object
      */
     public static RCaller create() {
-        return new RCaller(new RCode(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), RCallerOptions.create());
+        return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), RCallerOptions.create());
     }
 
     public static RCaller create(RCallerOptions rCallerOptions) {
-        return new RCaller(new RCode(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
     public static RCaller create(RCode rcode, RCallerOptions rCallerOptions) {
@@ -136,10 +135,6 @@ public class RCaller {
         Globals.theme = theme;
     }
 
-    public final void cleanRCode() {
-        rCode.clear();
-    }
-
     public void deleteTempFiles() {
         tempFileService.deleteRCallerTempFiles();
         this.rCode.deleteTempFiles();
@@ -158,7 +153,7 @@ public class RCaller {
         BufferedWriter writer = null;
 
         try {
-            f = tempFileService.createTempFile("rcaller", "");
+            f = tempFileService.createTempFile("rCaller", "");
         } catch (IOException e) {
             throw new ExecutionException("Can not open a temporary file for storing the R Code: " + e.toString());
         }
@@ -393,8 +388,7 @@ public class RCaller {
     }
 
     public void redirectROutputToFile(String name, boolean appendToExisting) throws FileNotFoundException {
-        OutputStream fstream = new FileOutputStream(name, appendToExisting);
-        redirectROutputToStream(fstream);
+        redirectROutputToStream(new FileOutputStream(name, appendToExisting));
     }
 
     public void redirectROutputToStream(final OutputStream o) {
@@ -415,7 +409,7 @@ public class RCaller {
         rError.addEventHandler(eh);
     }
 
-    public RCallerOptions getrCallerOptions() {
+    public RCallerOptions getRCallerOptions() {
         return rCallerOptions;
     }
 }

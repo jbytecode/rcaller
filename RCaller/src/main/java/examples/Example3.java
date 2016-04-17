@@ -57,7 +57,7 @@ public class Example3 {
        * Creating RCaller
        */
       RCaller caller = RCaller.create();
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       /**
        *  We are creating a random data from a normal distribution

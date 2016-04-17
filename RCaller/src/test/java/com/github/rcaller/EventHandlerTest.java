@@ -29,7 +29,7 @@ public class EventHandlerTest {
     @Before
     public void setUp() {
         caller = RCaller.create();
-        code = new RCode();
+        code = RCode.create();
     }
 
     @After

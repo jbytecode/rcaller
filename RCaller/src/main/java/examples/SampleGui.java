@@ -107,7 +107,7 @@ public class SampleGui extends JFrame implements ActionListener {
 
             RCaller caller = RCaller.create();
 
-            RCode code = new RCode();
+            RCode code = RCode.create();
             code.addRCode(textArea.getText());
 
 

@@ -8,13 +8,11 @@ import static org.junit.Assert.assertEquals;
 
 public class MatrixTest {
 
-  double delta = 0.0001;
-  
   @Test
   public void simpleMatrixTest() {
 
     RCaller caller = RCaller.create();
-    RCode code = new RCode();
+    RCode code = RCode.create();
 
     double[][] matrix = new double[][]{{6, 4}, {9, 8}};
 
@@ -32,6 +30,7 @@ public class MatrixTest {
     assertEquals(expected.length, inverse.length);
     for (int i = 0; i < expected.length; i++) {
       for (int j = 0; j < expected[0].length; j++) {
+        double delta = 0.0001;
         assertEquals(expected[i][j], inverse[i][j], delta);
       }
     }

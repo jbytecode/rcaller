@@ -40,7 +40,7 @@ public class Main {
   public Main() {
     try {
       RCaller rCaller = RCaller.create();
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       double[] x = new double[]{1, 2, 3, 4, 5};
       double[] y = new double[]{5, 7, 6, 10, 20};

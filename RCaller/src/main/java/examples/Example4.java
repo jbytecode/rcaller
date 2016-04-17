@@ -46,7 +46,7 @@ public class Example4 {
        * Creating an instance of RCaller
        */
       RCaller caller = RCaller.create();
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       /**
        * Some R Stuff

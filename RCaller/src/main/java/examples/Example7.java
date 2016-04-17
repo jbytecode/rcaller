@@ -41,7 +41,7 @@ public class Example7 {
        * methods are deprecated and will no longer will be
        * available in RCaller 3.0
        */
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
 
       double[] numbers = new double[]{1, 4, 3, 5, 6, 10};

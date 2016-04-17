@@ -20,7 +20,7 @@ public class UTF8Test {
     @Test
     public void Utf8CharactersTest() {
         String s = "ǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦ";
-        RCode code = new RCode();
+        RCode code = RCode.create();
         RCaller caller = RCaller.create();
 
         caller.setRCode(code);
@@ -34,7 +34,7 @@ public class UTF8Test {
     
     @Test
     public void VariableNameContainsAndCharacterTest() throws IOException{
-        RCode code = new RCode();
+        RCode code = RCode.create();
         RCaller caller = RCaller.create();
 
         caller.setRCode(code);

@@ -10,7 +10,7 @@ public class ParserEmptyFileTest {
     @Test(expected = Exception.class)
     public void EmptyOutputInParser(){
     	RCaller caller = RCaller.create();
-    	RCode code = new RCode();
+    	RCode code = RCode.create();
 
     	code.addRCode("Some meaningless code");
     	caller.runAndReturnResult("requestedvar");

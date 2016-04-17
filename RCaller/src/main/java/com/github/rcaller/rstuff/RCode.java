@@ -40,7 +40,25 @@ public class RCode {
 
     private StringBuffer code;
     private TempFileService tempFileService = null;
-    
+
+
+    private RCode() {
+        this.code = new StringBuffer();
+    }
+
+    public static RCode create() {
+        RCode rCode = new RCode();
+        rCode.clear();
+        return rCode;
+    }
+
+    public static RCode create(StringBuffer stringBuffer) {
+        RCode rCode = RCode.create();
+        rCode.clear();
+        rCode.getCode().append(stringBuffer);
+        return rCode;
+    }
+
     public void setCode(StringBuffer sb) {
         this.code = new StringBuffer();
         clear();
@@ -51,25 +69,14 @@ public class RCode {
         return (this.code);
     }
 
-    public RCode() {
-        this.code = new StringBuffer();
-        clear();
-    }
-
-    public RCode(StringBuffer sb) {
-        this.code = new StringBuffer();
-        clear();
-        this.code.append(sb);
-    }
-
     public final void clear() {
         this.code.setLength(0);
         try {
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("runiversal.r");
-            InputStreamReader reader = new InputStreamReader(is);
-            BufferedReader breader = new BufferedReader(reader);
+            InputStreamReader inputStreamReader = new InputStreamReader(is);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
             while (true) {
-                String s = breader.readLine();
+                String s = bufferedReader.readLine();
                 if (s == null) {
                     break;
                 }

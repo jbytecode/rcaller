@@ -21,7 +21,7 @@ public class DataFileExample {
     /**
      * Creating a source code
      */
-    RCode code = new RCode();
+    RCode code = RCode.create();
 
     /**
      *  Creating an external data file

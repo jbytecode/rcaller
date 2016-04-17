@@ -184,7 +184,7 @@ public class RProcessStartUpOptions {
         switch (fieldName) {
             case "maxPPSize": return maxPPSize != null && maxPPSize >= 0 ? "--max-ppsize=" + maxPPSize + " " : "";
             case "minNSize": return minNSize !=  null && minNSize >= 0 ? "--min-nsize=" + minNSize + " " : "";
-            case "minVSize": return minVSize != null && minVSize >= 0 ? "--min-vsize=" + minNSize + " " : "";
+            case "minVSize": return minVSize != null && minVSize >= 0 ? "--min-vsize=" + minVSize + " " : "";
             default: throw new IllegalArgumentException("Unknown field: " + fieldName);
         }
     }

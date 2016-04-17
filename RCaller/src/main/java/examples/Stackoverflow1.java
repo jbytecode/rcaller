@@ -12,7 +12,7 @@ public class Stackoverflow1 {
 
     public static void main(String[] args) {
         RCaller rcaller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addDoubleArray("x", new double[]{1.0, 2.0, 3.0, 4.0, 50.0});
         code.addRCode("result <- mean(x)");

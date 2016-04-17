@@ -56,7 +56,7 @@ public class Example2 {
        * Creating an instance of RCaller class
        */
       RCaller caller = RCaller.create();
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       /**
        * Creating vectors x and y

@@ -22,7 +22,7 @@ public class LargeDataTest {
             }
         }
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addDoubleMatrix("x", data);
         code.addRCode("s <- dim(t(x) %*% x)");
@@ -41,7 +41,7 @@ public class LargeDataTest {
     public void testReturnsBigData (){
         double delta = 0.5;
         RCaller caller = RCaller.create();
-        RCode code = new RCode();
+        RCode code = RCode.create();
 
         code.addRCode("s <- rnorm(1024 * 2)");
         code.addRCode("m <- mean(s)");

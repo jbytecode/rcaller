@@ -32,14 +32,18 @@ import com.github.rcaller.exception.ExecutionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 public class TempFileService {
 
-    protected ArrayList<File> tempFiles;
+    private static final Logger logger = Logger.getLogger(TempFileService.class.getName());
+
+    private ArrayList<File> tempFiles;
     
     public TempFileService(){
-        tempFiles = new ArrayList<File>();
+        tempFiles = new ArrayList<>();
     }
     
     public File createTempFile(String prefix, String suffix) throws IOException {
@@ -50,15 +54,17 @@ public class TempFileService {
     
     public void deleteRCallerTempFiles(){
         for (File tempFile : tempFiles) {
-            tempFile.delete();
+            if (!tempFile.delete()) {
+                logger.log(Level.WARNING, "Couldn't delete file ".concat(tempFile.getName()));
+            }
         }
     }
 
     public File createOutputFile() {
         try {
-            return createTempFile("Routput", "");
+            return createTempFile("ROutput", "");
         } catch (Exception e) {
-            throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.getMessage());
+            throw new ExecutionException("Can not create a temporary file for storing the R results: " + e.getMessage());
         }
     }
 }

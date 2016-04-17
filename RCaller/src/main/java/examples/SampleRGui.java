@@ -19,7 +19,7 @@ public class SampleRGui extends javax.swing.JFrame {
     public SampleRGui() {
         initComponents();
         caller = RCaller.create();
-        code = new RCode();
+        code = RCode.create();
         caller.setRCode(code);
 
         byteOutput = new ByteArrayOutputStream();

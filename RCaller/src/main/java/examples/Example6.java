@@ -21,7 +21,7 @@ public class Example6 {
   public Example6() {
     try {
       RCaller caller = RCaller.create();
-      RCode code = new RCode();
+      RCode code = RCode.create();
 
       code.addRCode("x<-rnorm(30)");
       code.addRCode("y<-rnorm(30)");
