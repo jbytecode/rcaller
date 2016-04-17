@@ -74,25 +74,22 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
 
     @Override
     public Object eval(Reader reader) throws ScriptException {
-        BufferedReader breader = null;
-
-        breader = new BufferedReader(reader);
-
-        String line = null;
-        StringBuilder sbuilder = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(reader);
+        String line;
+        StringBuilder stringBuilder = new StringBuilder();
 
         try {
             while (true) {
-                line = breader.readLine();
+                line = bufferedReader.readLine();
                 if (line == null) {
                     break;
                 }
-                sbuilder.append(line);
+                stringBuilder.append(line);
             }
         } catch (IOException ioe) {
             throw new ScriptException("Error while reading from reader: " + ioe.toString());
         }
-        return (this.eval(sbuilder.toString()));
+        return (this.eval(stringBuilder.toString()));
     }
 
     @Override
@@ -181,7 +178,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         this.rcaller.StopRCallerOnline();
     }
 
-    /*
+    /**
     Methods for invokable interface
      */
     @Override
@@ -205,19 +202,19 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         }
         rcode.addRCode(")");
         rcaller.setRCode(rcode);
-        //System.out.println("Invoking: "+rcode.getCode().toString());
         rcaller.runAndReturnResultOnline(var);
-        //System.out.println("Names: "+rcaller.getParser().getNames());
+
         ArrayList<NamedArgument> namedResults = new ArrayList<>();
         ArrayList<String> names = rcaller.getParser().getNames();
-        for (int i = 0; i < names.size(); i++) {
-            var = names.get(i);
+        for (String name : names) {
+            var = name;
             try {
                 dimension = parser.getDimensions(var);
             } catch (Exception e) {
                 namedResults.add(NamedArgument.Named(var, parser.getAsStringArray(var)));
             }
             String vartype = parser.getType(var);
+            assert dimension != null;
             if (dimension[0] > 1 && dimension[1] > 1) {
                 namedResults.add(NamedArgument.Named(var, parser.getAsDoubleMatrix(var)));
             } else if (vartype.equals("numeric")) {

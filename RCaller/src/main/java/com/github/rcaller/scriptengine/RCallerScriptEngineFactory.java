@@ -25,10 +25,10 @@
  */
 package com.github.rcaller.scriptengine;
 
-import java.util.ArrayList;
-import java.util.List;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RCallerScriptEngineFactory implements ScriptEngineFactory {
 
@@ -45,21 +45,21 @@ public class RCallerScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public List<String> getExtensions() {
-        ArrayList<String> ext = new ArrayList<String>();
+        ArrayList<String> ext = new ArrayList<>();
         ext.add("R");
         return (ext);
     }
 
     @Override
     public List<String> getMimeTypes() {
-        ArrayList<String> mimes = new ArrayList<String>();
+        ArrayList<String> mimes = new ArrayList<>();
         mimes.add("text/R");
         return (mimes);
     }
 
     @Override
     public List<String> getNames() {
-        ArrayList<String> names = new ArrayList<String>();
+        ArrayList<String> names = new ArrayList<>();
         names.add("RCallerScriptEngine");
         names.add("RCaller");
         names.add("R");
@@ -99,7 +99,7 @@ public class RCallerScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public String getMethodCallSyntax(String string, String string1, String... strings) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(string);
         buf.append("(");
         buf.append(string1);
@@ -130,8 +130,7 @@ public class RCallerScriptEngineFactory implements ScriptEngineFactory {
     @Override
     public ScriptEngine getScriptEngine() {
         //System.out.println("getScriptEngine() called");
-        RCallerScriptEngine engine = new RCallerScriptEngine();
-        return (engine);
+        return (new RCallerScriptEngine());
     }
 
 }
