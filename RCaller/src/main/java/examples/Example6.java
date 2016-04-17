@@ -3,10 +3,9 @@
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
+import com.github.rcaller.graphics.SkyTheme;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.graphics.SkyTheme;
 
 import java.io.File;
 import java.util.logging.Level;
@@ -21,11 +20,9 @@ public class Example6 {
 
   public Example6() {
     try {
-      RCaller caller = new RCaller();
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
+      RCaller caller = RCaller.create();
       RCode code = new RCode();
-      code.clear();
+
       code.addRCode("x<-rnorm(30)");
       code.addRCode("y<-rnorm(30)");
       code.addRCode("ols<-lm(y~x)");

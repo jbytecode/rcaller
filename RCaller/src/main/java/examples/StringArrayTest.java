@@ -1,6 +1,5 @@
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -11,11 +10,8 @@ public class StringArrayTest {
 
   public StringArrayTest() {
     try {
-      RCaller caller = new RCaller();
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
+      RCaller caller = RCaller.create();
       RCode code = new RCode();
-      code.clear();
 
       String[] str11 = new String[]{"a", "b", "c", "d", "e", "f", "g", "s", "c"};
       String[] str22 = new String[]{"d", "b", "a", "l", "m", "a", "f", "r", "s"};

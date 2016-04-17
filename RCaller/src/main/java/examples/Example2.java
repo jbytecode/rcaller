@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -56,10 +55,8 @@ public class Example2 {
       /**
        * Creating an instance of RCaller class
        */
-      RCaller caller = new RCaller();
+      RCaller caller = RCaller.create();
       RCode code = new RCode();
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
 
       /**
        * Creating vectors x and y

@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -57,10 +56,8 @@ public class Example3 {
       /**
        * Creating RCaller
        */
-      RCaller caller = new RCaller();
+      RCaller caller = RCaller.create();
       RCode code = new RCode();
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
 
       /**
        *  We are creating a random data from a normal distribution

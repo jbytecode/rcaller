@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -46,14 +45,8 @@ public class Example4 {
       /**
        * Creating an instance of RCaller
        */
-      RCaller caller = new RCaller();
+      RCaller caller = RCaller.create();
       RCode code = new RCode();
-      Globals.detect_current_rscript();
-
-      /**
-       * Defining the Rscript executable
-       */
-      caller.setRscriptExecutable(Globals.Rscript_current);
 
       /**
        * Some R Stuff

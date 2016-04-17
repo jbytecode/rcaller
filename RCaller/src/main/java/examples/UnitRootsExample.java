@@ -5,7 +5,6 @@
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -36,16 +35,9 @@ public class UnitRootsExample {
       for (int i = 1; i < stockClosePrices.length; i++) {
         stockClosePrices[i] = 0.5 + 1 * stockClosePrices[0] + random.nextGaussian();
       }
-      RCaller caller = new RCaller();
-
-      /**
-       * This must be caller.setRScriptExecutable() instead.
-       */
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
+      RCaller caller = RCaller.create();
 
       RCode code = new RCode();
-      code.clear();
 
       code.addDoubleArray("x", stockClosePrices);
 

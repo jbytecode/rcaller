@@ -30,8 +30,6 @@ import com.github.rcaller.MessageSaver;
 import com.github.rcaller.TempFileService;
 import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.exception.ParseException;
-import com.github.rcaller.exception.RExecutableNotFoundException;
-import com.github.rcaller.exception.RscriptExecutableNotFoundException;
 import com.github.rcaller.graphics.GraphicsTheme;
 import com.github.rcaller.util.Globals;
 
@@ -49,54 +47,51 @@ public class RCaller {
 
     private static final Logger logger = Logger.getLogger(RCaller.class.getName());
 
-    protected String RscriptExecutable;
-    protected String RExecutable;
-    protected RCode rcode;
-    protected ROutputParser parser;
-    protected Process process;
-    protected RStreamHandler rOutput = null;
-    protected RStreamHandler rError = null;
-    protected MessageSaver errorMessageSaver = new MessageSaver();
-    protected OutputStream rInput = null;
-    protected FailurePolicy failPolicy;
-    //in case of R failute, how many retries have been made
-    protected int retries = 0;
-    //how long to wait for R to finish
-    protected long maxWaitTime;
-    protected TempFileService tempFileService = null;
+    private RCode rCode;
+    private ROutputParser parser;
+    private Process process;
+    private OutputStream rInput;
+    private RStreamHandler rOutput;
+    private RStreamHandler rError;
+    private MessageSaver errorMessageSaver;
+    private TempFileService tempFileService;
+    private RCallerOptions rCallerOptions;
 
-    public RCaller() {
-        this.rcode = new RCode();
-        this.parser = new ROutputParser();
-        this.failPolicy = FailurePolicy.RETRY_5;
-        this.maxWaitTime = Long.MAX_VALUE;
-        //create but do not do not activate the handlers yet
-        //set the stream they listen to to null
-        rOutput = new RStreamHandler(null, "Output");
-        rError = new RStreamHandler(null, "Error");
-        rError.addEventHandler(errorMessageSaver);
-        tempFileService = new TempFileService();
+    public RCaller(RCode rCode,
+                   ROutputParser parser,
+                   RStreamHandler rOutput,
+                   RStreamHandler rError,
+                   MessageSaver messageSaver,
+                   TempFileService tempFileService,
+                   RCallerOptions rCallerOptions) {
+        this.rCode = rCode;
+        this.parser = parser;
+        this.rOutput = rOutput;
+        this.rError = rError;
+        this.errorMessageSaver = messageSaver;
+        this.tempFileService = tempFileService;
+        this.rCallerOptions = rCallerOptions;
+
+        this.rError.addEventHandler(errorMessageSaver);
         cleanRCode();
     }
 
     /**
-     * How long this R caller will wait for the R process to terminate before
-     * forcibly killing it
      *
-     * @return maxWaitTime - the max time to wait
+     * @return default RCaller object
      */
-    public long getMaxWaitTime() {
-        return maxWaitTime;
+    public static RCaller create() {
+        return new RCaller(new RCode(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), RCallerOptions.create());
     }
 
-    /**
-     * How long this R caller will wait for the R process to terminate before
-     * forcibly killing it (in milliseconds)
-     * @param maxWaitTime - the max time to wait
-     */
-    public void setMaxWaitTime(long maxWaitTime) {
-        this.maxWaitTime = maxWaitTime;
+    public static RCaller create(RCallerOptions rCallerOptions) {
+        return new RCaller(new RCode(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
+
+    public static RCaller create(RCode rcode, RCallerOptions rCallerOptions) {
+        return new RCaller(rcode, new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+    }
+
 
     /**
      * Stops the threads that are emptying the output and error streams of the
@@ -121,14 +116,6 @@ public class RCaller {
         rError.start();
     }
 
-    public void setRExecutable(String RExecutable) {
-        File file = new File(RExecutable);
-        if (!file.exists()) {
-            throw new RExecutableNotFoundException("R Executable " + RExecutable + " not found");
-        }
-        this.RExecutable = RExecutable;
-    }
-
     public String getCranRepos() {
         return Globals.cranRepos;
     }
@@ -138,19 +125,11 @@ public class RCaller {
     }
 
     public RCode getRCode() {
-        return rcode;
+        return rCode;
     }
 
     public void setRCode(RCode rcode) {
-        this.rcode = rcode;
-    }
-
-    public void setRscriptExecutable(String RscriptExecutable) {
-        File file = new File(RscriptExecutable);
-        if (!file.exists()) {
-            throw new RscriptExecutableNotFoundException("R executable " + RscriptExecutable + " not found");
-        }
-        this.RscriptExecutable = RscriptExecutable;
+        this.rCode = rcode;
     }
 
     public void setGraphicsTheme(GraphicsTheme theme) {
@@ -158,12 +137,12 @@ public class RCaller {
     }
 
     public final void cleanRCode() {
-        rcode.clear();
+        rCode.clear();
     }
 
     public void deleteTempFiles() {
         tempFileService.deleteRCallerTempFiles();
-        this.rcode.deleteTempFiles();
+        this.rCode.deleteTempFiles();
     }
 
     /**
@@ -186,7 +165,7 @@ public class RCaller {
 
         try {
             writer = new BufferedWriter(new FileWriter(f));
-            writer.write(this.rcode.toString());
+            writer.write(this.rCode.toString());
             writer.flush();
         } catch (IOException e) {
             throw new ExecutionException("Can not write to temporary file for storing the R Code: " + e.toString());
@@ -212,7 +191,7 @@ public class RCaller {
      * reason
      */
     public void runOnly() throws ExecutionException {
-        this.rcode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
+        this.rCode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
         runRCode();
     }
 
@@ -221,7 +200,7 @@ public class RCaller {
     }
 
     private void runRCode() throws ExecutionException {
-        if (this.RscriptExecutable == null) {
+        if (rCallerOptions.getrScriptExecutable() == null) {
             throw new ExecutionException("RscriptExecutable is not defined. Please set this variable "
                     + "to full path of Rscript executable binary file.");
         }
@@ -231,11 +210,11 @@ public class RCaller {
         int returnCode;
         try {
             //this Process object is local to this method. Do not use the public one.
-            process = exec(RscriptExecutable + " " + rSourceFile.toString());
+            process = exec(rCallerOptions.getrScriptExecutable() + " " + rSourceFile.toString());
             startStreamConsumers(process);
             returnCode = process.waitFor();
         } catch (Exception e) {
-            throw new ExecutionException("Can not run " + RscriptExecutable + ". Reason: " + e.toString());
+            throw new ExecutionException("Can not run " + rCallerOptions.getrScriptExecutable() + ". Reason: " + e.toString());
         } finally {
             stopStreamConsumers();
         }
@@ -255,23 +234,23 @@ public class RCaller {
      * @throws ExecutionException if R cannot be started
      */
     public void runAndReturnResultOnline(String var) throws ExecutionException {
-        this.retries = 0; //assumes only one of the run* methods of this class is executing at any given time
+        rCallerOptions.resetRetries();
         boolean done = false;
         do {
-            if (getRetries() > 0) {
+            if (rCallerOptions.getRetries() > 0) {
                 logger.log(Level.INFO, "Retrying online R execution");
             }
 
             File outputFile;
 
-            if (this.RExecutable == null) {
+            if (rCallerOptions.getrExecutable() == null) {
                 if (handleRFailure("RExecutable is not defined.Please set this" + " variable to full path of R executable binary file.")) {
                     continue;
                 }
             }
 
             try {
-                outputFile = createOutputFile();
+                outputFile = tempFileService.createOutputFile();
             } catch (Exception e) {
                 if (handleRFailure("Can not create a temporary file for storing the R results: " + e.getMessage())) {
                     continue;
@@ -280,16 +259,16 @@ public class RCaller {
                 }
             }
 
-            appendStandardCodeToAppend(outputFile, var);
+            rCode.appendStandardCodeToAppend(outputFile, var);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
-                    String commandline = RExecutable + " --vanilla";
+                    String commandline = rCallerOptions.getrExecutable() + rCallerOptions.getStartUpOptionsAsCommand();
                     process = exec(commandline);
                     rInput = process.getOutputStream();
                     startStreamConsumers(process);
 
                 } catch (Exception e) {
-                    if (handleRFailure("Can not run " + RExecutable + ". Reason: "
+                    if (handleRFailure("Can not run " + rCallerOptions.getrExecutable() + ". Reason: "
                             + e.toString())) {
                         continue;
                     }
@@ -297,7 +276,7 @@ public class RCaller {
             }
 
             try {
-                rInput.write(rcode.toString().getBytes());
+                rInput.write(rCode.toString().getBytes());
                 rInput.flush();
             } catch (IOException e) {
                 if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
@@ -314,7 +293,7 @@ public class RCaller {
                     //a lock file or something like that and only read when that is gone
                     Thread.sleep(1);
                     slept++;
-                    if (slept > this.maxWaitTime) {
+                    if (slept > rCallerOptions.getMaxWaitTime()) {
                         process.destroy();
                         stopStreamConsumers();
                         processKilled = true;
@@ -353,39 +332,39 @@ public class RCaller {
         }
     }
 
-    /* Returns true if it is OK to try again under the current FailurePolicy
+    /**
+     *  Returns true if it is OK to try again under the current FailurePolicy
      * @param reason The reason for the failure, e.g. could not start R, could not parse
      * results, etc...
-     * @param retries How many retries have been made so far. The method will take care of incrementing this
-     * @throws RCallerExecutionException if no more retries are permitted, but an exception
+     * retries How many retries have been made so far. The method will take care of incrementing this
+     * @throws ExecutionException if no more retries are permitted, but an exception
      * still occurs
      */
     private boolean handleRFailure(String reason) throws ExecutionException {
         int maxFailures = 0;
-        if (this.failPolicy == FailurePolicy.CONTINUE) {
+        if (rCallerOptions.getFailurePolicy() == FailurePolicy.CONTINUE) {
             maxFailures = -1;
         }
-        if (this.failPolicy == FailurePolicy.RETRY_1) {
+        if (rCallerOptions.getFailurePolicy() == FailurePolicy.RETRY_1) {
             maxFailures = 1;
         }
-        if (this.failPolicy == FailurePolicy.RETRY_5) {
+        if (rCallerOptions.getFailurePolicy() == FailurePolicy.RETRY_5) {
             maxFailures = 5;
 
         }
-        if (this.failPolicy == FailurePolicy.RETRY_10) {
+        if (rCallerOptions.getFailurePolicy() == FailurePolicy.RETRY_10) {
             maxFailures = 10;
         }
 
-        if (this.failPolicy == FailurePolicy.RETRY_FOREVER) {
+        if (rCallerOptions.getFailurePolicy() == FailurePolicy.RETRY_FOREVER) {
             maxFailures = Integer.MAX_VALUE;
         }
 
-        if (getRetries() < maxFailures) {
-            retries++;
+        if (rCallerOptions.getRetries() < maxFailures) {
+            rCallerOptions.incrementRetries();
             return true;
         } else {
-            throw new ExecutionException(reason
-                    + " Maximum number of retries exceeded.");
+            throw new ExecutionException(reason + " Maximum number of retries exceeded.");
         }
     }
 
@@ -400,15 +379,15 @@ public class RCaller {
      * trace
      */
     public void runAndReturnResult(String var) throws ExecutionException {
-        File outputFile = createOutputFile();
-        appendStandardCodeToAppend(outputFile, var);
+        File outputFile = tempFileService.createOutputFile();
+        rCode.appendStandardCodeToAppend(outputFile, var);
         runRCode();
 
         parser.setXMLFile(outputFile);
         try {
             parser.parse();
         } catch (Exception e) {
-            Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rcode.toString());
+            Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rCode.toString());
             throw new ParseException("Can not handle R results due to : " + e.getMessage());
         }
     }
@@ -436,46 +415,7 @@ public class RCaller {
         rError.addEventHandler(eh);
     }
 
-    /**
-     * Sets the failure policy of this RCaller
-     *
-     * @param f - the FailurePolicy f
-     * @see RCaller.FailurePolicy
-     */
-    public void setFailurePolicy(FailurePolicy f) {
-        this.failPolicy = f;
-    }
-
-    /**
-     * How many times we have retried to run the R code
-     *
-     * @return the retries
-     */
-    public int getRetries() {
-        return retries;
-    }
-
-    /* Specifies the behaviour of the program in case of an exception
-     */
-    public enum FailurePolicy {
-
-        RETRY_1,//retry at most once
-        RETRY_5,
-        RETRY_10, //retry at most 10 times
-        RETRY_FOREVER,//retry until success
-        CONTINUE//ignore the error and continue
-    }
-
-    private File createOutputFile() {
-        try {
-            return tempFileService.createTempFile("Routput", "");
-        } catch (Exception e) {
-            throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.getMessage());
-        }
-    }
-
-    private void appendStandardCodeToAppend(File outputFile, String var) {
-        rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
-                append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
+    public RCallerOptions getrCallerOptions() {
+        return rCallerOptions;
     }
 }

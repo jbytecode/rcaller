@@ -9,9 +9,8 @@ public class RService {
     private RCaller rcaller = null;
     private RCode rcode = null;
 
-    public RService(String pathToR){
-        rcaller = new RCaller();
-        rcaller.setRExecutable(pathToR);
+    public RService(){
+        rcaller = RCaller.create();
         rcode = new RCode();
         rcaller.setRCode(rcode);
     }

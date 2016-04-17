@@ -38,8 +38,8 @@ import java.io.*;
 
 public class RCode {
 
-    protected StringBuffer code;
-    protected TempFileService tempFileService = null;
+    private StringBuffer code;
+    private TempFileService tempFileService = null;
     
     public void setCode(StringBuffer sb) {
         this.code = new StringBuffer();
@@ -63,7 +63,7 @@ public class RCode {
     }
 
     public final void clear() {
-        code.setLength(0);
+        this.code.setLength(0);
         try {
             InputStream is = this.getClass().getClassLoader().getResourceAsStream("runiversal.r");
             InputStreamReader reader = new InputStreamReader(is);
@@ -79,6 +79,11 @@ public class RCode {
         } catch (IOException e) {
             throw new ExecutionException("runiversal.R in package: " + e.toString());
         }
+    }
+
+    public void appendStandardCodeToAppend(File outputFile, String var) {
+        this.code.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
+                append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
     }
     
     public void clearOnline(){

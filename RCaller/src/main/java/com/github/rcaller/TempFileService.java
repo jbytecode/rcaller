@@ -27,6 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package com.github.rcaller;
 
+import com.github.rcaller.exception.ExecutionException;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +51,14 @@ public class TempFileService {
     public void deleteRCallerTempFiles(){
         for (File tempFile : tempFiles) {
             tempFile.delete();
+        }
+    }
+
+    public File createOutputFile() {
+        try {
+            return createTempFile("Routput", "");
+        } catch (Exception e) {
+            throw new ExecutionException("Can not create a tempopary file for storing the R results: " + e.getMessage());
         }
     }
 }

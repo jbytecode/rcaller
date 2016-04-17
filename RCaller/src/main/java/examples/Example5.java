@@ -28,7 +28,6 @@
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.statistics.RandomNumberGenerator;
 
@@ -50,13 +49,7 @@ public class Example5 {
             /**
              * RCaller instant
              */
-            RCaller caller = new RCaller();
-
-            /**
-             * Rscript executable
-             */
-            Globals.detect_current_rscript();
-            caller.setRscriptExecutable(Globals.Rscript_current);
+            RCaller caller = RCaller.create();
 
             /**
              * Random Number Generator

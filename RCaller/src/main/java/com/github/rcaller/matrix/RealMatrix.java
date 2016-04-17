@@ -53,7 +53,7 @@ public class RealMatrix {
     }
 
     public RealMatrix(String pathToR, String name) {
-        service = new RService(pathToR);
+        service = new RService();
         rcaller = service.getRCaller();
         code = service.getRCode();
         this.name = name;

@@ -27,13 +27,12 @@
 
 package com.github.rcaller;
 
-import java.util.ArrayList;
-
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.ArrayList;
 
 public class HandlingAllVariablesTest {
 
@@ -41,10 +40,7 @@ public class HandlingAllVariablesTest {
 
     @Test
     public void GetAllVariablesInEnvironmentTest() {
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
 
         code.addDouble("x", 5.65);
@@ -56,10 +52,6 @@ public class HandlingAllVariablesTest {
         caller.runAndReturnResult("result");
 
         ArrayList<String> names = caller.getParser().getNames();
-        //System.out.println("Names : " + names);
-
-        //System.out.println("x is " + caller.getParser().getAsDoubleArray("x")[0]);
-        //System.out.println("y is " + caller.getParser().getAsDoubleArray("y")[0]);
 
         Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[0], 5.65, delta);
         Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[0], 8.96, delta);
@@ -67,10 +59,7 @@ public class HandlingAllVariablesTest {
     
     @Test
     public void GetAllVectorsInEnvironmentTest() {
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
 
         code.addDoubleArray("x", new double[]{1,2,3,4,5});

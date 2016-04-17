@@ -28,8 +28,7 @@ public class EventHandlerTest {
 
     @Before
     public void setUp() {
-        caller = new RCaller();
-        caller.setRExecutable(Globals.R_current);
+        caller = RCaller.create();
         code = new RCode();
     }
 

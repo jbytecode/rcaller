@@ -24,7 +24,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -40,10 +39,9 @@ public class Main {
 
   public Main() {
     try {
-      RCaller r = new RCaller();
-      Globals.detect_current_rscript();
-      r.setRscriptExecutable(Globals.Rscript_current);
+      RCaller rCaller = RCaller.create();
       RCode code = new RCode();
+
       double[] x = new double[]{1, 2, 3, 4, 5};
       double[] y = new double[]{5, 7, 6, 10, 20};
       code.addDoubleArray("x", x);
@@ -60,12 +58,12 @@ public class Main {
       code.addRCode("pie(tt)");
       code.endPlot();
 
-      r.setRCode(code);
-      r.runAndReturnResult("ols");
+      rCaller.setRCode(code);
+      rCaller.runAndReturnResult("ols");
 
-      System.out.println("Names : " + r.getParser().getNames());
+      System.out.println("Names : " + rCaller.getParser().getNames());
       code.showPlot(f);
-      double[] v = r.getParser().getAsDoubleArray("fitted_values");
+      double[] v = rCaller.getParser().getAsDoubleArray("fitted_values");
       for (double aV : v) {
         System.out.println(aV);
       }

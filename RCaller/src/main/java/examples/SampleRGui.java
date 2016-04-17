@@ -2,7 +2,6 @@
 package examples;
 
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -19,13 +18,10 @@ public class SampleRGui extends javax.swing.JFrame {
      */
     public SampleRGui() {
         initComponents();
-        caller = new RCaller();
+        caller = RCaller.create();
         code = new RCode();
         caller.setRCode(code);
-        
-        Globals.detect_current_rscript();
-        caller.setRExecutable(Globals.R_current);
-        
+
         byteOutput = new ByteArrayOutputStream();
         caller.redirectROutputToStream(byteOutput);
         

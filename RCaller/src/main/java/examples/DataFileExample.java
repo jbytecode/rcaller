@@ -1,7 +1,6 @@
 
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -17,15 +16,12 @@ public class DataFileExample {
     /**
      *  Creating a RCaller
      */
-    RCaller caller = new RCaller();
-    Globals.detect_current_rscript();
-    caller.setRscriptExecutable(Globals.Rscript_current);
+    RCaller caller = RCaller.create();
 
     /**
      * Creating a source code
      */
     RCode code = new RCode();
-    code.clear();
 
     /**
      *  Creating an external data file

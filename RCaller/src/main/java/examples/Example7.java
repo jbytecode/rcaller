@@ -23,12 +23,7 @@ public class Example7 {
   public Example7() {
     try {
 
-      RCaller caller = new RCaller();
-      /**
-       * This must be caller.setRScriptExecutable() instead.
-       */
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
+      RCaller caller = RCaller.create();
 
       /**
        * After version 2.0.6
@@ -47,7 +42,6 @@ public class Example7 {
        * available in RCaller 3.0
        */
       RCode code = new RCode();
-      code.clear();
 
 
       double[] numbers = new double[]{1, 4, 3, 5, 6, 10};

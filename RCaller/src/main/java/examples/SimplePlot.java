@@ -49,17 +49,14 @@ public class SimplePlot {
    */
   public SimplePlot() {
     try {
-      RCaller caller = new RCaller();
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
-      
+      RCaller caller = RCaller.create();
+
       /**
        * One of the themes.
        */
 
       RCode code = new RCode();
-      code.clear();
-      
+
 
       double[] numbers = new double[]{1, 4, 3, 5, 6, 10};
 

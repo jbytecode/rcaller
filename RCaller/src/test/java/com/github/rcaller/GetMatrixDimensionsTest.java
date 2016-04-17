@@ -19,10 +19,8 @@ public class GetMatrixDimensionsTest {
                 data[i][j] = Math.random();
             }
         }
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-        
+        RCaller caller = RCaller.create();
+
         RCode code = new RCode();
         code.addDoubleMatrix("x", data);
         caller.setRCode(code);
@@ -44,10 +42,8 @@ public class GetMatrixDimensionsTest {
         for (int i=0;i<data.length;i++){
             data[i] = Math.random();
         }
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-        
+        RCaller caller = RCaller.create();
+
         RCode code = new RCode();
         code.addDoubleArray("x", data);
         caller.setRCode(code);

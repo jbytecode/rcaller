@@ -21,11 +21,9 @@ public class LargeDataTest {
                 data[i][j] = Math.random();
             }
         }
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-        
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
+
         code.addDoubleMatrix("x", data);
         code.addRCode("s <- dim(t(x) %*% x)");
         caller.setRCode(code);
@@ -42,11 +40,9 @@ public class LargeDataTest {
     @Test
     public void testReturnsBigData (){
         double delta = 0.5;
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-        
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
+
         code.addRCode("s <- rnorm(1024 * 2)");
         code.addRCode("m <- mean(s)");
         code.addRCode("result <- list(arr=s, mean=m)");

@@ -25,16 +25,12 @@
  */
 package com.github.rcaller;
 
-import java.io.File;
-
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
+
+import java.io.File;
+
 import static org.junit.Assert.*;
 
 
@@ -61,12 +57,9 @@ public class RCallerTest {
 
     @Test
     public void testIntArrays() {
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
 
-        code.clear();
         code.addIntArray("x_i", new int[]{1, 2, 3, 4, 5, 6});
         code.addRCode("x_i <- x_i * 2");
         rcaller.setRCode(code);
@@ -83,12 +76,9 @@ public class RCallerTest {
     @Test
     public void testDoubleArrays() {
         double delta = 0.0000001;
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addDoubleArray("x_d", new double[]{1.1, 2.2, 3.3, 4.4, 5.5, 6.6});
         code.addRCode("x_d <- x_d * 2");
         rcaller.setRCode(code);
@@ -106,12 +96,9 @@ public class RCallerTest {
     @Test
     public void testFloatArrays() {
         double delta = 0.0000001;
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addFloatArray("x_f", new float[]{1.1f, 2.2f, 3.3f, 4.4f, 5.5f, 6.6f});
         code.addRCode("x_f <- x_f * 2");
         rcaller.setRCode(code);
@@ -128,12 +115,9 @@ public class RCallerTest {
 
     @Test
     public void testStringArrays() {
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addStringArray("x_s1", new String[]{"a", "b", "c", "d", "e", "f", "g"});
         code.addStringArray("x_s2", new String[]{"g", "f", "z", "q", "W", "Z", "%"});
         code.addRCode("result <- intersect(x_s1, x_s2)");
@@ -152,12 +136,9 @@ public class RCallerTest {
     @Test
     public void testLogicalArrays() {
         boolean[] boolarr = new boolean[]{true, true, false, true, true, true, false};
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addLogicalArray("b", boolarr);
         code.addRCode("result<-xor(b,b)");
 
@@ -175,12 +156,9 @@ public class RCallerTest {
 
     @Test
     public void testLists() {
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addRCode("alist <- list(x=c(1,2,3), y=c('a','b','c'))");
 
         rcaller.setRCode(code);
@@ -205,12 +183,9 @@ public class RCallerTest {
     @Test
     public void TestLists2() throws Exception {
         double delta = 0.0000001;
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
         code.addRCode("med1 <- median(x)");
 
@@ -239,11 +214,8 @@ public class RCallerTest {
 
     @Test
     public void testPlot() {
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
 
         File plot = null;
 
@@ -266,12 +238,9 @@ public class RCallerTest {
     @Test
     public void singleResultTest() {
         double delta = 0.0000001;
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRscriptExecutable(Globals.Rscript_current);
-
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
-        code.clear();
+
         code.addRCode("x <- c(6 ,8, 3.4, 1, 2)");
         code.addRCode("med <- median(x)");
         rcaller.setRCode(code);

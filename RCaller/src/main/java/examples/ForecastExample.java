@@ -27,12 +27,9 @@ public class ForecastExample {
   public void RunRScript(double[] stockClosePrices) {
     try {
 
-      RCaller caller = new RCaller();
-      Globals.detect_current_rscript();
-      caller.setRscriptExecutable(Globals.Rscript_current);
+      RCaller caller = RCaller.create();
 
       RCode code = new RCode();
-      code.clear();
 
       code.addDoubleArray("x", stockClosePrices);
       code.R_require("forecast");

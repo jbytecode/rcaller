@@ -6,15 +6,11 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
+import org.junit.*;
 
 import java.io.IOException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 
 
@@ -61,12 +57,8 @@ public class JavaObjectTest {
     JavaObject jo = new JavaObject("myObj", tc);
 
 
-    RCaller rcaller = new RCaller();
+    RCaller rcaller = RCaller.create();
     RCode code = new RCode();
-
-    Globals.detect_current_rscript();
-    rcaller.setRscriptExecutable(Globals.Rscript_current);
-    code.clear();
 
     code.addRCode(jo.produceRCode(false));
 
@@ -86,12 +78,8 @@ public class JavaObjectTest {
     TestClassWithArrays tcwa = new TestClassWithArrays();
     JavaObject jo = new JavaObject("tcwa", tcwa);
 
-    RCaller rcaller = new RCaller();
+    RCaller rcaller = RCaller.create();
     RCode code = new RCode();
-
-    Globals.detect_current_rscript();
-    rcaller.setRscriptExecutable(Globals.Rscript_current);
-    code.clear();
 
     code.addRCode(jo.produceRCode(false));
 
@@ -124,12 +112,8 @@ public class JavaObjectTest {
     TestClassWithArrays tcwa = new TestClassWithArrays();
     JavaObject jo = new JavaObject("tcwa", tcwa);
 
-    RCaller rcaller = new RCaller();
+    RCaller rcaller = RCaller.create();
     RCode code = new RCode();
-
-    Globals.detect_current_rscript();
-    rcaller.setRscriptExecutable(Globals.Rscript_current);
-    code.clear();
 
     code.addRCode(jo.produceRCode(false));
     code.addRCode("result <- quantile(tcwa$da, 0.95)");

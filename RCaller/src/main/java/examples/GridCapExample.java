@@ -2,7 +2,6 @@
 
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
@@ -10,10 +9,8 @@ import com.github.rcaller.rstuff.RCode;
 public class GridCapExample {
     
     public static void main(String[] args){
-        RCaller caller = new RCaller();
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
         code.R_require("grid");
         code.addRCode("dev.new(width=.5, height=.5)");
         code.addRCode("grid.rect()");

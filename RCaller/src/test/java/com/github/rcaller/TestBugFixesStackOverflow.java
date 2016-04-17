@@ -2,7 +2,6 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -11,11 +10,8 @@ public class TestBugFixesStackOverflow {
    
     @Test
     public void testStack1() {
-        RCaller caller = new RCaller();
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
-        caller.cleanRCode();
 
         String x = "is.installed <- function(mypkg){ \n"
                 + "is.element(mypkg, installed.packages()[,1])\n"
@@ -42,9 +38,7 @@ public class TestBugFixesStackOverflow {
             {63.492, 40.04, 20.449, 19.019},
             {59.052, 37.24, 19.019, 17.689}
         };
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
 
         code.addDoubleMatrix("mydata", data);

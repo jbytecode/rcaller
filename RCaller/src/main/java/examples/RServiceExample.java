@@ -1,7 +1,6 @@
 
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RService;
 
 public class RServiceExample {
@@ -15,10 +14,8 @@ public class RServiceExample {
         /**
          *  Creating R Service
          */
-        Globals.detect_current_rscript();
-        RService service = new RService(Globals.R_current);
-        service.getRCode().clear();
-        
+        RService service = new RService();
+
         /**
          * Defining some variables in R side
          */

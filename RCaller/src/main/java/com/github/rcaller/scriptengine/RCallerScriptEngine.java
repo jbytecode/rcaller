@@ -30,35 +30,22 @@ import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 import com.github.rcaller.rstuff.ROutputParser;
 import com.github.rcaller.util.CodeUtils;
-import com.github.rcaller.util.Globals;
+
+import javax.script.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.script.Bindings;
-import javax.script.Invocable;
-import javax.script.ScriptContext;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
-import javax.script.ScriptException;
-import javax.script.SimpleScriptContext;
-import org.apache.commons.lang.ArrayUtils;
 
 public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocable {
 
-    RCaller rcaller;
-    RCode rcode;
-    ROutputParser parser;
+    private RCaller rcaller;
+    private RCode rcode;
+    private ROutputParser parser;
 
     public RCallerScriptEngine() {
-        rcaller = new RCaller();
+        rcaller = RCaller.create();
         rcode = new RCode();
-
-        rcaller.setRExecutable(Globals.R_current);
 
         rcode.addRCode("result <- list(a=0)");
         rcaller.setRCode(rcode);

@@ -2,13 +2,15 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
+import org.junit.Test;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class UTF8Test {
 
@@ -19,9 +21,7 @@ public class UTF8Test {
     public void Utf8CharactersTest() {
         String s = "ǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦ";
         RCode code = new RCode();
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
+        RCaller caller = RCaller.create();
 
         caller.setRCode(code);
 
@@ -35,9 +35,7 @@ public class UTF8Test {
     @Test
     public void VariableNameContainsAndCharacterTest() throws IOException{
         RCode code = new RCode();
-        RCaller caller = new RCaller();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
+        RCaller caller = RCaller.create();
 
         caller.setRCode(code);
         

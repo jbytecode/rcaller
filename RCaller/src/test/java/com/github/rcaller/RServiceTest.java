@@ -1,31 +1,17 @@
 package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RService;
-import com.github.rcaller.util.Globals;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
 public class RServiceTest {
 
-    static RService service;
-    double delta = 1 / 10000;
+    private static RService service;
 
     public RServiceTest() {
-        Globals.detect_current_rscript();
         if (service == null) {
-            service = new RService(Globals.R_current);
+            service = new RService();
         }
-    }
-
-    @Before
-    public void setUp() {
-
-    }
-
-    @After
-    public void tearDown() {
     }
 
     @Test
@@ -53,6 +39,7 @@ public class RServiceTest {
         service.getRCode().addDoubleArray("y", new double[]{2, 4, 6});
         o = service.get("coefficients", "lm(y~x)", RService.type_double);
 
+        double delta = 1 / 10000;
         Assert.assertEquals(0.0, ((Double) o[0]), delta);
         Assert.assertEquals(2.0, ((Double) o[1]), delta);
     }

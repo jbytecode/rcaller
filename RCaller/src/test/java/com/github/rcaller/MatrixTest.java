@@ -2,9 +2,9 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class MatrixTest {
 
@@ -13,10 +13,7 @@ public class MatrixTest {
   @Test
   public void simpleMatrixTest() {
 
-    RCaller caller = new RCaller();
-    Globals.detect_current_rscript();
-    caller.setRscriptExecutable(Globals.Rscript_current);
-
+    RCaller caller = RCaller.create();
     RCode code = new RCode();
 
     double[][] matrix = new double[][]{{6, 4}, {9, 8}};

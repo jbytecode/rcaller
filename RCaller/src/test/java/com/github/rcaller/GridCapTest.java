@@ -3,7 +3,6 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
 import org.junit.Test;
 
 
@@ -11,10 +10,9 @@ public class GridCapTest {
     
     @Test
     public void GridCapTest(){
-        RCaller caller = new RCaller();
+        RCaller caller = RCaller.create();
         RCode code = new RCode();
-        Globals.detect_current_rscript();
-        caller.setRscriptExecutable(Globals.Rscript_current);
+
         code.R_require("grid");
         code.addRCode("dev.new(width=.5, height=.5)");
         code.addRCode("grid.rect()");

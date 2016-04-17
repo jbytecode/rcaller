@@ -5,16 +5,13 @@
 
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
 public class Stackoverflow1 {
 
     public static void main(String[] args) {
-        RCaller rcaller = new RCaller();
-        Globals.detect_current_rscript();
-        rcaller.setRExecutable(Globals.R_current);
+        RCaller rcaller = RCaller.create();
         RCode code = new RCode();
 
         code.addDoubleArray("x", new double[]{1.0, 2.0, 3.0, 4.0, 50.0});
