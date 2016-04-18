@@ -4,17 +4,17 @@ import com.github.rcaller.scriptengine.RCallerScriptEngine;
 import com.github.rcaller.util.Globals;
 import javax.script.ScriptException;
 
-public class RCallerScriptEngineExample {
+public class RCallerScriptEngineExample1 {
 
     public static void main(String[] args) {
         try {
-            RCallerScriptEngineExample e = new RCallerScriptEngineExample();
+            RCallerScriptEngineExample1 e = new RCallerScriptEngineExample1();
         } catch (ScriptException exception) {
             System.out.println("Error while scripting: " + exception.toString());
         }
     }
 
-    public RCallerScriptEngineExample() throws ScriptException {
+    public RCallerScriptEngineExample1() throws ScriptException {
         Globals.R_current = "/usr/bin/R";
         RCallerScriptEngine engine = new RCallerScriptEngine();
         engine.put("mydata", new double[]{1, 2, 3, 4, 5});

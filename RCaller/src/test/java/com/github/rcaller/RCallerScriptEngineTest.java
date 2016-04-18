@@ -30,8 +30,13 @@ import com.github.rcaller.scriptengine.RCallerScriptEngine;
 import static com.github.rcaller.scriptengine.NamedArgument.*;
 import com.github.rcaller.util.Globals;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import javax.script.Bindings;
 import javax.script.ScriptException;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import org.junit.Before;
@@ -65,7 +70,13 @@ public class RCallerScriptEngineTest {
         message("Creating an engine using ScriptEngineManager");
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine en = manager.getEngineByName("RCaller");
-        //assertNotNull(en);
+        assertNotNull(en);
+
+        Bindings bindings = en.getBindings(0);
+        assertNotNull(bindings);
+
+        ScriptContext context = en.getContext();
+        assertNotNull(bindings);
     }
 
     @Test

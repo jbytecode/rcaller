@@ -47,13 +47,14 @@ public class RCallerScriptEngineFactory implements ScriptEngineFactory {
     public List<String> getExtensions() {
         ArrayList<String> ext = new ArrayList<>();
         ext.add("R");
+        ext.add("RCaller");
         return (ext);
     }
 
     @Override
     public List<String> getMimeTypes() {
         ArrayList<String> mimes = new ArrayList<>();
-        mimes.add("text/R");
+        mimes.add("text/r");
         return (mimes);
     }
 
@@ -78,6 +79,7 @@ public class RCallerScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public Object getParameter(String key) {
+        System.out.println("getParameter: "+key);
         if (null != key) {
             switch (key) {
             case ScriptEngine.ENGINE:
@@ -129,7 +131,6 @@ public class RCallerScriptEngineFactory implements ScriptEngineFactory {
 
     @Override
     public ScriptEngine getScriptEngine() {
-        //System.out.println("getScriptEngine() called");
         return (new RCallerScriptEngine());
     }
 

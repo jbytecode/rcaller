@@ -42,10 +42,14 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     private RCaller rcaller;
     private RCode rcode;
     private ROutputParser parser;
+    private Bindings bindings;
+    private ScriptContext context;
 
     public RCallerScriptEngine() {
         rcaller = RCaller.create();
         rcode = RCode.create();
+
+        context = new javax.script.SimpleScriptContext();
 
         rcode.addRCode("result <- list(a=0)");
         rcaller.setRCode(rcode);
@@ -141,37 +145,38 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
 
     @Override
     public Bindings getBindings(int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (this.bindings);
     }
 
     @Override
     public void setBindings(Bindings bndngs, int i) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.bindings = bndngs;
     }
 
     @Override
     public Bindings createBindings() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Bindings bindings = new javax.script.SimpleBindings();
+        return (bindings);
     }
 
     @Override
     public ScriptContext getContext() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (this.context);
     }
 
     @Override
     public void setContext(ScriptContext sc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        this.context = sc;
     }
 
     @Override
     public ScriptEngineFactory getFactory() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (new RCallerScriptEngineFactory());
     }
 
     @Override
     public void messageReceived(String senderName, String msg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("RCaller Script Engine Received: (" + senderName + ") " + msg);
     }
 
     public void close() {
@@ -179,7 +184,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     }
 
     /**
-    Methods for invokable interface
+     * Methods for invokable interface
      */
     @Override
     public Object invokeMethod(Object o, String string, Object... os) throws ScriptException, NoSuchMethodException {
