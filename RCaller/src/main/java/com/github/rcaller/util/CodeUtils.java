@@ -26,34 +26,35 @@
 package com.github.rcaller.util;
 
 import com.github.rcaller.JavaObject;
+import com.github.rcaller.scriptengine.LanguageElement;
 import org.apache.commons.lang.ArrayUtils;
 
 public class CodeUtils {
-
+    
     public static void addIntArray(StringBuffer RCode, String name, int[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
-
+    
     public static void addLongArray(StringBuffer RCode, String name, long[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
-
+    
     public static void addFloatArray(StringBuffer RCode, String name, float[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
-
+    
     public static void addDoubleArray(StringBuffer RCode, String name, double[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
-
+    
     public static void addStringArray(StringBuffer RCode, String name, String[] arr, boolean useEquals) {
         addArray(RCode, name, arr, useEquals, true);
     }
-
+    
     public static void addShortArray(StringBuffer RCode, String name, short[] arr, boolean useEquals) {
         addArray(RCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
-
+    
     public static void addLogicalArray(StringBuffer RCode, String name, boolean[] arr, boolean useEquals) {
         String[] stringArray = new String[arr.length];
         for (int i = 0; i < arr.length; i++) {
@@ -61,7 +62,7 @@ public class CodeUtils {
         }
         addArray(RCode, name, stringArray, useEquals, false);
     }
-
+    
     public static <T> void addArray(StringBuffer RCode, String name, T[] array, boolean useEquals, boolean isString) {
         if (!name.equals("")) {
             if (useEquals) {
@@ -71,7 +72,7 @@ public class CodeUtils {
             }
         }
         RCode.append("c(");
-
+        
         for (int i = 0; i < array.length; i++) {
             if (isString) {
                 RCode.append("\"").append(array[i]).append("\"");
@@ -88,14 +89,14 @@ public class CodeUtils {
             RCode.append(");").append("\n");
         }
     }
-
+    
     public static void addJavaObject(StringBuffer RCode, Object o, boolean useEquals) throws IllegalAccessException {
         RCode.append(((JavaObject) o).produceRCode(useEquals));
         if (!useEquals) {
             RCode.append("\n");
         }
     }
-
+    
     public static void addDoubleMatrix(StringBuffer RCode, String name, double[][] matrix, boolean useEquals) {
         int dim2 = matrix[0].length;
         int counter = 0;
@@ -121,31 +122,31 @@ public class CodeUtils {
             RCode.append(";\n");
         }
     }
-
+    
     public static void addDouble(StringBuffer RCode, String name, double d, boolean useEquals) {
         addValue(RCode, name, d, useEquals);
     }
-
+    
     public static void addInt(StringBuffer RCode, String name, int i, boolean useEquals) {
         addValue(RCode, name, i, useEquals);
     }
-
+    
     public static void addLong(StringBuffer RCode, String name, long l, boolean useEquals) {
         addValue(RCode, name, l, useEquals);
     }
-
+    
     public static void addFloat(StringBuffer RCode, String name, float f, boolean useEquals) {
         addValue(RCode, name, String.valueOf(f).toUpperCase(), useEquals);
     }
-
+    
     public static void addShort(StringBuffer RCode, String name, short s, boolean useEquals) {
         addValue(RCode, name, s, useEquals);
     }
-
+    
     public static void addBoolean(StringBuffer RCode, String name, boolean b, boolean useEquals) {
         addValue(RCode, name, String.valueOf(b).toUpperCase(), useEquals);
     }
-
+    
     public static void addString(StringBuffer RCode, String name, String value, boolean useEquals) {
         if (!name.equals("")) {
             if (useEquals) {
@@ -163,7 +164,7 @@ public class CodeUtils {
             }
         }
     }
-
+    
     private static void addValue(StringBuffer RCode, String name, Object value, boolean useEquals) {
         if (!name.equals("")) {
             if (useEquals) {
@@ -179,7 +180,7 @@ public class CodeUtils {
             }
         }
     }
-
+    
     public static void addRespectToType(StringBuffer code, String name, Object o, boolean useEquals) {
         if (o instanceof double[]) {
             CodeUtils.addDoubleArray(code, name, (double[]) o, useEquals);
@@ -207,7 +208,9 @@ public class CodeUtils {
             CodeUtils.addString(code, name, (String) o, useEquals);
         } else if (o instanceof double[][]) {
             CodeUtils.addDoubleMatrix(code, name, (double[][]) o, useEquals);
+        } else if (o instanceof LanguageElement) {
+            CodeUtils.addValue(code, name, ((LanguageElement) o).getObjectName(), useEquals);
         }
-
+        
     }
 }

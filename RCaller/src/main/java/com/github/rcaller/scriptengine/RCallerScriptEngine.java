@@ -183,12 +183,12 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         this.rcaller.StopRCallerOnline();
     }
 
-    /**
-     * Methods for invokable interface
+    /*
+      Methods for invokable interface
      */
     @Override
-    public Object invokeMethod(Object o, String string, Object... os) throws ScriptException, NoSuchMethodException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Object invokeMethod(Object o, String fname, Object... arguments) throws ScriptException, NoSuchMethodException {
+        return (invokeFunction(fname, arguments));
     }
 
     @Override
@@ -207,10 +207,13 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         }
         rcode.addRCode(")");
         rcaller.setRCode(rcode);
+        //Please do not delete, I like to see verbose output in development stage.
+        //System.out.println(rcode.getCode().toString());
         rcaller.runAndReturnResultOnline(var);
 
         ArrayList<NamedArgument> namedResults = new ArrayList<>();
         ArrayList<String> names = rcaller.getParser().getNames();
+        //System.out.println("Names : "+names);
         for (String name : names) {
             var = name;
             try {
@@ -235,12 +238,15 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
 
     @Override
     public <T> T getInterface(Class<T> type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (null);
     }
 
     @Override
     public <T> T getInterface(Object o, Class<T> type) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return (null);
     }
 
+    /*
+      End of Methods for invokable interface
+     */
 }

@@ -25,6 +25,7 @@
  */
 package com.github.rcaller;
 
+import com.github.rcaller.scriptengine.LanguageElement;
 import com.github.rcaller.scriptengine.NamedArgument;
 import com.github.rcaller.scriptengine.RCallerScriptEngine;
 import static com.github.rcaller.scriptengine.NamedArgument.*;
@@ -306,5 +307,27 @@ public class RCallerScriptEngineTest {
                 = (ArrayList<NamedArgument>) invocable.invokeFunction("lm", Named("formula", "y~x"));
         assertEquals("coefficients", allresults.get(0).getName());
         assertArrayEquals(new double[]{2.368475785867E-15, 2.0}, (double[]) allresults.get(0).getO(), delta);
+    }
+    
+    @Test
+    public void NumericalIntegrationTest() throws ScriptException, NoSuchMethodException {
+        message("Numerical integration by calling integrate()");
+        Invocable invocable = (Invocable) engine;
+        engine.eval("f <- function(x) { return(1/(1+x)^2) }");
+        ArrayList<NamedArgument> results
+                = (ArrayList<NamedArgument>) invocable.invokeFunction("integrate",
+                        Named("f", new LanguageElement("f")),
+                        Named("lower", 0.0),
+                        Named("upper", new LanguageElement("Inf")));
+        for (int i=0;i<results.size();i++){
+            NamedArgument current = results.get(i);
+            if(current.getName().equals("value")){
+                assertEquals(1.0, ((double[])current.getO())[0], delta);
+            }else if (current.getName().equals("message")){
+                assertEquals("OK", ((String[])current.getO())[0]);
+            }else if (current.getName().equals("abs_error")){
+                assertTrue( ((double[])current.getO())[0] < 0.001 );
+            }
+        }
     }
 }
