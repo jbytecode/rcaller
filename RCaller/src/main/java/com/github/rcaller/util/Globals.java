@@ -25,6 +25,7 @@
  */
 package com.github.rcaller.util;
 
+import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.graphics.DefaultTheme;
 import com.github.rcaller.graphics.GraphicsTheme;
 
@@ -87,5 +88,27 @@ public class Globals {
 
     public static boolean isWindows() {
         return System.getProperty("os.name").contains("Windows");
+    }
+
+    public static File findFileRecursively(File startingPath, String filename) {
+        if (!startingPath.isDirectory()) {
+            throw new ExecutionException(startingPath.toString() + " is not a directory:");
+        }
+        File[] childs = startingPath.listFiles();
+        for (int i = 0; i < childs.length; i++) {
+            if (childs[i].isFile()) {
+                if (childs[i].getName().equals(filename)) {
+                    return (childs[i]);
+                }
+            } else if (childs[i].isDirectory()) {
+                if (childs[i].listFiles().length > 0) {
+                    File subsearch = findFileRecursively(childs[i], filename);
+                    if (subsearch != null) {
+                        return (subsearch);
+                    }
+                }
+            }
+        }
+        return (null);
     }
 }

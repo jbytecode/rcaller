@@ -54,5 +54,74 @@ public class UTF8Test {
         String[] result = caller.getParser().getAsStringArray("ID");
         assertEquals("a&b", result[0]);
     }
+    
+        @Test
+    public void VariableNameContainsLessThanCharacterTest() throws IOException{
+        RCode code = RCode.create();
+        RCaller caller = RCaller.create();
+
+        caller.setRCode(code);
+        
+        TempFileService tmpservice = new TempFileService();
+        File tmpfile = tmpservice.createTempFile("csv", "");
+        
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tmpfile));
+        writer.write("ID,Feature1,Feature2,Feature3\n");
+        writer.write("a<b,1,0.01,0.65\n");
+        writer.flush();
+        writer.close();
+        
+        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        caller.runAndReturnResult("predictions");
+        
+        String[] result = caller.getParser().getAsStringArray("ID");
+        assertEquals("a<b", result[0]);
+    }
+    
+        @Test
+    public void VariableNameContainsGreaterCharacterTest() throws IOException{
+        RCode code = RCode.create();
+        RCaller caller = RCaller.create();
+
+        caller.setRCode(code);
+        
+        TempFileService tmpservice = new TempFileService();
+        File tmpfile = tmpservice.createTempFile("csv", "");
+        
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tmpfile));
+        writer.write("ID,Feature1,Feature2,Feature3\n");
+        writer.write("a>b,1,0.01,0.65\n");
+        writer.flush();
+        writer.close();
+        
+        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        caller.runAndReturnResult("predictions");
+        
+        String[] result = caller.getParser().getAsStringArray("ID");
+        assertEquals("a>b", result[0]);
+    }
+
+        @Test
+    public void VariableNameContainsApostropheCharacterTest() throws IOException{
+        RCode code = RCode.create();
+        RCaller caller = RCaller.create();
+
+        caller.setRCode(code);
+        
+        TempFileService tmpservice = new TempFileService();
+        File tmpfile = tmpservice.createTempFile("csv", "");
+        
+        BufferedWriter writer = new BufferedWriter(new FileWriter(tmpfile));
+        writer.write("ID,Feature1,Feature2,Feature3\n");
+        writer.write("a'b,1,0.01,0.65\n");
+        writer.flush();
+        writer.close();
+        
+        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        caller.runAndReturnResult("predictions");
+        
+        String[] result = caller.getParser().getAsStringArray("ID");
+        assertEquals("a'b", result[0]);
+    }
 
 }

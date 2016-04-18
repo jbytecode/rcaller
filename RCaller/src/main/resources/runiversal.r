@@ -14,6 +14,9 @@ cleanNames<-function(names){
 
 replaceXMLchars <- function(aStr){
   cln <-paste(unlist(strsplit(aStr,"&")),collapse="&amp;")
+  cln <-paste(unlist(strsplit(cln,"<")),collapse="&lt;")
+  cln <-paste(unlist(strsplit(cln,">")),collapse="&gt;")
+  cln <-paste(unlist(strsplit(cln,"'")),collapse="&#39;")
   return(cln)	
 }
 
