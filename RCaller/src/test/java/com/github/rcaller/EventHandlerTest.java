@@ -3,10 +3,14 @@ package com.github.rcaller;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 import com.github.rcaller.util.Globals;
+import java.io.BufferedReader;
 import org.junit.*;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 
 public class EventHandlerTest {
 
@@ -20,10 +24,8 @@ public class EventHandlerTest {
 
     @AfterClass
     public static void tearDownClass() throws Exception {
-        System.out.println("************* Cleaning oneCopy.txt ****************");
         File f = new File("oneCopy.txt");
         boolean result = f.delete();
-        System.out.println("Deletion Result: "+result);
     }
 
     @Before
@@ -39,24 +41,46 @@ public class EventHandlerTest {
     }
 
     @Test
-    public void testEventHandler1() throws FileNotFoundException {
+    public void testEventHandler1() throws FileNotFoundException, IOException {
         caller.redirectROutputToFile("oneCopy.txt", false);
 
         code.clear();
         code.addRCode("x<-1:1000");
         code.addRCode("m<-median(x)");
         caller.setRCode(code);
-        //System.out.println("running code");
-        //System.out.println(code);
+
         caller.runAndReturnResultOnline("m");
 
         code.clear();
         code.addRCode("cat(\"This message might be catched by the event handler\")");
         caller.runAndReturnResultOnline("m");
-        //System.out.println("stopping consumers");
+
         caller.stopStreamConsumers();
 
         caller.deleteTempFiles();
         caller.StopRCallerOnline();
+
+        BufferedReader reader = new BufferedReader(new FileReader("oneCopy.txt"));
+        String s;
+        boolean resultFound = false;
+
+        while (true) {
+            s = reader.readLine();
+            if (s == null) {
+                break;
+            }
+            if (s.contains("This message might be catched by the event handler")) {
+                resultFound = true;
+                break;
+            }
+        }
+
+        assertTrue(resultFound);
+
+        reader.close();
+
+        File f = new File("oneCopy.txt");
+        f.delete();
+
     }
 }

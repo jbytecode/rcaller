@@ -1,23 +1,18 @@
-
 package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import com.github.rcaller.util.Globals;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
-
 
 public class LargeDataTest {
 
-    
-   
     @Test
-    public void testBigData_1000_10(){
-        double delta = 1/100000;
+    public void testBigData_1000_10() {
+        double delta = 1 / 100000;
         double[][] data = new double[1000][10];
-        for (int i=0;i<data.length;i++){
-            for (int j=0;j<data[0].length;j++){
+        for (int i = 0; i < data.length; i++) {
+            for (int j = 0; j < data[0].length; j++) {
                 data[i][j] = Math.random();
             }
         }
@@ -27,18 +22,18 @@ public class LargeDataTest {
         code.addDoubleMatrix("x", data);
         code.addRCode("s <- dim(t(x) %*% x)");
         caller.setRCode(code);
-        
+
         caller.runAndReturnResult("s");
-        
+
         double[] result = caller.getParser().getAsDoubleArray("s");
-        
-        Assert.assertEquals(result[0], 10.0, delta);
-        Assert.assertEquals(result[1], 10.0, delta);
+
+        assertEquals(result[0], 10.0, delta);
+        assertEquals(result[1], 10.0, delta);
         caller.deleteTempFiles();
     }
-    
+
     @Test
-    public void testReturnsBigData (){
+    public void testReturnsBigData() {
         double delta = 0.5;
         RCaller caller = RCaller.create();
         RCode code = RCode.create();
@@ -48,12 +43,12 @@ public class LargeDataTest {
         code.addRCode("result <- list(arr=s, mean=m)");
         caller.setRCode(code);
         caller.runAndReturnResult("result");
-        
+
         double m = caller.getParser().getAsDoubleArray("mean")[0];
         int len = caller.getParser().getAsDoubleArray("arr").length;
-        
-        Assert.assertEquals(0.0, m, delta);
-        Assert.assertEquals((long)len, 2048l);
+
+        assertEquals(0.0, m, delta);
+        assertEquals(2048l,(long) len);
         caller.deleteTempFiles();
     }
 }

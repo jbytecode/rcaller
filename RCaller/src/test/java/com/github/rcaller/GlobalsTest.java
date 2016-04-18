@@ -25,17 +25,8 @@
  */
 package com.github.rcaller;
 
-import com.github.rcaller.scriptengine.NamedArgument;
-import com.github.rcaller.scriptengine.RCallerScriptEngine;
-import static com.github.rcaller.scriptengine.NamedArgument.*;
 import com.github.rcaller.util.Globals;
 import java.io.File;
-import java.util.ArrayList;
-import javax.script.ScriptException;
-import javax.script.Invocable;
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import org.junit.Before;
 import static org.junit.Assert.*;
 import org.junit.Test;
 

@@ -29,7 +29,7 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
-import org.junit.Assert;
+import static org.junit.Assert.*;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -53,8 +53,8 @@ public class HandlingAllVariablesTest {
 
         ArrayList<String> names = caller.getParser().getNames();
 
-        Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[0], 5.65, delta);
-        Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[0], 8.96, delta);
+        assertEquals(caller.getParser().getAsDoubleArray("x")[0], 5.65, delta);
+        assertEquals(caller.getParser().getAsDoubleArray("y")[0], 8.96, delta);
     }
     
     @Test
@@ -76,7 +76,7 @@ public class HandlingAllVariablesTest {
         //System.out.println("x[4] is " + caller.getParser().getAsDoubleArray("x")[4]);
         //System.out.println("y[4] is " + caller.getParser().getAsDoubleArray("y")[4]);
 
-        Assert.assertEquals(caller.getParser().getAsDoubleArray("x")[4], 5, delta);
-        Assert.assertEquals(caller.getParser().getAsDoubleArray("y")[4], 10, delta);
+        assertEquals(caller.getParser().getAsDoubleArray("x")[4], 5, delta);
+        assertEquals(caller.getParser().getAsDoubleArray("y")[4], 10, delta);
     }
 }
