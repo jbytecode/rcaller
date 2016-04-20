@@ -23,14 +23,14 @@
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-
 package com.github.rcaller.scriptengine;
 
+import java.util.ArrayList;
 
 public class NamedArgument {
-    
+
     private String name = null;
-    private Object o = null;
+    private Object obj = null;
 
     public String getName() {
         return name;
@@ -40,22 +40,35 @@ public class NamedArgument {
         this.name = name;
     }
 
-    public Object getO() {
-        return o;
+    public Object getObj() {
+        return obj;
     }
 
-    public void setO(Object o) {
-        this.o = o;
+    public void setObj(Object obj) {
+        this.obj = obj;
     }
-    
-    public NamedArgument(String name, Object o){
+
+    public NamedArgument(String name, Object o) {
         this.name = name;
-        this.o = o;
+        this.obj = o;
     }
-  
-    
-    public static NamedArgument Named(String name, Object o){
-        return(new NamedArgument(name,o));
+
+    public static NamedArgument Named(String name, Object o) {
+        return (new NamedArgument(name, o));
     }
-  
+
+    @Override
+    public String toString() {
+        return (name + "[ " + obj + " ]");
+    }
+
+    public static Object find(ArrayList<NamedArgument> list, String name) {
+        for (NamedArgument n : list) {
+            if (n.getName().equals(name)) {
+                return (n.getObj());
+            }
+        }
+        return (null);
+    }
+
 }

@@ -127,6 +127,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         parser = rcaller.getParser();
         parser.parse();
         try {
+            //System.out.println(parser.getXMLFileAsString());
             dimension = parser.getDimensions(var);
         } catch (Exception e) {
             return (parser.getAsStringArray(var));
@@ -200,7 +201,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcode.addRCode(var + " <- " + fname + "(");
         for (int i = 0; i < arguments.length; i++) {
             NamedArgument named = (NamedArgument) arguments[i];
-            CodeUtils.addRespectToType(rcode.getCode(), named.getName(), named.getO(), true);
+            CodeUtils.addRespectToType(rcode.getCode(), named.getName(), named.getObj(), true);
             if (i != (arguments.length - 1)) {
                 rcode.addRCode(",");
             }
