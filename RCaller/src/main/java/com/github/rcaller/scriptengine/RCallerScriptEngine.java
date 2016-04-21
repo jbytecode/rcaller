@@ -36,6 +36,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocable {
 
@@ -49,11 +51,11 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcaller = RCaller.create();
         rcode = RCode.create();
 
-        context = new javax.script.SimpleScriptContext();
-
         rcode.addRCode("result <- list(a=0)");
         rcaller.setRCode(rcode);
         rcaller.runAndReturnResultOnline("result");
+        
+        context = new javax.script.SimpleScriptContext();
     }
 
     @Override
@@ -209,12 +211,14 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcode.addRCode(")");
         rcaller.setRCode(rcode);
         //Please do not delete, I like to see verbose output in development stage.
-        //System.out.println(rcode.getCode().toString());
+        //System.out.println(rcode.getCode().toString()); 
         rcaller.runAndReturnResultOnline(var);
-
+       
+        parser = rcaller.getParser();
+        
         ArrayList<NamedArgument> namedResults = new ArrayList<>();
         ArrayList<String> names = rcaller.getParser().getNames();
-        //System.out.println("Names : "+names);
+        
         for (String name : names) {
             var = name;
             try {

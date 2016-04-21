@@ -59,7 +59,7 @@ public class NamedArgument {
 
     @Override
     public String toString() {
-        return (name + "[ " + obj + " ]");
+        return (name + ": " + obj.getClass().getCanonicalName());
     }
 
     public static Object find(ArrayList<NamedArgument> list, String name) {

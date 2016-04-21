@@ -38,6 +38,7 @@ makevectorxml<-function(code,objt,name=""){
   if(is.matrix(obj)) obj<-as.vector(obj)
   if(typeof(obj)=="language") obj<-toString(obj)
   if(typeof(obj)=="logical") obj<-as.character(obj)
+  if(class(obj)=="factor") obj<-as.vector(obj)
   if(is.vector(obj) && is.numeric(obj)){
     xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
     s <- sapply(X=obj, function(str){
