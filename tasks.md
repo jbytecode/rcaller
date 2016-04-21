@@ -12,4 +12,8 @@
 - [ ] Add new examples for new features
 - [ ] Add ~steel~ tests for a more reliable software library
 - [ ] Solve all of the issues, remove bugs due to problems, at least give some advice in stackoverflow
+- [X] Passing fields of Java Objects to R in a more clear way
+- [X] Invocable interface is implemented for R function call facility from Java in RCallerScriptEngine
+- [ ] Threading improvements in stream consumers
+- [X] Minimum factor data type support
 
