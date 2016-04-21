@@ -36,13 +36,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocable {
 
-    private RCaller rcaller;
-    private RCode rcode;
+    final private RCaller rcaller;
+    private final RCode rcode;
     private ROutputParser parser;
     private Bindings bindings;
     private ScriptContext context;
