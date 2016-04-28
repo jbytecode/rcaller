@@ -16,4 +16,5 @@
 - [X] Invocable interface is implemented for R function call facility from Java in RCallerScriptEngine
 - [ ] Threading improvements in stream consumers
 - [X] Minimum factor data type support
+- [ ] Data.Frames
 
