@@ -156,8 +156,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
 
     @Override
     public Bindings createBindings() {
-        Bindings bindings = new javax.script.SimpleBindings();
-        return (bindings);
+        return (new SimpleBindings());
     }
 
     @Override

@@ -23,7 +23,7 @@
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-package com.github.rcaller.matrix;
+package com.github.rcaller.datatypes;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
@@ -32,11 +32,11 @@ import com.github.rcaller.exception.ExecutionException;
 
 public class RealMatrix {
 
-    RService service;
-    RCaller rcaller;
-    RCode code;
-    String name;
-    String HashString;
+    private RService service;
+    private RCaller rcaller;
+    private RCode code;
+    private String name;
+    private String HashString;
 
     public RCaller getRCaller(){
         return(this.rcaller);
@@ -276,13 +276,13 @@ public class RealMatrix {
         RealMatrix uMatrix = new RealMatrix(service);
         RealMatrix vMatrix = new RealMatrix(service);
         
-        svd.d = d;
+        svd.setD(d);
         
         uMatrix.setData(u);
-        svd.u = uMatrix;
+        svd.setU(uMatrix);
         
         vMatrix.setData(v);
-        svd.v = vMatrix;
+        svd.setV(vMatrix);
         
         return(svd);
     }

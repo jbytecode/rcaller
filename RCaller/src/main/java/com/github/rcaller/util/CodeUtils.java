@@ -211,7 +211,7 @@ public class CodeUtils {
             CodeUtils.addDoubleMatrix(code, name, (double[][]) o, useEquals);
         } else if (o instanceof LanguageElement) {
             CodeUtils.addValue(code, name, ((LanguageElement) o).getObjectName(), useEquals);
-        } else if (o instanceof java.lang.Object) {
+        } else if (o != null) {
             try {
                 code.append(JavaObject.ConvertToRCode(name, o, /*useList=no*/false, useEquals));
             } catch (IllegalAccessException iae) {

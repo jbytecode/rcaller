@@ -36,7 +36,7 @@ import java.awt.*;
  */
 public class RPlotViewer extends JFrame {
 
-  ImageIcon img = null;
+  private ImageIcon img;
 
   public ImageIcon getImg() {
     return img;

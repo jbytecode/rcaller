@@ -95,20 +95,24 @@ public class Globals {
             throw new ExecutionException(startingPath.toString() + " is not a directory:");
         }
         File[] childs = startingPath.listFiles();
-        for (int i = 0; i < childs.length; i++) {
-            if (childs[i].isFile()) {
-                if (childs[i].getName().equals(filename)) {
-                    return (childs[i]);
-                }
-            } else if (childs[i].isDirectory()) {
-                if (childs[i].listFiles().length > 0) {
-                    File subsearch = findFileRecursively(childs[i], filename);
-                    if (subsearch != null) {
-                        return (subsearch);
+
+        if (childs != null && childs.length > 0) {
+            for (File child : childs) {
+                if (child.isFile()) {
+                    if (child.getName().equals(filename)) {
+                        return (child);
+                    }
+                } else if (child.isDirectory()) {
+                    if (child.listFiles().length > 0) {
+                        File subsearch = findFileRecursively(child, filename);
+                        if (subsearch != null) {
+                            return (subsearch);
+                        }
                     }
                 }
             }
         }
-        return (null);
+
+        return null;
     }
 }

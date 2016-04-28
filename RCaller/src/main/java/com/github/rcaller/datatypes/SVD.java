@@ -23,12 +23,13 @@
  * Please visit the blog page with rcaller label:
  * http://stdioe.blogspot.com.tr/search/label/rcaller
  */
-package com.github.rcaller.matrix;
+package com.github.rcaller.datatypes;
 
 public class SVD {
 
-    double[] d;
-    RealMatrix u, v;
+    private double[] d;
+    private RealMatrix u;
+    private RealMatrix v;
 
     public double[] getD() {
         return d;

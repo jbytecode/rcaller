@@ -1,19 +1,20 @@
-package com.github.rcaller.matrix;
+package com.github.rcaller.datatypes;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.AfterClass;
 import com.github.rcaller.util.Globals;
+import org.junit.AfterClass;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 
 public class RealMatrixTest {
 
-    double[][] matrix = new double[][]{{1.0, 2.0}, {4.0, 9.0}};
-    double[][] inverse = new double[][]{{9.0, -2.0}, {-4.0, 1.0}};
-    double[][] another = new double[][]{{8, 7}, {11, -1}};
-    String pathToR;
-    double delta = 0.00001;
-    static RealMatrix rm = null;
+    private double[][] matrix = new double[][]{{1.0, 2.0}, {4.0, 9.0}};
+    private double[][] inverse = new double[][]{{9.0, -2.0}, {-4.0, 1.0}};
+    private double[][] another = new double[][]{{8, 7}, {11, -1}};
+    private double delta = 0.00001;
+    private static RealMatrix rm = null;
 
     @AfterClass
     public static void MyAfterClass() {
@@ -23,7 +24,7 @@ public class RealMatrixTest {
 
     public RealMatrixTest() {
         Globals.detect_current_rscript();
-        pathToR = Globals.R_current;
+        String pathToR = Globals.R_current;
         if (rm == null) {
             rm = new RealMatrix(pathToR, "MyMatrix");
         }
