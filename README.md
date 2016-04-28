@@ -1,5 +1,7 @@
 # Overview
 
+[![Join the chat at https://gitter.im/jbytecode/rcaller](https://badges.gitter.im/jbytecode/rcaller.svg)](https://gitter.im/jbytecode/rcaller?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 RCaller is a software library which is developed to simplify calling R from Java. Despite it is not
 the most efficient way of calling R codes from Java, it is very simple to use and its learning curve is
 steep. It successfully simplifies and wraps type conversations and makes variables in each languages
