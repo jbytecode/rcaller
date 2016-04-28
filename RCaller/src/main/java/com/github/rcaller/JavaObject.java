@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.rcaller;
 
-import com.github.rcaller.util.CodeUtils;
+import com.github.rcaller.util.RCodeUtils;
 
 import java.lang.reflect.Field;
 
@@ -91,37 +91,37 @@ public class JavaObject {
                     break;
                 case "int[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addIntArray(tempbuffer, varName, (int[]) o, true);
+                    RCodeUtils.addIntArray(tempbuffer, varName, (int[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "double[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addDoubleArray(tempbuffer, varName, (double[]) o, true);
+                    RCodeUtils.addDoubleArray(tempbuffer, varName, (double[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "float[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addFloatArray(tempbuffer, varName, (float[]) o, true);
+                    RCodeUtils.addFloatArray(tempbuffer, varName, (float[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "short[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addShortArray(tempbuffer, varName, (short[]) o, true);
+                    RCodeUtils.addShortArray(tempbuffer, varName, (short[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "long[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addLongArray(tempbuffer, varName, (long[]) o, true);
+                    RCodeUtils.addLongArray(tempbuffer, varName, (long[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "boolean[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addLogicalArray(tempbuffer, varName, (boolean[]) o, true);
+                    RCodeUtils.addLogicalArray(tempbuffer, varName, (boolean[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "java.lang.String[]":
                     tempbuffer.setLength(0);
-                    CodeUtils.addStringArray(tempbuffer, varName, (String[]) o, true);
+                    RCodeUtils.addStringArray(tempbuffer, varName, (String[]) o, true);
                     builder.append(tempbuffer.toString());
                     break;
                 case "java.lang.Object":

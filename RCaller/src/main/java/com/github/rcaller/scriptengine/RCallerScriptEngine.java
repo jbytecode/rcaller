@@ -29,7 +29,7 @@ import com.github.rcaller.EventHandler;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 import com.github.rcaller.rstuff.ROutputParser;
-import com.github.rcaller.util.CodeUtils;
+import com.github.rcaller.util.RCodeUtils;
 
 import javax.script.*;
 import java.io.BufferedReader;
@@ -110,7 +110,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     public void put(String name, Object o) {
         rcode.clearOnline();
         StringBuffer code = new StringBuffer();
-        CodeUtils.addRespectToType(code, name, o, false);
+        RCodeUtils.addRespectToType(code, name, o, false);
         rcode.addRCode("result <- list(a=0)");
         rcode.setCode(code);
 
@@ -200,7 +200,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
         rcode.addRCode(var + " <- " + fname + "(");
         for (int i = 0; i < arguments.length; i++) {
             NamedArgument named = (NamedArgument) arguments[i];
-            CodeUtils.addRespectToType(rcode.getCode(), named.getName(), named.getObj(), true);
+            RCodeUtils.addRespectToType(rcode.getCode(), named.getName(), named.getObj(), true);
             if (i != (arguments.length - 1)) {
                 rcode.addRCode(",");
             }

@@ -1,5 +1,8 @@
 package com.github.rcaller.datatypes;
 
+import com.github.rcaller.rstuff.RCaller;
+import com.github.rcaller.rstuff.RCode;
+import com.github.rcaller.util.DataFrameUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -120,6 +123,31 @@ public class DataFrameTest {
         DataFrame dataFrame = DataFrame.create(objects, names);
 
         assertTrue(dataFrame.getObject(8,2).equals(3));
+    }
+
+    @Test
+    public void writeDataFrameToRAndGetMean() {
+        Object[][] objects = new Object[][]{{1, 2, 3, 4}, {2, 3, 4, 5}, {3, 4, 5, 6}};
+
+        DataFrame dataFrame = DataFrame.create(objects, DataFrameUtil.createDefaultNamesArray(3));
+
+        RCaller rCaller = RCaller.create();
+        RCode rCode = RCode.create();
+
+        rCode.addDataFrame("df", dataFrame);
+        rCode.addRCode("result <- c(colMeans(df), rowMeans(df))");
+        rCaller.setRCode(rCode);
+        rCaller.runAndReturnResult("result");
+
+        double[] result = rCaller.getParser().getAsDoubleArray("result");
+
+        assertEquals(result[0], 2.5);
+        assertEquals(result[1], 3.5);
+        assertEquals(result[2], 4.5);
+        assertEquals(result[3], 2.0);
+        assertEquals(result[4], 3.0);
+        assertEquals(result[5], 4.0);
+        assertEquals(result[6], 5.0);
     }
 
 }

@@ -28,9 +28,10 @@ package com.github.rcaller.rstuff;
 
 import com.github.rcaller.FunctionCall;
 import com.github.rcaller.TempFileService;
+import com.github.rcaller.datatypes.DataFrame;
 import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.graphics.GraphicsType;
-import com.github.rcaller.util.CodeUtils;
+import com.github.rcaller.util.RCodeUtils;
 import com.github.rcaller.util.Globals;
 
 import javax.swing.*;
@@ -102,35 +103,35 @@ public class RCode {
     }
 
     public void addStringArray(String name, String[] arr) {
-        CodeUtils.addStringArray(code, name, arr, false);
+        RCodeUtils.addStringArray(code, name, arr, false);
     }
 
     public void addDoubleArray(String name, double[] arr) {
-        CodeUtils.addDoubleArray(code, name, arr, false);
+        RCodeUtils.addDoubleArray(code, name, arr, false);
     }
 
     public void addFloatArray(String name, float[] arr) {
-        CodeUtils.addFloatArray(code, name, arr, false);
+        RCodeUtils.addFloatArray(code, name, arr, false);
     }
 
     public void addIntArray(String name, int[] arr) {
-        CodeUtils.addIntArray(code, name, arr, false);
+        RCodeUtils.addIntArray(code, name, arr, false);
     }
 
     public void addShortArray(String name, short[] arr) {
-        CodeUtils.addShortArray(code, name, arr, false);
+        RCodeUtils.addShortArray(code, name, arr, false);
     }
 
     public void addLogicalArray(String name, boolean[] arr) {
-        CodeUtils.addLogicalArray(code, name, arr, false);
+        RCodeUtils.addLogicalArray(code, name, arr, false);
     }
 
     public void addJavaObject(Object o) throws IllegalAccessException {
-        CodeUtils.addJavaObject(code, o, false);
+        RCodeUtils.addJavaObject(code, o, false);
     }
 
     public void addDoubleMatrix(String name, double[][] matrix) {
-        CodeUtils.addDoubleMatrix(code, name, matrix, false);
+        RCodeUtils.addDoubleMatrix(code, name, matrix, false);
     }
     
     public void addFunctionCall(String returnVarName, FunctionCall fc){
@@ -138,27 +139,27 @@ public class RCode {
     }
 
     public void addDouble(String name, double d){
-        CodeUtils.addDouble(code, name, d, false);
+        RCodeUtils.addDouble(code, name, d, false);
     }
     
     public void addInt(String name, int i){
-        CodeUtils.addInt(code, name, i, false);
+        RCodeUtils.addInt(code, name, i, false);
     }
     
     public void addLong(String name, long l){
-        CodeUtils.addLong(code, name, l, false);
+        RCodeUtils.addLong(code, name, l, false);
     }
     
     public void addFloat(String name, float f){
-        CodeUtils.addFloat(code, name, f, false);
+        RCodeUtils.addFloat(code, name, f, false);
     }
     
     public void addShort(String name, short s){
-        CodeUtils.addShort(code, name, s, false);
+        RCodeUtils.addShort(code, name, s, false);
     }
     
     public void addBoolean(String name, boolean b){
-        CodeUtils.addBoolean(code, name, b, false);
+        RCodeUtils.addBoolean(code, name, b, false);
     }
     
     public void addLogical(String name, boolean b){
@@ -166,7 +167,11 @@ public class RCode {
     }
     
     public void addString(String name, String value){
-        CodeUtils.addString(code, name, value, false);
+        RCodeUtils.addString(code, name, value, false);
+    }
+
+    public void addDataFrame(String name, DataFrame dataFrame) {
+        RCodeUtils.addDataFrame(code, name, dataFrame);
     }
     
     public File startPlot() throws IOException {
