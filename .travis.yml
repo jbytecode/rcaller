@@ -1,4 +1,4 @@
 language: java
-cd RCaller
-mvn test
+script: cd RCaller
+script: mvn test
 
