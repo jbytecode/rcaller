@@ -23,7 +23,7 @@ public class RServiceTest {
     @Test
     public void TestMajorVersion() {
         String major = service.major();
-        Assert.assertTrue(Integer.parseInt(major) >= 3);
+        Assert.assertTrue(Integer.parseInt(major) >= 2);
     }
 
     @Test
