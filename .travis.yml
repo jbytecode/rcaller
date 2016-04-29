@@ -1,6 +1,11 @@
 language: java
 
-before_script: cd RCaller
+before_script: 
+- cd RCaller
+- sudo apt-get update
+- sudo apt-get -y install r-base
+- wget https://cran.r-project.org/src/contrib/Runiversal_1.0.2.tar.gz
+- R CMD INSTALL Runiversal_1.0.2.tar.gz 
 
 script: mvn test
 
