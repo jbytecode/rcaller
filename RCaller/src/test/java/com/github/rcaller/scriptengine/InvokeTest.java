@@ -15,10 +15,10 @@ import static org.junit.Assert.*;
 public class InvokeTest {
 
     static ScriptEngine engine = null;
-    double delta = 1 / 100000;
-    
+    double delta = 1.0 / 100000.0;
+
     public static void message(String text) {
-        System.out.println("* " + text); 
+        System.out.println("* " + text);
     }
 
     @BeforeClass
@@ -184,9 +184,9 @@ public class InvokeTest {
     @Test
     public void OptimizeTest() throws ScriptException, NoSuchMethodException {
         message("Invoke optimize() test...");
-        
+
         Invocable invocable = (Invocable) engine;
-        
+
         ArrayList<NamedArgument> args;
 
         engine.eval("f <- function(x){"
@@ -203,5 +203,23 @@ public class InvokeTest {
         assertEquals(0.0, value, delta);
         assertEquals(0.0, x, delta);
     }
-    
+
+    @Test
+    public void HandleReturnedMatrixFromFunctionTest() throws ScriptException, NoSuchMethodException {
+        message("Handle returned matrix from cor() function ...");
+
+        ArrayList<NamedArgument> args;
+
+        Invocable invocable = (Invocable) engine;
+
+        double[][] mat = new double[][]{{1, 1}, {2, 2}, {3, 3}, {4, 4}, {50, 5}};
+        args = (ArrayList<NamedArgument>) invocable.invokeFunction("cor",
+                new NamedArgument("", mat));
+        double[][] result = (double[][]) args.get(0).getObj();
+        assertEquals(1.0, result[0][0], delta);
+        assertEquals(0.7432941, result[0][1], delta);
+        assertEquals(0.7432941, result[1][0], delta);
+        assertEquals(1.0, result[1][1], delta);
+    }
+
 }
