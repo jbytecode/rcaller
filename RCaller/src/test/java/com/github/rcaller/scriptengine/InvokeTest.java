@@ -203,5 +203,5 @@ public class InvokeTest {
         assertEquals(0.0, value, delta);
         assertEquals(0.0, x, delta);
     }
-
+    
 }

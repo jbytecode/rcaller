@@ -218,7 +218,9 @@ public class RCodeUtils {
             RCodeUtils.addDoubleMatrix(rCode, name, (double[][]) o, useEquals);
         } else if (o instanceof LanguageElement) {
             RCodeUtils.addValue(rCode, name, ((LanguageElement) o).getObjectName(), useEquals);
-        } else if (o != null) {
+        } else if (o instanceof DataFrame){
+            RCodeUtils.addDataFrame(rCode, name, (DataFrame)o);
+        }else if (o != null) {
             try {
                 rCode.append(JavaObject.ConvertToRCode(name, o, /*useList=no*/false, useEquals));
             } catch (IllegalAccessException iae) {
