@@ -150,4 +150,20 @@ public class DataFrameTest {
         assertEquals(result[6], 5.0);
     }
 
+    @Test
+    public void writeBigDataFrame() {
+        RCaller rCaller = RCaller.create();
+        RCode rCode = RCode.create();
+
+        rCode.addDataFrame("df", DataFrame.create(DataFrameUtil.createObjectsMatrix(2000, 3000, 2), DataFrameUtil.createDefaultNamesArray(2000)));
+        rCode.addRCode("result <- c(nrow(df), ncol(df), df[2,2])");
+        rCaller.setRCode(rCode);
+        rCaller.runAndReturnResult("result");
+
+        double[] result = rCaller.getParser().getAsDoubleArray("result");
+        assertEquals(result[0], 3000d);
+        assertEquals(result[1], 2000d);
+        assertEquals(result[2], 2d);
+    }
+
 }
