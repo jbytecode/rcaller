@@ -25,6 +25,7 @@
  */
 package com.github.rcaller.scriptengine;
 
+import com.github.rcaller.datatypes.DataFrame;
 import com.github.rcaller.util.Globals;
 import javax.script.Bindings;
 import javax.script.ScriptException;
@@ -191,7 +192,6 @@ public class ScriptEngineBasicsTest {
         assertEquals(6.0, mat[1][2], delta);
     }
 
-
     @Test
     public void setRefClassTest() throws ScriptException, NoSuchMethodException {
         message("setRefClass test...");
@@ -245,5 +245,24 @@ public class ScriptEngineBasicsTest {
         engine.eval("temp <- p$getAge()");
         assertEquals(100.0, ((double[]) engine.get("temp"))[0], delta);
     }
-    
+
+    @Test
+    public void GetSetDataFrameTest() throws ScriptException, NoSuchMethodException {
+        message("get/set data.frame ...");
+        String[] names = new String[]{"x", "y"};
+        Object[][] data = new Object[][]{{1.0, 1.0, 1.0, 1.0, 1.0}, {1.0, 2.0, 3.0, 4.0, 5.0}};
+        DataFrame dataFrame = DataFrame.create(data, names);
+        engine.put("mydf", dataFrame);
+
+        double[] x = (double[]) engine.get("mydf$x");
+        for (int i = 0; i < data[0].length; i++) {
+            assertEquals((double) data[0][i], x[i], delta);
+        }
+
+        double[] y = (double[]) engine.get("mydf$y");
+        for (int i = 0; i < data[0].length; i++) {
+            assertEquals((double) data[1][i], y[i], delta);
+        }
+    }
+
 }

@@ -4,6 +4,8 @@
 
 [![Build Status](https://travis-ci.org/jbytecode/rcaller.svg?branch=master)](https://travis-ci.org/jbytecode/rcaller)
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jbytecode/RCaller/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.jbytecode/RCaller)
+
 RCaller is a software library which is developed to simplify calling R from Java. Despite it is not
 the most efficient way of calling R codes from Java, it is very simple to use and its learning curve is
 steep. It successfully simplifies and wraps type conversations and makes variables in each languages
