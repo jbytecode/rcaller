@@ -3,7 +3,7 @@
 
     <groupId>com.github.jbytecode</groupId>
     <artifactId>RCaller</artifactId>
-    <version>2.9-SNAPSHOT</version>
+    <version>3.0-</version>
     <packaging>jar</packaging>
 
     <name>RCaller</name>
