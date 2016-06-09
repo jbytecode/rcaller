@@ -33,8 +33,7 @@ import javax.script.ScriptException;
 public class RCallerScriptEngineExample2 {
 
     public static void main(String[] args) throws ScriptException {
-        Globals.detect_current_rscript();
-
+        
         ScriptEngineManager manager = new ScriptEngineManager();
         ScriptEngine engine = manager.getEngineByName("RCaller");
 

@@ -110,6 +110,10 @@ public class RCode {
         RCodeUtils.addDoubleArray(code, name, arr, false);
     }
 
+    public void addLongArray(String name, long[] arr) {
+        RCodeUtils.addLongArray(code, name, arr, false);
+    }
+    
     public void addFloatArray(String name, float[] arr) {
         RCodeUtils.addFloatArray(code, name, arr, false);
     }

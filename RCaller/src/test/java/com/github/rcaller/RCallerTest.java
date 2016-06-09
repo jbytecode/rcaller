@@ -33,7 +33,6 @@ import java.io.File;
 
 import static org.junit.Assert.*;
 
-
 public class RCallerTest {
 
     public RCallerTest() {
@@ -109,6 +108,26 @@ public class RCallerTest {
         assertEquals(expected.length, actual.length, delta);
         for (int i = 0; i < actual.length; i++) {
             assertEquals(actual[i], expected[i], delta);
+        }
+        rcaller.deleteTempFiles();
+    }
+
+    @Test
+    public void testLongArrays() {
+        double delta = 0.0000001;
+        RCaller rcaller = RCaller.create();
+        RCode code = RCode.create();
+
+        code.addLongArray("x_L", new long[]{1L, 2L, 3L, 4L, 5L});
+        code.addRCode("x_L <- x_L * 2");
+        rcaller.setRCode(code);
+
+        rcaller.runAndReturnResult("x_L");
+        long[] actual = rcaller.getParser().getAsLongArray("x_L");
+        long[] expected = new long[]{2L, 4L, 6L, 8L, 10L};
+        assertEquals(expected.length, actual.length, delta);
+        for (int i = 0; i < actual.length; i++) {
+            assertEquals(actual[i], expected[i]);
         }
         rcaller.deleteTempFiles();
     }
