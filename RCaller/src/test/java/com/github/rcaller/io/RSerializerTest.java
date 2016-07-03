@@ -1,0 +1,44 @@
+
+package com.github.rcaller.io;
+
+import com.github.rcaller.TempFileService;
+import com.github.rcaller.rstuff.RCaller;
+import com.github.rcaller.rstuff.RCode;
+import java.io.File;
+import java.io.IOException;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
+public class RSerializerTest {
+
+    double delta = 1 / 100000;
+    
+    @Test
+    public void WriteVectorTest() throws IOException{
+        RSerializer rs = new RSerializer();
+        double[] v = new double[]{1.0,2.0,3.0};
+        rs.writeVector(v);
+        
+        TempFileService tmpServ = new TempFileService();
+        File tmpFile = tmpServ.createTempFile("RCaller", "Test");
+        
+        rs.save(tmpFile.getCanonicalPath());
+        
+        RCaller caller = RCaller.create();
+        RCode code = RCode.create();
+        
+        code.addRCode("conn <- file(\"" +  tmpFile.getCanonicalPath()  + "\" , \"r\")");
+        code.addRCode("x <- unserialize(conn)");
+        caller.setRCode(code);
+        
+        caller.runAndReturnResult("x");
+        
+        double[] x = caller.getParser().getAsDoubleArray("x");
+        assertEquals(1.0, x[0], delta);
+        assertEquals(2.0, x[1], delta);
+        assertEquals(3.0, x[2], delta);
+    }
+    
+    
+}
