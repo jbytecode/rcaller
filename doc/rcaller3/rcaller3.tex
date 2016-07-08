@@ -1,0 +1,895 @@
+\documentclass[10pt,a4paper, final, oneside]{article}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{amsmath}
+\usepackage{fancyhdr}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amscd}
+\usepackage{latexsym}
+\usepackage{amsthm}
+\usepackage{graphicx}
+\usepackage{graphics}
+\usepackage{natbib}
+\usepackage{afterpage}
+\usepackage[colorlinks=true, urlcolor=blue,  linkcolor=black, citecolor=black]{hyperref}
+\usepackage{color}
+\usepackage{listings}
+\usepackage{url}
+\usepackage{float}
+\usepackage{menukeys}
+
+
+
+\setlength{\oddsidemargin}{1pt} \setlength{\evensidemargin}{1pt}
+\setlength{\hoffset}{-25mm} \addtolength{\hoffset}{25mm}
+\setlength{\textwidth}{160mm} 
+
+
+
+
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{color_code_back_gray}{rgb}{0.95,0.95,0.95}
+\definecolor{color_black}{rgb}{0,0,0}
+
+
+
+
+\begin{document}
+\hyphenpenalty=100000
+
+
+
+\title{RCaller 3.0: An Easy Tool for Abstraction of Java and R Connectivity}
+
+\author{Mehmet Hakan Satman and Paul Curcean}
+
+
+\maketitle
+\tableofcontents
+\newpage
+
+
+
+
+% ABSTRACT
+\abstract{
+In this paper, version $3.0$ of the open source library \texttt{RCaller} is introduced. \texttt{RCaller} is a software library which simplifies performing data analysis and statistical calculations in \emph{Java} using \texttt{R}. The details are hidden from the user including transferring data between platforms, function calls, and retrieving results. Addition to the previous revisions, \texttt{RCaller} \texttt{3.0} implements the scripting \texttt{API} of \texttt{Java} in which the \texttt{R} function calls and data transfers are performed in a standard way as in the way of calling other scripting languages in \texttt{Java}. Besides implementation of new features, \texttt{RCaller} has many performance improvements in the new release of $3.0$. A simulation study shows that the new release is two times faster than the previously reported and published one, especially, in process of transferring large matrices. The results of the simulation study also show that the library can be used on performing calculations with moderate size of data in reasonable times.
+} 
+
+
+
+
+\section{Introduction}
+\label{Introduction}
+\texttt{R} is an open source programming language and a programming environment for statistical and data analysis \cite{R} which is an implementation of the \texttt{S} language \cite{SLang}. Having an \emph{REPL} (Read-Eval-Print-Loop) interface as a consequence of being an interpreted language; including both procedural and object-oriented as well as functional programming paradigms; having a syntax similar to \texttt{ALGOL}-family languages, and being developed under an open source license make \texttt{R} very popular in many fields of research, especially for those based on data. \texttt{R} has also a successful foreing language interface, namely \texttt{.Call} interface, which simplifies calling legacy \texttt{Fortran}, \texttt{C}, and \texttt{C++} libraries. The \texttt{.Call} interface is also frequently used by the package developers for the code in which more performance is required for critical calculations. Since the \texttt{.Call} interface is very transparent and does not hide the \texttt{R} internals from the package developers, it is more error prone and hard to use in some cases. \texttt{Rcpp} is an \texttt{R} package which wraps the \texttt{R} internals using \texttt{C++} templates and reduces the time required for interfacing \texttt{C++} and \texttt{R} interoperability \cite{eddelbuettel2011rcpp, eddelbuettel2013seamless} in the developing stage. \texttt{Rcpp} mainly wraps \texttt{SEXP} data structures with \texttt{XXXVector}, \texttt{XXXMatrix}, \texttt{List}, etc. in a way like writing code in \texttt{R}. 
+
+A huge amount of \texttt{R} code is written in \texttt{C}, \texttt{C++}, \texttt{Fortran}, and \texttt{R} itself. In addition to this, \texttt{Java} is another mainstream programming language which is used in many areas of software as a general purpose language. Beside being a language, \texttt{Java} is the name of the \texttt{JVM} (\emph{Java Virtual Machine}) and an ecosystem in which many languages are compiled and translated to. As the use of \texttt{Java} platform increases in statistics based applications, the need of interfacing the \texttt{Java} language with \texttt{R} increases. Firstly, the \texttt{Java} ecosystem does not have a statistical library as comprehensive as \texttt{R}. Secondly, \texttt{Java} has some mature and legacy code such as \texttt{WEKA} \cite{hall2009weka,RWeka1,RWeka2} among others which gains productivity and efficiency when it is used with \texttt{R}. For interfacing \texttt{Java} with \texttt{R} and vice versa, many software packages and libraries were developed. \texttt{rJava} \cite{urbanek2009talk,rJava} is a software library that uses \texttt{JNI} \cite{gordon1998essential} (\emph{Java Native Interface}) for both calling \texttt{R} from \texttt{Java} and vice versa. It is known that \texttt{JNI} is the nautral way of interfacing \texttt{C} and \texttt{Java}, and many software including the \texttt{Java} core libraries are implemented through \texttt{JNI}. This implementation makes \emph{function callbacks} possible between the languages. Since \texttt{JNI} translates data types between inter-language calls, it is not too much effective to perform frequent function calls, for instance using a loop, even the operations are performed on the computers memory. In addition to this, the external native library must be compiled for the client machine and must be hosted in the \texttt{java\_library\_path}. However, \texttt{rJava} is one of the most efficient and scalable library for interfacing \texttt{R} with \texttt{Java}. 
+
+\texttt{Rserve} \cite{urbanek2003fast} is an other option for interfacing \texttt{R} and \texttt{Java}. \texttt{Rserve} opens a server socket on a specific \texttt{TCP} port and listens for incoming connections, possibly sent from the \texttt{Java} side. Whenever a connection request is received, the data protocol is activated and all of the results that are obtained in the \texttt{R} side are sent to \texttt{Java} through the \texttt{TCP} connection. Since \texttt{Rserve} can create multiple \texttt{R} instances in the background, more than one clients can be handled by the library. \texttt{Rserve} provides an unified and platform independent method, that is, the server and the client can be hosted on different kind of operating systems as well as different networks. 
+
+
+
+\texttt{RCaller} \cite{satman2014rcaller} is a \texttt{LGLP}'ed \texttt{Java} library for calling \texttt{R} from within \texttt{Java}. \texttt{RCaller} creates \texttt{R} processes, translates \texttt{Java} data structures to \texttt{R} code, sends these codes and \texttt{R} function calls to \texttt{R}, receives the results, and translates the results back to \texttt{Java} objects. Despite being a slower option, \texttt{RCaller} provides a painless method as it can be integrated by adding a single \texttt{Maven} entry into the project's \texttt{pom.xml} file. \texttt{RCaller} is pure \texttt{Java} and can be run on any machine that has \texttt{Java} and \texttt{R} are installed. 
+
+In this paper, we introduce the version $3.0$ of the software library \texttt{RCaller} which is first introduced in \cite{satman2014rcaller} for the \texttt{2.X} version branch. In Section \ref{sec:setup} we give a brief guidance for adding and using \texttt{RCaller} as a dependency in \texttt{Java} projects. In Section \ref{sec:rcaller_basics}, we give a brief introduction for using \texttt{RCaller} in simple calculations. In Section \ref{sec:transferring_data}, we mention transferring data including vectors, matrices, data frames and \texttt{Java} objects between platforms. In Section \ref{sec:single_R_Process_for_multiple_calculations}, we demonstrate gaining performance improvements in the case of using a single \texttt{R} process. In Section \ref{sec:features_in_version_3}, we introduce some new features of $3.0$ version of \texttt{RCaller}. In Section \ref{sec:performance_issues}, we replicate the simulation study that is performed in the previously published work and compare results by means of time efficiency. Finally in Section \ref{sec:conclusion}, we conclude.
+
+\section{Setup and Installation}
+\label{sec:setup}
+
+\texttt{RCaller} is hosted on Github (\url{https://github.com/jbytecode/rcaller}) and the source code can be downloaded and compiled manually. Using \texttt{git}, the source tree can be downloaded using the command prompt as shown below:
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=c,
+  basicstyle=\ttfamily,
+  frame=single,
+  morekeywords={version,dependency,groupId,artifactId,classifier,c}
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Downloading source code, label=code:git]
+$ git clone https://github.com/jbytecode/rcaller.git
+\end{lstlisting}
+\end{minipage}
+
+The most straightforward way of including \texttt{RCaller} in a project as a dependency is to add \texttt{RCaller} as a \texttt{Maven} repository into the \texttt{pom.xlm} file. Listing \ref{code:maven_dependency} shows the \texttt{XML} code which can be directly copied between \texttt{XML} tags \texttt{<dependencies>} and \texttt{</dependencies>}. By using this way, all of the dependencies including the libraries that \texttt{RCaller} imports are downloaded and packaged with the host application.  
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=XML,
+  basicstyle=\ttfamily,
+  frame=single,
+  morekeywords={version,dependency,groupId,artifactId,classifier,c}
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Maven dependency code, label=code:maven_dependency]
+<dependency>
+  <groupId>com.github.jbytecode</groupId>
+  <artifactId>RCaller</artifactId>
+  <version>3.0</version>
+  <classifier>jar-with-dependencies</classifier>
+</dependency>
+\end{lstlisting}
+\end{minipage}
+
+In projects that are not defined as \texttt{Maven} structures, precompiled binaries can be downloaded from the project page\footnote{$^1$\url{https://github.com/jbytecode/rcaller/releases}}$^1$ and added to the \texttt{classpath} manually. 
+
+\section{RCaller Basics}
+\label{sec:rcaller_basics}
+
+\texttt{RCaller} basically wraps all of the details and performs type conversions between the platforms. \texttt{RCaller} serves three different ways of calling \texttt{R} from \texttt{Java}. In the first case, the data is transferred, a vector of results is calculated, and the result is handled in \texttt{Java}. In the background, an external process for \texttt{Rscript} executable is created which is located in the \texttt{bin} directory of \texttt{R} installation in \texttt{Windows} systems and \texttt{/usr/bin/Rscript} in \texttt{Linux} systems. This way of calling \texttt{R} is useful in the situtations that fit the one-time \texttt{send-calculate-return} pattern.
+
+In the second way, an external \texttt{R} process is created and the process is kept alive on the memory. Commands, function calls, and data are sent to \texttt{R}, the results are sent back to \texttt{Java}, and the created process is kept alive for the later computations. This way of calling \texttt{R} is convenient for the situtations that fit the loop of \texttt{send-calculate-return} pattern and interactive computation is required. 
+
+In the third way, the process of calling \texttt{R} from \texttt{Java} is more abstract and wrapped by the scripting API which is defined by \emph{JSR 223: Scripting for the Java\texttrademark Platform} \cite{Friesen2007}. Scripting API serves a standard way for integrating a scripting language such as \texttt{javascript} with \emph{Java} in which the function calls and the data transfers are masked. This feature is presented in version $3.0$ and introduced in great detail in Section \ref{sec:javax_script_interface}.
+
+Most of the main classes of \texttt{RCaller} are located in the package \texttt{com.github.rcaller.rstuff}.
+The class \texttt{RCaller} includes methods for creating external processes and transferring data while \texttt{RCode} includes methods for converting data types and creating \texttt{R} code. Now suppose that the mean of a double vector containing values $1.0$, $2.0$, and $3.0$ is calculated throughout \texttt{RCaller}. A simple call is given in Listing \ref{code_simple_call}. 
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Simple call,label=code_simple_call]
+RCaller caller = RCaller.create();
+RCode code = RCode.create();
+        
+double[] arr = new double[]{1.0, 2.0, 3.0};
+code.addDoubleArray("myarr", arr);
+        
+code.addRCode("avg <- mean(myarr)");
+caller.setRCode(code);
+        
+caller.runAndReturnResult("avg");
+        
+double[] result = caller.getParser().getAsDoubleArray("avg");
+System.out.println(result[0]);
+\end{lstlisting}
+\end{minipage}
+
+In Listing \ref{code_simple_call}, the mean of an vector is calculated on \texttt{R} side. In line 1 and line 2, instances of \texttt{RCaller} and \texttt{RCode} are created using the corresponding factory methods. In line 4, a double array is created and stored within the variable name \texttt{arr}. In line 5, the \texttt{Java} variable \texttt{arr} is converted to an \texttt{R} vector and its name is set to \texttt{myarr}. In line 7, a literal \texttt{R} code is added for calculating the mean. The code from line 10 performs the most time consuming jobs, which are: an \texttt{Rscript} process is created, the generated \texttt{R} code is sent, the calculations are performed, and the results are sent back in \texttt{XML} format. In line 12, the generated context is handled as a double array. Since the result contains a single value, length of the array is 1. Finally, the result is printed as $2.0$. 
+
+
+\section{Transferring Data}
+\label{sec:transferring_data}
+\texttt{RCaller} simplifies transferring data between \texttt{Java} and \texttt{R} plotforms. Data sent from the \texttt{Java} side is encoded into the \texttt{R} code and the calculations are performed on the \texttt{R} side. Whenever a result is requested in \texttt{Java}, the result is converted into a valid \texttt{XML} code and then parsed on the \texttt{Java} side. \texttt{RCaller} performs data transformations between platforms using the \texttt{RCode} class. The class \texttt{RCode} provides the following methods for transferring scaler types from \texttt{Java} to \texttt{R}:
+
+\begin{itemize}
+\item addLogical (String, boolean)
+\item addDouble (String, double)
+\item addFloat (String, float)
+\item addInt (String, int)
+\item addLong (String, long)
+\item addShort (String, short)
+\item addString (String, String)
+\end{itemize}
+
+\noindent where the arguments for variable names in type of \texttt{String} and values in corresponding type. Listing \ref{code_java_pass_data} shows an example of passing different types of data to \texttt{R} and getting back the results in \texttt{Java}.
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Passing Data,label=code_java_pass_data]
+RCode code = RCode.create();
+RCaller caller = RCaller.create();
+        
+code.addBoolean("a", true);
+code.addDouble("e", Math.exp(1.0));
+code.addInt("i", 1);
+        
+code.addRCode("d <- a + e + i");
+caller.setRCode(code);
+       
+caller.runAndReturnResult("d");
+        
+double[] result = caller.getParser().getAsDoubleArray("d");
+System.out.println(result[0]);
+\end{lstlisting}
+\end{minipage}
+
+
+\subsection{Vectors and Matrices}
+\label{sec:vectors_and_matrices}
+
+Besides the scalar types, the class \texttt{RCode} also provides some utility functions for converting \texttt{Java} array types to \texttt{R} code. As the methods listed in Section \ref{sec:transferring_data}, array-passing function names follow the pattern \texttt{addXXXArray(name, value)} as follows:
+
+\begin{itemize}
+\item addLogicalArray (String, boolean[])
+\item addDoubleArray (String, double[])
+\item addFloatArray (String, float[])
+\item addIntArray (String, int[])
+\item addLongArray (String, long[])
+\item addShortArray (String, short[])
+\item addStringArray (String, String[])
+\end{itemize}
+
+In addition to array-passing functions, the function \texttt{addDoubleMatrix} can be used for transferring matrices from \texttt{Java} to \texttt{R}. In \texttt{RCaller 3.0}, process of transferring matrices is performed in a more efficient way compared with the previous version as shown in Section \ref{sec:performance_improvements} \cite{satman2014rcaller}. Listing \ref{code_java_svd} shows an example for performing \emph{Singular Value Decomposition} \emph{(SVD)} on a matrix defined in \texttt{Java}. The matrix is transferred from \texttt{Java} to \texttt{R}, the \emph{svd} function is called with the given matrix as argument and the result is handled back on the \texttt{Java} side. Since two matrices \texttt{u} and \texttt{v} are produced after a \texttt{svd} call, the \texttt{getAsDoubleMatrix()} method is called twice and the result is handled in \texttt{Java} in type of \texttt{double[][]}.
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Transferring Matrices,label=code_java_svd]
+RCaller caller = RCaller.create();
+RCode code = RCode.create();
+
+double[][] d = new double[][]{{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+code.addDoubleMatrix("d", d);
+code.addRCode("result <- svd(d)");
+
+caller.setRCode(code);
+caller.runAndReturnResult("result");
+
+double[][] u = caller.getParser().getAsDoubleMatrix("u");
+double[][] v = caller.getParser().getAsDoubleMatrix("v");
+\end{lstlisting}
+\end{minipage}
+
+
+\subsection{Data Frames}
+\label{sec:data_frames}
+\texttt{Data Frames} are mostly used in \texttt{R} for data representation and $3.0$ version of \texttt{RCaller} has a minimum support for the \texttt{data.frame} object. A \texttt{DataFrame} object in \texttt{RCaller} contains a matrix of objects in type of \texttt{Object[][]} and an array of strings for names. The length of the string array must be equal to the number of columns of the objects matrix. There are two methods implemented for creating a data frame in \texttt{RCaller}. In Listing \ref{code_dataframe_way1} the factory method \texttt{create} takes two arguments for the dimension of data and returns an empty \texttt{DataFrame} object with default names. 
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Default DataFrame Creator,label=code_dataframe_way1]
+public static DataFrame create(int n, int m) {
+    return new DataFrame(
+    DataFrameUtil.createEmptyObjectsMatrix(n,m), 
+    DataFrameUtil.createDefaultNamesArray(n)
+    );
+}
+\end{lstlisting}
+\end{minipage}
+
+Since only the dimension is given, the data matrix is filled with \texttt{null} values and the names are set to the default strings \texttt{var0}, \texttt{var1}, \texttt{...}, and \texttt{varn-1} where \texttt{n} is the number of columns. In Listing \ref{code_dataframe_way2}, a static method for creating a \texttt{DataFrame} object is shown. If the number of columns and the length of the string array are not equal, an \texttt{IllegalArgumentException} will be thrown, otherwise a \texttt{DataFrame} object containing the passed parameters is created and returned.
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Custom DataFrame Creator, label=code_dataframe_way2]
+public static DataFrame create(Object[][] objects, String[] names) {
+    if (objects.length != names.length) {
+        throw  new IllegalArgumentException("...");
+    }
+
+    return new DataFrame(objects, names);
+}
+\end{lstlisting}
+\end{minipage}
+
+Using the factory method a \texttt{DataFrame} object can be created and sent from \texttt{Java} to \texttt{R} using the \texttt{addDataFrame} method declared in the class \texttt{RCode}. 
+
+In order to obtain the best performance and avoid any data loss, \texttt{RCaller} exports the data contained in the \texttt{DataFrame} object as a \texttt{csv} file. The path of the file will be transfered to \texttt{R} and it will be imported using the function \texttt{read.csv} on the \texttt{R} side. 
+Since a data conversation process is not performed, \texttt{DataFrames} objects are transferred in an efficient way. 
+Note that the current version of \texttt{RCaller} supports only the one-way transferring of \texttt{DataFrame} objects and retrieving a \texttt{data.frame} from \texttt{R} to \texttt{Java} will be implemented in further revisions. 
+
+
+\subsection{Plain Java Objects}
+\label{sec:passing_pojos}
+A \texttt{Java} object can be passed to \texttt{R} and calculations can be performed on the fields that are declared using \texttt{public} keyword on the \texttt{R} side. Any \texttt{Java} object can be passed as an \texttt{R} \texttt{List} object with elements corresponding to the public fields of the \texttt{Java} object. In Listing \ref{code_java_simple_object}, a \texttt{Java} class is declared with three public fields. 
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=A Plain Java Object Class,label=code_java_simple_object]
+public class PlainJavaObject {
+    public double[] d = new double[]{1.0, 2.0, 3.0};
+    public int[] i = new int[]{1, 2, 3};
+    public String s = "Test String";
+}
+\end{lstlisting}
+\end{minipage}
+
+The class \texttt{RCode} defines the method \texttt{addJavaObject} which takes only one argument in type of \texttt{com.github.rcaller.JavaObject}. The constructor of the \texttt{JavaObject} class takes two arguments that define the name of object and the object itself. The object then will be converted to an \texttt{R} \texttt{List} with the given name. In Listing \ref{code_java_pass_object}, an instance of the \texttt{PlainJavaObject} is passed from \texttt{Java} to \texttt{R}. The declared fields \texttt{d}, \texttt{i}, and \texttt{s} are accessable in \texttt{R} using the \texttt{\$} operator like \texttt{myobject\$d}, \texttt{myobject\$i}, and \texttt{myobject\$s}, respectively.
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Passing Java Objects,label=code_java_pass_object]
+RCaller caller = RCaller.create();
+RCode code = RCode.create();
+
+code.addJavaObject(new JavaObject("myobject", new PlainJavaObject()));
+code.addRCode("myobject$d <- c(9,8,7)");
+
+caller.setRCode(code);
+caller.runAndReturnResult("myobject");
+
+System.out.println(caller.getParser().getNames());
+\end{lstlisting}
+\end{minipage}
+
+The output is \texttt{[d, i, s]}. Since the element \texttt{d} of \texttt{List} \texttt{myobject} is altered, it will be returned as \texttt{[9.0, 8.0, 7.0]}, rather than \texttt{[1.0, 2.0, 3.0]}.
+
+
+\section{Single R Process for Multiple Calculations}
+\label{sec:single_R_Process_for_multiple_calculations}
+The method \texttt{runAndReturnResult} that is mentioned in previous sections creates an external process for the \texttt{Rscript} executable, transfers data to \texttt{R}, performs calculations, and gets back the results in \texttt{Java}. Each time the method \texttt{runAndReturnResult} is called, a new operating system level process is created. However, this way of calling \texttt{R} is not much efficient. The method \texttt{runAndResultOnline} creates an external process for \texttt{R} executable and keeps it alive during the calculations. After handling the results on the \texttt{Java} side, the process is kept alive and waits for the next calculations. During the calculations in a session, variables and data objects are shared between the sequent calls. Since the executable file is activated once, the elapsed time during the calculations includes the time consumed by transferring data and the time consumed by \texttt{R}. As a result of this, only the first call consumes much time, due to the creation of the external process. The rest of the calls are performed efficiently. The code shown in Listing \ref{code_java_online} is an example of online calling of \texttt{R} using a single process.
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=RCaller Online,label=code_java_online]
+RCaller caller = RCaller.create();
+RCode code = RCode.create();
+caller.setRCode(code);
+
+code.addDoubleArray("d", new double[]{1.0, 2.0, 3.0});
+code.addRCode("mymean <- mean(d)");
+caller.runAndReturnResultOnline("mymean");
+System.out.println(
+   caller.getParser().getAsDoubleArray("mymean")[0]
+);
+
+code.clearOnline();
+code.addRCode("myvar <- var(d)");
+caller.runAndReturnResultOnline("myvar");
+System.out.println(
+   caller.getParser().getAsDoubleArray("myvar")[0]
+);
+
+code.clearOnline();
+code.addRCode("mymed <- median(d)");
+caller.runAndReturnResultOnline("mymed");
+System.out.println(
+   caller.getParser().getAsDoubleArray("mymed")[0]
+);
+
+caller.StopRCallerOnline();
+\end{lstlisting}
+\end{minipage}
+
+In Listing \ref{code_java_online}, an array in type of \texttt{double[]} is sent to \texttt{R}. Using the same external process, the mean, the variance and the median of variable \texttt{d} are calculated and sent to \texttt{Java} sequentially. Since the process is kept alive during the calculations, it is terminated by calling the function \texttt{StopRCallerOnline} of object \texttt{caller} in type of \texttt{RCaller}.
+
+\section{Features in Version 3.0}
+\label{sec:features_in_version_3}
+
+\subsection{Java Scripting Interface for RCaller}
+\label{sec:javax_script_interface}
+\emph{Java Scripting API} provides a standard interface for wrapping all of the details of the function calls and the object transfers between the \texttt{Java} language and other scripting languages which are possibly implemented in \texttt{Java} or compiled to binary and used throught \texttt{JNI}. 
+
+Listing \ref{code_java_script} demonstrates a simple example of calling \texttt{JavaScript} in \texttt{Java}. In this example, an instance of \texttt{ScriptEngineManager} class is created. The \texttt{getEngineByName} method returns a \texttt{ScriptEngine} object for a given language name. The \texttt{engine} object mainly implements three methods for sending objects, retrieving objects, and evaluating foreign language codes. The argument passed to \texttt{eval} method is native to the called language. 
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Calling JavaScript,label=code_java_script]
+ScriptEngineManager manager = new ScriptEngineManager();
+ScriptEngine engine = manager.getEngineByName("JavaScript");
+        
+engine.eval("var a = 3;");
+engine.put("b", 7.0);
+engine.eval("var c = a + b;");
+        
+System.out.println(engine.get("c"));
+\end{lstlisting}
+\end{minipage}
+
+The code shown in Listing \ref{code_r_script} presents a simple example for interfacing \texttt{R} in \texttt{Java} throughout \emph{Java Scripting Interface}. An instance of \texttt{ScriptEngine} is created by calling the \texttt{getEngineByName} method with argument \texttt{RCaller}. The code passed to \texttt{eval} method hosts native \texttt{R} code for creating the variable \texttt{a} in line 4. In line 5, the value of $7.0$ in \texttt{Java} is sent to \texttt{R} and saved as variable \texttt{b}. In line 6, sum of \texttt{a} and  \texttt{b} is assigned to the variable \texttt{mysum}. Finally, by using the \texttt{get} method, the calculated value of \texttt{mysum} variable is retrieved on the \texttt{Java} side. Differently, \texttt{mysum} is in type of \texttt{vector} rather than \texttt{scaler}, the object \texttt{result} in \texttt{Java} is in type of \texttt{double[]}. Since length of the vector is unit, the retrieved result is handled using \texttt{result[0]}.
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Calling R,label=code_r_script]
+ScriptEngineManager manager = new ScriptEngineManager();
+ScriptEngine engine = manager.getEngineByName("RCaller");
+        
+engine.eval("a <- 3");
+engine.put("b", 7.0);
+engine.eval("mysum <- a + b");
+        
+double[] result = (double[])engine.get("mysum");
+System.out.println(result[0]);
+        
+((RCallerScriptEngine)engine).close();
+\end{lstlisting}
+\end{minipage}
+
+Listing \ref{code_r_script_array} demonstrates an other simple example of sending an array from \texttt{Java} to \texttt{R}, performing a sorting operation on the \texttt{R} side, and retrieving the sorted array from \texttt{R} to \texttt{Java}. The \texttt{Java} array \texttt{a} is of type \texttt{double[]} and it is sent using the method \texttt{put()}. Since the code \texttt{b <- sort(a)} is native to \texttt{R}, it is evaluated using the \texttt{eval()} method. Finally, the sorted array \texttt{b} is retrieved using the method \texttt{get()}. These three methods are defined in the scripting API and the behaivour is in the same way of calling other scripting languages in \texttt{Java}. 
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Passing Java Arrays,label=code_r_script_array]
+double[] a = new double[]{19.0, 17.0, 23.0};
+engine.put("a", a);
+engine.eval("b <- sort(a)");        
+double[] result = (double[]) engine.get("b");
+\end{lstlisting}
+\end{minipage}
+
+Function calls can be performed using the \texttt{eval()} method as shown in the previous examples. In addition to this way, the \texttt{Java Scripting API} provides the \texttt{Invocable} interface that hosts some functions for calling external functions in \texttt{Java}. The \texttt{invokeFunction} function defined in \texttt{Invocable} interface takes variable number of arguments in which the first one is function name and the others are function arguments that will then passed to the function. Listing \ref{code_invoke_runif} demonstrates calling \texttt{runif} function which is defined in \texttt{R} with parameters \texttt{n}, \texttt{min}, and \texttt{max} for expressing the number of generated random numbers, lower bound of the random numbers, and upper bound of the random numbers, respectively. Since the function arguments can be passed to functions with their names, the arguments in \texttt{invokeFunction} are specified with \texttt{Named()} function in which the argument names and their values are defined. In the example, $5$ random numbers are drawn using the Uniform(0,100) distribution. The result calculated in \texttt{R} and retrieved in \texttt{Java} is of type \texttt{ArrayList<NamedArgument>}, because the output is supposed to be vector or a list in which the array of results are possibly stored with their names. Each result in the array has properties of \texttt{Obj} and \texttt{Name}. The values are handled with the \texttt{getObj()} method whereas the names are handled using the \texttt{getName()} method.
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Invoking runif,label=code_invoke_runif]
+Invocable invocable = (Invocable) engine;
+Object result = invocable.invokeFunction(
+                  "runif",
+                  Named("n", 5),
+                  Named("min", 0),
+                  Named("max", 100)
+                );
+ArrayList<NamedArgument> allresults = 
+                   (ArrayList<NamedArgument>) result;
+
+double[] dresult = (double[]) allresults.get(0).getObj();
+\end{lstlisting}
+\end{minipage}
+
+The example given in Listing \ref{code_invoke_sqrt} is similar with the one given in Listing \ref{code_invoke_runif}. The \texttt{sqrt} function defined in \texttt{R} takes the argument \texttt{x} and returns the square root of \texttt{x}. The function call can be performed using \texttt{sqrt(x = 5.0)} as well as using \texttt{sqrt(5.0)}. If the orders of arguments are not important, the \texttt{Named} function can be used without argument names. In Listing \ref{code_invoke_sqrt}, the \texttt{sqrt} is called with value of $25.0$ without an argument name. Since the function returns a scaler rather than an array, it is stored in the first element of the return list and handled by object \texttt{dresult[0]}. Note that the \texttt{invokeFunction} method can call any \texttt{R} function including the user-defined functions. Listing \ref{code_invoke_userfunction} shows an example of calling a user-defined \texttt{R} function which is defined on the \texttt{Java} side. Function \texttt{f} takes only one argument \texttt{a} and returns the power of $2$.
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Invoking sqrt,label=code_invoke_sqrt]
+Invocable invocable = (Invocable) engine;
+ArrayList<NamedArgument> allresults = 
+      (ArrayList<NamedArgument>) invocable.invokeFunction(
+                                   "sqrt", 
+                                   Named("", 25.0)
+                                 );
+                                 
+double[] dresult = (double[]) allresults.get(0).getObj();
+\end{lstlisting}
+\end{minipage}
+        
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  showstringspaces=false,
+  backgroundcolor=\color{color_code_back_gray} 
+}
+\begin{lstlisting}[caption=Invoking user-defined functions,label=code_invoke_userfunction]
+Invocable invocable = (Invocable) engine;
+double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
+        
+engine.eval("f <- function(a){return(a^2)}");
+
+ArrayList<NamedArgument> allresults = 
+           (ArrayList<NamedArgument>) invocable.invokeFunction(
+                                        "f", 
+                                        Named("a", x)
+                                      );
+                                      
+double[] dresult = (double[]) allresults.get(0).getObj();        
+\end{lstlisting}
+\end{minipage}
+        
+        
+\subsection{R Start-up Options}
+\label{sec:r_startup_options}
+Since the \texttt{R} executable can be run with several arguments which can be set in the command prompt, \texttt{RCaller} can create an external process of \texttt{R} by setting these variables in version $3.0$. By default, \texttt{RCaller} starts an \texttt{R} process with the option \texttt{--vanilla}. By using this option, the process is not started with an existing enviroment, the variable pool is not saved and the process does not read the \texttt{RProfile.site}. Shortly, in each creation of the external process, a \textit{clean} environment is started without a history. The \texttt{--vanilla} option of processes is the default one in the current version of \texttt{RCaller} for performance issues. However, starting a clean process is not always the best option, because the sources obtained in the previous sessions would be usable in the current one.
+
+For a performance improvement, some implemented methods can be stored in \texttt{RProfile.site} and possibly be compiled into the \texttt{bytecode} using \texttt{cmpfun} from package \texttt{compiler} \cite{lim2015r,tierney2001compiling}. But in order to use the methods that are exported in this file, \texttt{RCaller} should not be started with the default option \texttt{--vanilla} or the option \texttt{--no-site-file}. 
+
+The static method \texttt{RProcessStartUpOptions} is encapsulated in the \texttt{RCallerOptions} class and it is called with default values in instantiation of a new \texttt{RCaller} object. Creating a \texttt{RStartUpOtions} object can be performed by either with the default values of arguments or with the user-defined values. Listing \ref{code_options_way1} shows the factory method for creating an \texttt{RPocessStartUpOptions} object with default arguments and the argument for the option \texttt{--vanilla} is set to \texttt{true}. 
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Default RProcessStartUpOptions Creator,label=code_options_way1]
+ public static RProcessStartUpOptions create() {
+        return new RProcessStartUpOptions(
+            false, false, false, false, false,
+            false, false, false, false, true, false, false,
+            false, false, false, false, null, null,
+            null, null, null, null, null, null, null);
+    }
+}
+\end{lstlisting}
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Custom RProcessStartUpOptions Creator,label=code_options_way2]
+public static RProcessStartUpOptions create(
+      boolean save, boolean noSave, boolean noEnviron,
+      boolean noSiteFile, boolean noInitFile, boolean restore,
+      boolean noRestoreData, boolean noRestoreHistory,
+      boolean noRestore, boolean vanilla, boolean noReadLine,
+      boolean quiet, boolean silent, boolean slave,
+      boolean interactive, boolean verbose,
+      Integer maxPPSize, Integer minNSize, Integer minVSize,
+      String debugger, String debuggerArgs, String gui,
+      String arch, String args, String file) {
+            
+        return new RProcessStartUpOptions(
+               save, noSave, noEnviron, noSiteFile, noInitFile, 
+               restore, noRestoreData, noRestoreHistory, noRestore, 
+               vanilla, noReadLine, quiet, silent, slave, interactive, 
+               verbose, maxPPSize, minNSize, minVSize, debugger, 
+               debuggerArgs, gui, arch, args, file);
+    }
+}
+\end{lstlisting}
+\end{minipage}
+
+Listing \ref{code_options_way2} shows the factory method \texttt{create} for creating a configuration for starting up options. Invoking the \texttt{create} method with the arguments that are given in Listing \ref{code_options_example} produces the option string that is passed to external \texttt{R} process as in shown in Listing \ref{code_options_gen}.
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[caption=Custom RProcessStartUpOptions Creator,label=code_options_example]
+RProcessStartUpOptions rProcessStartUpOptions = 
+	RProcessStartUpOptions.create(
+              true, false, false, false, true, true, 
+              false, false, false, false, false, true, 
+              true, true, false, false, null, null, 10, 
+              null, null, "test", null, null, null
+    );
+\end{lstlisting}
+\end{minipage}
+
+%\keys{\return}
+
+\begin{minipage}{\linewidth}
+\lstset{
+  language=Java,
+  showstringspaces=false,
+  numbers=left,
+  frame=single,
+  numbers=left,                    
+  numbersep=5pt,                   
+  numberstyle=\tiny\color{color_black},
+  numberfirstline=true,
+  backgroundcolor=\color{color_code_back_gray}
+}
+\begin{lstlisting}[escapeinside={<@}{@>},caption=Generated Options,label=code_options_gen]
+--save --no-init-file --restore --quiet --silent <@\keys{\return}@>
+--slave --min-vsize=10 --gui=test
+\end{lstlisting}
+\end{minipage}
+
+\section{Performance Issues}
+\label{sec:performance_issues}
+
+\subsection{Performance Improvements}
+\label{sec:performance_improvements}
+
+A simulation study is reported in the recent work \cite{satman2014rcaller} to reveal the performance of \texttt{RCaller} for comparative aims. In the original simulation study, a randomly created \texttt{double} vector of size $1000$ is created on the \texttt{Java} side and sent to \texttt{R} to calculate a new  \texttt{double} vector which is squared of the original. Finally the squared vector is retrieved on the \texttt{Java} side. We replicate the same simulation with the version $3.0$ and the results of the previous simulations and new ones in milliseconds are shown in Table \ref{tbl:performance_improvements}$^1$\footnote{$^1$The simulations are performed on the same computer with same configuration but new versions of \texttt{R} and \texttt{Linux} are installed.}. 
+
+\begin{table}[H]
+\begin{center}
+\caption{Performance improvements in RCaller 3.0}
+\label{tbl:performance_improvements}
+\begin{tabular}{|c|cc ||cc|}
+\hline
+          & \multicolumn{2}{c||}{RCaller 2.2}  &\multicolumn{2}{c|}{RCaller 3.0} \\
+\hline
+Statistic & RCaller & RCallerOnline & RCaller & RCallerOnline \\
+\hline
+min       & 557     & 257           & 247     & 103    \\
+mean      & 569     & 266.96        & 255.70  & 111.52 \\
+median    & 565     & 263           & 255     & 111    \\
+max       & 643     & 296           & 518     & 366    \\
+\hline
+std.dev.  & 14.92   & 9.63          & 10.31   & 9.68   \\
+mad       & 4.45    & 5.93          & 2.96    & 2.96   \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+In Table \ref{tbl:performance_improvements}, it is shown that the new version is more than two times faster
+than the older version in average. Standard deviations are also reduced, that is, the new version differs less between calculations. It is also shown in Table \ref{tbl:performance_improvements} that median absolute deviations (\emph{mad}) are reduced, but the reduction on \emph{mad} values are larger than the reduction on standard deviations. The main reason of this situation is that the first attempt of creating \texttt{RCallerOnline} is more time consuming and the sequent calls are faster. The simulation results without the initialization process are reported in Table \ref{tbl:performance_improvements_without_init}. 
+Since the median and mad statistics are more robust when they are compared to summation based counterparts, they stay the same. As a result of this, median and mad are more useful for comparing the performances of versions. It is shown in Table \ref{tbl:performance_improvements} and Table \ref{tbl:performance_improvements_without_init} that the volatility of elapsed computation time as well as the computation time itself are reduced in the version $3.0$. 
+
+\begin{table}[H]
+\begin{center}
+\caption{Performance improvements without initialization}
+\label{tbl:performance_improvements_without_init}
+\begin{tabular}{|c|cc|}
+
+\hline
+Statistic & RCaller & RCallerOnline \\
+\hline
+min       &   247     &  103           \\
+mean      &   255.43  &  111.26         \\
+median    &   255     &  111             \\
+max       &   380     &  179            \\
+\hline
+std.dev.  &   6.11   &  5.37            \\
+mad       &   2.96   &  2.96             \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+
+
+
+\subsection{Time Consumed on Transferring Matrices}
+\label{sec:time_consumed_transfer_matrix}
+Since data are transferred as text and \texttt{XML} formats, \texttt{RCaller} consumes more time than a method that transfers the data in binary. We perform a simulation study to reveal the time performance of \texttt{RCaller} on sending a matrix from \texttt{Java} to \texttt{R}, performing a small operation on this matrix on the \texttt{R} side, and finally retrieve the matrix from \texttt{R} to \texttt{Java}. Specifically, we create a matrix with dimensions of $n \times n$ in \texttt{Java}, we send it and calculate the transpose of the matrix, and retrieve the result in \texttt{Java} where $n = 2, 3, ..., 150$. Since calculating a transpose of a matrix is not a time consuming operation, transferring square matrices are prominent by means of both sending and receiving the data. The results of the simulation is shown in Figure \ref{fig:time_consuming_transfer_matrix}. 
+
+\begin{figure}
+\centering
+	\includegraphics[scale=0.7]{MatrixSendReceive.pdf}
+	\caption{Time consuming by transferring matrices in milliseconds}
+	\label{fig:time_consuming_transfer_matrix}
+\end{figure}
+
+
+In Figure \ref{fig:time_consuming_transfer_matrix}, it is shown that the time consumed by transferring data between two platforms increases as the dimension of the square matrix increases. Increase of the consumed time is upward-concave, that is, increase of the computation time also increases as the dimension gets larger and larger. In Listing \ref{code_fitted_curve_matrices}, it is shown that data fits the model
+
+\begin{equation}
+t = \beta_0 + \beta_1 n +  \beta_2 n^2 + \epsilon
+\end{equation}
+
+\noindent well. Since parameters are significant, we can conclude that the time curve is upward-concave. 
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting}[language=R,frame=single,caption=Fitted Curve,label=code_fitted_curve_matrices]
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)   127.984946  14.646752   8.738 5.12e-15 ***
+n              -7.127311   0.444450 -16.036  < 2e-16 ***
+n^2             0.192632   0.002835  67.956  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 
+
+Residual standard error: 57.25 on 146 degrees of freedom
+Multiple R-squared:  0.9968,	Adjusted R-squared:  0.9968 
+F-statistic: 2.295e+04 on 2 and 146 DF,  p-value: < 2.2e-16
+\end{lstlisting}
+\end{minipage}
+
+The estimated regression equation can be written using the results given in Listing \ref{code_fitted_curve_matrices} as
+
+\begin{equation}
+\hat{t} = 127.984946 - 7.127311n + 0.192632n^2
+\end{equation}
+
+\noindent and the derivative $\frac{d \hat{t}}{dn}$ 
+
+\begin{equation}
+\frac{d \hat{t}}{dn} = - 7.127311 + 0.385264n
+\end{equation}
+
+\noindent can be obtained. Using these estimates, it can be concluded that increasing the matrix dimensions from $100 \times 100$ to $101 \times 101$ increases the consumed time by $31.39909$ milliseconds, approximately. Similarly, increasing the dimensions from $150 \times 150$ to $151 \times 151$ increases the computation time by $50.66229$ milliseconds, approximately. However, both of the operations take $290$ms for a $50 \times 50$ matrix and $1279$ms for a $100 \times 100$ matrix. Consequently, the method can be used for small and moderate size matrices. If the operation takes more time on the \texttt{R} side, in other terms, the time consumed by the operation is larger than the time consumed by the transferring data, the method can be useful in the data of larger sizes. 
+
+%{ \includegraphics[scale=0.6]{Table1.png} }
+%{ \includegraphics[scale=0.6]{Table2.png} }
+%{ \includegraphics[scale=0.6]{Fig1.png} }
+
+
+
+\section{CONCLUSIONS}
+\label{sec:conclusion}
+\texttt{RCaller} is a simple to use \texttt{Java} library for \texttt{Java} and \texttt{R} interoperability.
+Basically, \texttt{RCaller} is based on creating an external process of executable file \texttt{Rscript.exe}. The \texttt{R} code and the data created in \texttt{Java} are converted to \texttt{R} code and sent to \texttt{R} throughout streams, computations are performed in \texttt{R}, and finally the result is sent back to \texttt{Java} in \texttt{XML} file format. Besides creating an external process for each calculation, \texttt{RCaller} provides an \texttt{online} method for performing more than one operations sequentially using a single \texttt{R} process which is kept alive along the application lifetime. This use of \texttt{RCaller} is more efficient than the \texttt{RScript.exe} based one as shown in the simulation study of the previous study. In this paper, the simulation study is replicated for the version \texttt{3.0} and the results of the simulation study show that the performance is improved $100\%$ by means of time efficiency. The new version also implements the \texttt{scripting} \texttt{API} in \texttt{Java} and the process of calling \texttt{R} is more like calling a scripting language such as \texttt{javascript} in \texttt{Java}. By using this \texttt{API}, calling \texttt{R} from \texttt{Java} is oversimplified using four basic methods \texttt{get}, \texttt{eval}, \texttt{put}, and \texttt{invokeFunction}. 
+
+We also perform a stress test for measuring the time consumed by matrix operations and the results of this test show that the increasing the dimension of a squared matrix from $150 \times 150$ to $151 \times 151$ increases the computation time $50$ milliseconds, whereas, increasing the dimension of a squared matrix from $200 \times 200$ to $201 \times 201$ increases the computation time $70$ milliseconds, approximately. Since only the transpose of a matrix is calculated on the \texttt{R} side, the time consumed by sending and receiving matrices are prominent. 
+
+Time improvements, new features implemented and being easy to use, make \texttt{RCaller} an elegant option in \texttt{jvm} based projects which need statistical calculations in the background. \texttt{RCaller} hides the details of interactions of two seperate platforms and the users are more able to focus on the development as they are performing all of the calculations on the \texttt{Java} side only.
+
+
+
+%\begin{description}
+%Description
+%\end{description}
+
+
+
+%\noindent \Large\textbf{Acknowledgment}\\[2mm] 
+%
+%\footnotesize A brief acknowledgement section may be given after the conclusion section just before the %references. The acknowledgments of people who provided assistance in manuscript preparation, funding for %research, etc. should be listed in this section.\\[3mm]
+
+
+\bibliographystyle{plain}
+\bibliography{rcaller3}
+
+
+\newpage
+\section*{Acknowledgement}
+\addcontentsline{toc}{section}{Acknowledgement}
+Please cite \texttt{RCaller} using the \emph{Bibtex} entry: \\
+
+\begin{minipage}{\linewidth}
+\begin{verbatim}
+@article{satman2014rcaller,
+  title={RCaller: A software library for calling R from Java},
+  author={Satman, M Hakan},
+  journal={British Journal of Mathematics \& Computer Science},
+  volume={4},
+  number={15},
+  pages={2188},
+  year={2014},
+  publisher={SCIENCEDOMAIN International}
+}
+\end{verbatim}
+\end{minipage}
+
+\noindent \\ for \LaTeX,  \\
+
+\begin{minipage}{\linewidth}
+\begin{verbatim}
+Satman, M. Hakan. "RCaller: A software library for calling R from Java." 
+British Journal of Mathematics & Computer Science 4.15 (2014): 2188.
+\end{verbatim}
+\end{minipage}
+
+\noindent \\ for other text editors.
+
+%\begin{thebibliography}{}
+%\end{thebibliography}
+
+\scriptsize\-----------------------------------------------------------------------------------------------------------------------------------------\\\copyright \it 2016  Mehmet Hakan Satman \& Paul Curcean; This is an Open Access article distributed under the terms of the Creative Commons Attribution License
+\href{http://creativecommons.org/licenses/by/2.0}{http://creativecommons.org/licenses/by/2.0},  which permits unrestricted use, distribution, and reproduction in any medium,
+provided the original work is properly cited.
+
+
+\end{document}
+
