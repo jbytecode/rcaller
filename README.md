@@ -21,6 +21,8 @@ suitable for the projects which have many clients that request relatively single
 
 [Official publication](http://www.sciencedomain.org/download.php?f=Satman4152014BJMCS10902_1.pdf&aid=4838&type=a)
 
+[RCaller3 Documentation](https://github.com/jbytecode/rcaller/blob/master/doc/rcaller3/rcaller3.pdf)
+
 # Usage
 
 It is recommended to take a look at the existing [tests](https://github.com/jbytecode/rcaller/tree/master/RCaller/src/test/java/org/expr/rcaller)
