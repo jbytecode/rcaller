@@ -66,7 +66,11 @@ makexml<-function(obj,name=""){
   }else{
     objnames<-names(obj)
     for (i in 1:length(obj)){
-      xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(objnames[[i]]))
+      name <- objnames[[i]]
+      if (is.null(name)) {
+        name <- paste(typeof(obj[[i]]), "-", i, sep='')
+      }
+      xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(name))
     }
   }
   xmlcode<-paste(xmlcode,"</root>\n",sep="")
