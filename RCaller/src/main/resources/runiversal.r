@@ -1,22 +1,14 @@
 cleanNames<-function(names){
-  cln<-paste(unlist(strsplit(names,"\\.")),collapse="_")
-  cln<-paste(unlist(strsplit(cln,"<")),collapse="")
-  cln<-paste(unlist(strsplit(cln,">")),collapse="")
-  cln<-paste(unlist(strsplit(cln," ")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\(")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\)")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\[")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\]")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\*")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"&")),collapse="")
+  cln<-gsub("|<|>| |\\(|\\)|\\[|\\]|\\*|\\&", "", names)
+  cln<-gsub("\\.","_",cln)
   return(cln)
 }
 
 replaceXMLchars <- function(aStr){
-  cln <-paste(unlist(strsplit(aStr,"&")),collapse="&amp;")
-  cln <-paste(unlist(strsplit(cln,"<")),collapse="&lt;")
-  cln <-paste(unlist(strsplit(cln,">")),collapse="&gt;")
-  cln <-paste(unlist(strsplit(cln,"'")),collapse="&#39;")
+  cln<-gsub("\\&", "&amp;", aStr)
+  cln<-gsub("<", "&lt;", cln);
+  cln<-gsub(">", "&gt;", cln);
+  cln<-gsub("'", "&#39;", cln);
   return(cln)	
 }
 
@@ -31,9 +23,11 @@ makevectorxml<-function(code,objt,name=""){
   n <- 0; m <- 0
   mydim <- dim(obj)
   if(!is.null(mydim)){
-    n <- mydim[1]; m <- mydim[2]
+    n <- mydim[1]
+    m <- mydim[2]
   }else{
-    n <- length(obj); m <- 1
+    n <- length(obj)
+    m <- 1
   }
   if(is.matrix(obj)) {
     obj<-as.vector(obj)
@@ -45,20 +39,20 @@ makevectorxml<-function(code,objt,name=""){
     obj<-as.vector(obj)
   }
   if(is.vector(obj) && is.numeric(obj)){
-    xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
+    xmlcode<-paste0(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">")
     s <- sapply(X=obj, function(str){
       return(
-        paste("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>",sep="")
+        paste0("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>")
       )})
-    xmlcode<-paste(xmlcode,paste(s, collapse=""),"</variable>\n")
+    xmlcode<-paste0(xmlcode,paste0(s, collapse=""),"</variable>\n")
   }
   if(is.vector(obj) && is.character(obj)){
-    xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
+    xmlcode<-paste0(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n")
     s <- sapply(X=obj, function(str){
                             return(
-                              paste("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>",sep="")
+                              paste0("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>")
                              )})
-    xmlcode<-paste(xmlcode,paste(s, collapse=""),"</variable>\n")
+    xmlcode<-paste0(xmlcode,paste0(s, collapse=""),"</variable>\n")
   }
   return(xmlcode)
 }
@@ -73,12 +67,12 @@ makexml<-function(obj,name=""){
     for (i in 1:length(obj)){
       name <- objnames[[i]]
       if (is.null(name)) {
-        name <- paste(typeof(obj[[i]]), "-", i, sep='')
+        name <- paste0(typeof(obj[[i]]), "-", i)
       }
       xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(name))
     }
   }
-  xmlcode<-paste(xmlcode,"</root>\n",sep="")
+  xmlcode<-paste0(xmlcode,"</root>\n")
   return(xmlcode)
 }
 
