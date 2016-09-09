@@ -1,5 +1,5 @@
 cleanNames<-function(names){
-  cln<-gsub("|<|>| |\\(|\\)|\\[|\\]|\\*|\\&", "", names)
+  cln<-gsub("|<|>| |\\(|\\)|\\[|\\]|\\*|\\&","",names)
   cln<-gsub("\\.","_",cln)
   return(cln)
 }
@@ -20,14 +20,14 @@ makevectorxml<-function(code,objt,name=""){
     varname<-name
   }
   obj<-objt  
-  n <- 0; m <- 0
-  mydim <- dim(obj)
+  n<-0;m<-0
+  mydim<-dim(obj)
   if(!is.null(mydim)){
-    n <- mydim[1]
-    m <- mydim[2]
+    n<-mydim[1]
+    m<-mydim[2]
   }else{
-    n <- length(obj)
-    m <- 1
+    n<-length(obj)
+    m<-1
   }
   if(is.matrix(obj)) {
     obj<-as.vector(obj)
@@ -65,9 +65,9 @@ makexml<-function(obj,name=""){
   }else{
     objnames<-names(obj)
     for (i in 1:length(obj)){
-      name <- objnames[[i]]
+      name<-objnames[[i]]
       if (is.null(name)) {
-        name <- paste0(typeof(obj[[i]]), "-", i)
+        name<-paste0(typeof(obj[[i]]), "-", i)
       }
       xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(name))
     }
