@@ -35,10 +35,15 @@ makevectorxml<-function(code,objt,name=""){
   }else{
     n <- length(obj); m <- 1
   }
-  if(is.matrix(obj)) obj<-as.vector(obj)
-  if(typeof(obj)=="language") obj<-toString(obj)
-  if(typeof(obj)=="logical") obj<-as.character(obj)
-  if(class(obj)=="factor") obj<-as.vector(obj)
+  if(is.matrix(obj)) {
+    obj<-as.vector(obj)
+  }else if(typeof(obj)=="language") {
+    obj<-toString(obj)
+  }else if(typeof(obj)=="logical") {
+    obj<-as.character(obj)
+  }else if(class(obj)=="factor") {
+    obj<-as.vector(obj)
+  }
   if(is.vector(obj) && is.numeric(obj)){
     xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
     s <- sapply(X=obj, function(str){
