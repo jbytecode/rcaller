@@ -13,10 +13,10 @@ cleanNames<-function(names){
 }
 
 replaceXMLchars <- function(aStr){
-  cln<-gsub("\\&", "&amp;", aStr)
-  cln<-gsub("<", "&lt;", cln);
-  cln<-gsub(">", "&gt;", cln);
-  cln<-gsub("'", "&#39;", cln);
+  cln <-paste(unlist(strsplit(aStr,"&")),collapse="&amp;")
+  cln <-paste(unlist(strsplit(cln,"<")),collapse="&lt;")
+  cln <-paste(unlist(strsplit(cln,">")),collapse="&gt;")
+  cln <-paste(unlist(strsplit(cln,"'")),collapse="&#39;")
   return(cln)	
 }
 
