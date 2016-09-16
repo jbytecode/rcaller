@@ -28,14 +28,12 @@ makevectorxml<-function(code,objt,name=""){
     varname<-name
   }
   obj<-objt  
-  n<-0;m<-0
-  mydim<-dim(obj)
+  n <- 0; m <- 0
+  mydim <- dim(obj)
   if(!is.null(mydim)){
-    n<-mydim[1]
-    m<-mydim[2]
+    n <- mydim[1]; m <- mydim[2]
   }else{
-    n<-length(obj)
-    m<-1
+    n <- length(obj); m <- 1
   }
   if(is.matrix(obj)) {
     obj<-as.vector(obj)
@@ -47,20 +45,20 @@ makevectorxml<-function(code,objt,name=""){
     obj<-as.vector(obj)
   }
   if(is.vector(obj) && is.numeric(obj)){
-    xmlcode<-paste0(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">")
+    xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
     s <- sapply(X=obj, function(str){
       return(
-        paste0("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>")
+        paste("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>",sep="")
       )})
-    xmlcode<-paste0(xmlcode,paste0(s, collapse=""),"</variable>\n")
+    xmlcode<-paste(xmlcode,paste(s, collapse=""),"</variable>\n")
   }
   if(is.vector(obj) && is.character(obj)){
-    xmlcode<-paste0(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n")
+    xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"character\">\n",sep="")
     s <- sapply(X=obj, function(str){
                             return(
-                              paste0("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>")
+                              paste("<v>",iconv(replaceXMLchars(toString(str)), to="UTF-8"),"</v>",sep="")
                              )})
-    xmlcode<-paste0(xmlcode,paste0(s, collapse=""),"</variable>\n")
+    xmlcode<-paste(xmlcode,paste(s, collapse=""),"</variable>\n")
   }
   return(xmlcode)
 }
@@ -73,14 +71,13 @@ makexml<-function(obj,name=""){
   }else{
     objnames<-names(obj)
     for (i in 1:length(obj)){
-      name<-objnames[[i]]
+      name <- objnames[[i]]
       if (is.null(name)) {
-        name<-paste0(typeof(obj[[i]]), "-", i)
+        name <- paste(typeof(obj[[i]]), "-", i, sep='')
       }
       xmlcode<-makevectorxml(xmlcode,obj[[i]],cleanNames(name))
     }
   }
-  xmlcode<-paste0(xmlcode,"</root>\n")
+  xmlcode<-paste(xmlcode,"</root>\n",sep="")
   return(xmlcode)
 }
-
