@@ -299,7 +299,7 @@ public class RCaller {
             }
 
             // an error might occur before any output is written
-            if (!process.isAlive() && errorMessageSaver.getMessage().length() > 0) {
+            if (!isProcessAlive() && errorMessageSaver.getMessage().length() > 0) {
                 if (handleRFailure("R stderr: " + errorMessageSaver.getMessage())) {
                     continue;
                 }
