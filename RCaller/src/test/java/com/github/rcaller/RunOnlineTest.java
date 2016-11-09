@@ -171,4 +171,35 @@ public class RunOnlineTest {
         rcaller.StopRCallerOnline();
     }
 
+    @Test
+    public void rHaltedTest() {
+        System.out.println("R HALTED TEST");
+        RCaller rcaller = RCaller.create(RCallerOptions.create(FailurePolicy.CONTINUE, 1000)); //don't retry
+        RCode code = RCode.create();
+
+        code.addRCode("dev.off();dev.off();a<-1:100000;");
+
+        rcaller.setRCode(code);
+
+        boolean exceptionThrown = false;
+        try {
+            rcaller.runAndReturnResultOnline("a");
+        } catch (ExecutionException ex) {
+            Logger.getLogger(RunOnlineTest.class.getName()).log(Level.SEVERE, ex.getMessage());
+            if (ex.getMessage().contains("R stderr:")) {
+                exceptionThrown = true;
+            }
+            rcaller.StopRCallerOnline();
+        }
+        assertTrue(exceptionThrown);
+
+        //must not have retried because the policy is CONTINUE
+        assertEquals(rcaller.getRCallerOptions().getRetries(), 0);
+
+        //both consumer threads are dead, program must terminate now
+        System.out.println("done");
+        rcaller.deleteTempFiles();
+        rcaller.stopStreamConsumers();
+        rcaller.StopRCallerOnline();
+    }
 }

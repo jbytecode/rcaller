@@ -282,7 +282,7 @@ public class RCaller {
             long slept = 0;
             boolean processKilled = false;
             try {
-                while (!processKilled && outputFile.length() < 1) {
+                while (!processKilled && outputFile.length() < 1 && process.isAlive()) {
                     //TODO checking file length is wrong. R can still be writing to the file when
                     //java attempts to read, resulting in an xml parse exception. We need to  put in
                     //a lock file or something like that and only read when that is gone
@@ -296,6 +296,13 @@ public class RCaller {
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace(); //quite lame, sorry
+            }
+
+            // an error might occur before any output is written
+            if (!process.isAlive() && errorMessageSaver.getMessage().length() > 0) {
+                if (handleRFailure("R stderr: " + errorMessageSaver.getMessage())) {
+                    continue;
+                }
             }
 
             parser.setXMLFile(outputFile);
