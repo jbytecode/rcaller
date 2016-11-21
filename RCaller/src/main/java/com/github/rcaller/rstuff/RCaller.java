@@ -205,7 +205,8 @@ public class RCaller {
         int returnCode;
         try {
             //this Process object is local to this method. Do not use the public one.
-            process = exec(rCallerOptions.getrScriptExecutable() + " " + rSourceFile.toString());
+            String source_path = com.github.rcaller.util.Globals.isWindows() ? rSourceFile.toString().replace("\\","/") : rSourceFile.toString();
+            process = exec(rCallerOptions.getrScriptExecutable() + " " + source_path);
             startStreamConsumers(process);
             returnCode = process.waitFor();
         } catch (Exception e) {
