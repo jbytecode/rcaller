@@ -283,7 +283,7 @@ public class RCaller {
             long slept = 0;
             boolean processKilled = false;
             try {
-                while (!processKilled && outputFile.length() < 1) {
+                while (!processKilled && outputFile.length() < 1 && isProcessAlive()) {
                     //TODO checking file length is wrong. R can still be writing to the file when
                     //java attempts to read, resulting in an xml parse exception. We need to  put in
                     //a lock file or something like that and only read when that is gone
@@ -299,6 +299,13 @@ public class RCaller {
                 e.printStackTrace(); //quite lame, sorry
             }
 
+            // an error might occur before any output is written
+            if (!isProcessAlive() && errorMessageSaver.getMessage().length() > 0) {
+                if (handleRFailure("R stderr: " + errorMessageSaver.getMessage())) {
+                    continue;
+                }
+            }
+
             parser.setXMLFile(outputFile);
 
             try {
@@ -311,6 +318,15 @@ public class RCaller {
 
             done = true; //if we got to there, no exceptions occurred
         } while (!done);
+    }
+
+    private boolean isProcessAlive() {
+        try {
+            process.exitValue();
+            return false;
+        } catch (IllegalThreadStateException  e) {
+            return true;
+        }
     }
 
     public void StopRCallerOnline() {
