@@ -115,4 +115,17 @@ public class Globals {
 
         return null;
     }
+
+    public static void setRscriptCurrent(String rscript_current) {
+        Rscript_current = rscript_current;
+    }
+
+    public static void setR_current(String rCurrent) {
+        R_current = rCurrent;
+    }
+
+    public static void setRPaths(String rscript_current, String r_current) {
+        Rscript_current = r_current;
+        R_current = r_current;
+    }
 }
