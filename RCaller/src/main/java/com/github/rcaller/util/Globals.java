@@ -62,17 +62,19 @@ public class Globals {
                     return pathname.isDirectory() && pathname.getName().startsWith("R-");
                 }
             });
-            Arrays.sort(rVersions);
-            File rHome = rVersions[rVersions.length - 1];
-            File rBin = new File(rHome, "bin");
-            if ("amd64".equals(System.getProperty("os.arch"))) {
-                File rBin64 = new File(rBin, "x64");
-                if (rBin64.exists()) {
-                    rBin = rBin64;
+            if(rVersions != null) {
+                Arrays.sort(rVersions);
+                File rHome = rVersions[rVersions.length - 1];
+                File rBin = new File(rHome, "bin");
+                if ("amd64".equals(System.getProperty("os.arch"))) {
+                    File rBin64 = new File(rBin, "x64");
+                    if (rBin64.exists()) {
+                        rBin = rBin64;
+                    }
                 }
+                R_Windows = new File(rBin, "R.exe").getAbsolutePath();
+                RScript_Windows = new File(rBin, "Rscript.exe").getAbsolutePath();
             }
-            R_Windows = new File(rBin, "R.exe").getAbsolutePath();
-            RScript_Windows = new File(rBin, "Rscript.exe").getAbsolutePath();
         }
     }
 
@@ -116,16 +118,50 @@ public class Globals {
         return null;
     }
 
+    /**
+     * Sets the default location of Rscript executable manually.
+     *
+     * Note that this also sets the default Rscript location for the platform (for the session).
+     *
+     * @param rscript_current path to the Rscript executable
+     */
     public static void setRscriptCurrent(String rscript_current) {
         Rscript_current = rscript_current;
+        // Also update the platform Rscript location
+        // otherwise detect_current_rscript() may overwrite Rscript_current unexpectedly
+        if (isWindows()) {
+            RScript_Windows = rscript_current;
+        } else {
+            RScript_Linux = rscript_current;
+        }
     }
 
-    public static void setR_current(String rCurrent) {
-        R_current = rCurrent;
-    }
-
-    public static void setRPaths(String rscript_current, String r_current) {
-        Rscript_current = r_current;
+    /**
+     * Sets the default location of R executable manually.
+     *
+     * Note that this also sets the default R location for the platform (for the session).
+     *
+     * @param r_current path to the R executable
+     */
+    public static void setR_current(String r_current) {
         R_current = r_current;
+        // Also update the platform R location
+        // otherwise detect_current_rscript() may overwrite R_current unexpectedly
+        if (isWindows()) {
+            R_Windows = R_current;
+        } else {
+            R_Linux = r_current;
+        }
+    }
+
+    /**
+     * Convenience method to set both Rscript and R default paths in one call.
+     *
+     * @param rscript_current path to the Rscript executable
+     * @param r_current path to the R executable
+     */
+    public static void setRPaths(String rscript_current, String r_current) {
+        setRscriptCurrent(rscript_current);
+        setR_current(r_current);
     }
 }
