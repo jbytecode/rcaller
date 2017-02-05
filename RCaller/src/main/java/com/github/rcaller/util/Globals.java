@@ -164,4 +164,15 @@ public class Globals {
         setRscriptCurrent(rscript_current);
         setR_current(r_current);
     }
+
+    /**
+     * Convenience method to convert parameters for R that contain a path to the correct format.
+     *
+     * @param file object for which the absolute patch is needed
+     */
+    public static String getSystemSpecificRPathParameter(File file)
+    {
+        String path = isWindows() ? file.getAbsolutePath().toString().replace("\\","/") : file.getAbsolutePath().toString();
+        return path;
+    }
 }
