@@ -2,6 +2,7 @@ package com.github.rcaller;
 
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
+import com.github.rcaller.util.Globals;
 import org.junit.Test;
 
 import java.io.BufferedWriter;
@@ -48,7 +49,7 @@ public class UTF8Test {
         writer.flush();
         writer.close();
         
-        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        code.addRCode("predictions <- read.csv(\""+ Globals.getSystemSpecificRPathParameter(tmpfile)+"\",stringsAsFactors = FALSE)");
         caller.runAndReturnResult("predictions");
         
         String[] result = caller.getParser().getAsStringArray("ID");
@@ -71,7 +72,7 @@ public class UTF8Test {
         writer.flush();
         writer.close();
         
-        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        code.addRCode("predictions <- read.csv(\""+Globals.getSystemSpecificRPathParameter(tmpfile)+"\",stringsAsFactors = FALSE)");
         caller.runAndReturnResult("predictions");
         
         String[] result = caller.getParser().getAsStringArray("ID");
@@ -94,7 +95,7 @@ public class UTF8Test {
         writer.flush();
         writer.close();
         
-        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        code.addRCode("predictions <- read.csv(\""+Globals.getSystemSpecificRPathParameter(tmpfile)+"\",stringsAsFactors = FALSE)");
         caller.runAndReturnResult("predictions");
         
         String[] result = caller.getParser().getAsStringArray("ID");
@@ -117,7 +118,7 @@ public class UTF8Test {
         writer.flush();
         writer.close();
         
-        code.addRCode("predictions <- read.csv(\""+tmpfile.toString()+"\",stringsAsFactors = FALSE)");
+        code.addRCode("predictions <- read.csv(\""+Globals.getSystemSpecificRPathParameter(tmpfile)+"\",stringsAsFactors = FALSE)");
         caller.runAndReturnResult("predictions");
         
         String[] result = caller.getParser().getAsStringArray("ID");

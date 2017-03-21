@@ -21,13 +21,19 @@ public class FileStatusWatcherTest {
                 FileWriter writer = null;
                 try {
                     writer = new FileWriter(testFile);
+                    writer.write(".");
+                    writer.flush();
+                    writer.close();
                 } catch (IOException ex) {
                     assertNull(ex);
                 }
                 while (true) {
                     try {
+                        //This test does not work on some windows configuration without closing the FileWriter in this loop.
+                        writer = new FileWriter(testFile, true);
                         writer.write(".");
                         writer.flush();
+                        writer.close();
                     } catch (IOException ex) {
                         break;
                     }

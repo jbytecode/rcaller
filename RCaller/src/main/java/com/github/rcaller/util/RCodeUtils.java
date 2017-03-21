@@ -235,7 +235,7 @@ public class RCodeUtils {
             File file = File.createTempFile("dataFrame", ".csv");
             CSVFileWriter csvFileWriter = CSVFileWriter.create(file.getAbsolutePath());
             csvFileWriter.writeDataFrameToFile(dataFrame);
-            rCode.append(name).append(" <- read.csv(\"").append(file.getAbsolutePath()).append("\")\n");
+            rCode.append(name).append(" <- read.csv(\"").append(Globals.getSystemSpecificRPathParameter(file)).append("\")\n");
 
         } catch (IOException e) {
             Logger.getLogger(RCodeUtils.class.getName()).log(Level.WARNING, "Couldn't export data frame to csv-file!", e.getStackTrace());

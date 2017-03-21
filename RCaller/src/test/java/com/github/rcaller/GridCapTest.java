@@ -5,6 +5,8 @@ import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 import java.io.File;
 import java.io.IOException;
+
+import com.github.rcaller.util.Globals;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -27,7 +29,11 @@ public class GridCapTest {
         
         File f = new File("Rplots.pdf");
 
-        assertEquals(-1397462731, f.hashCode());
+        if (Globals.isWindows()) {
+            assertEquals(902182165, f.hashCode());
+        } else {
+            assertEquals(-1397462731, f.hashCode());
+        }
         
         f.delete();
     }

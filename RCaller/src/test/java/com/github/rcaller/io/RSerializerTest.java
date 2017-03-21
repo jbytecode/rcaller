@@ -5,6 +5,8 @@ import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 import java.io.File;
 import java.io.IOException;
+
+import com.github.rcaller.util.Globals;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +29,7 @@ public class RSerializerTest {
         RCaller caller = RCaller.create();
         RCode code = RCode.create();
 
-        code.addRCode("conn <- file(\"" + tmpFile.getCanonicalPath() + "\" , \"r\")");
+        code.addRCode("conn <- file(\"" + Globals.getSystemSpecificRPathParameter(tmpFile) + "\" , \"r\")");
         code.addRCode("x <- unserialize(conn)");
         caller.setRCode(code);
 
@@ -58,7 +60,7 @@ public class RSerializerTest {
         RCaller caller = RCaller.create();
         RCode code = RCode.create();
 
-        code.addRCode("conn <- file(\"" + tmpFile.getCanonicalPath() + "\" , \"r\")");
+        code.addRCode("conn <- file(\"" + Globals.getSystemSpecificRPathParameter(tmpFile) + "\" , \"r\")");
         code.addRCode("x <- unserialize(conn)");
         caller.setRCode(code);
 
