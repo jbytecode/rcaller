@@ -31,18 +31,27 @@ import com.github.rcaller.graphics.GraphicsTheme;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class Globals {
 
     public static String cranRepos = "http://cran.r-project.org";
     public static String RScript_Windows = "C:\\Program Files\\R\\R-3.0.2\\bin\\Rscript.exe";
     public static String RScript_Linux = "/usr/bin/Rscript";
+    public static String RScript_Mac = "/usr/local/bin/Rscript";
     public static String Rscript_current;
+    
     public static String R_Windows = "C:\\Program Files\\R\\R-3.0.2\\bin\\R.exe";
     public static String R_Linux = "/usr/bin/R";
+    public static String R_Mac = "/usr/local/bin/R";
     public static String R_current;
-
+    
+    public static Locale standardLocale = Locale.getDefault();
+    public static Charset standardCharset = StandardCharsets.UTF_8;
+    
     public static GraphicsTheme theme = new DefaultTheme();
 
     public final static String version = "RCaller 3.0";
@@ -82,11 +91,16 @@ public class Globals {
         if (isWindows()) {
             Rscript_current = RScript_Windows;
             R_current = R_Windows;
+        } else if(isMac()) {
+            Rscript_current = RScript_Mac;
+            R_current = R_Mac;
         } else {
             Rscript_current = RScript_Linux;
             R_current = R_Linux;
         }
     }
+    
+    public static boolean isMac() { return System.getProperty("os.name").contains("Mac"); }
 
     public static boolean isWindows() {
         return System.getProperty("os.name").contains("Windows");
@@ -131,6 +145,8 @@ public class Globals {
         // otherwise detect_current_rscript() may overwrite Rscript_current unexpectedly
         if (isWindows()) {
             RScript_Windows = rscript_current;
+        } else if(isMac()) {
+            RScript_Mac = rscript_current;
         } else {
             RScript_Linux = rscript_current;
         }
@@ -149,6 +165,8 @@ public class Globals {
         // otherwise detect_current_rscript() may overwrite R_current unexpectedly
         if (isWindows()) {
             R_Windows = R_current;
+        } if(isMac()) {
+            R_Mac = R_current;
         } else {
             R_Linux = r_current;
         }
@@ -174,5 +192,27 @@ public class Globals {
     {
         String path = isWindows() ? file.getAbsolutePath().toString().replace("\\","/") : file.getAbsolutePath().toString();
         return path;
+    }
+    
+    /**
+     * Sets charset to be used with locale in JVM environment managed by ProcessBuilder.
+     *
+     * Default charset is UTF-8.
+     *
+     * @param charset charset to encode string before send through ProcessBuilder
+     */
+    public static void setChatset(Charset charset) {
+        standardCharset = charset;
+    }
+    
+    /**
+     * Sets locale to be used with charset in in JVM environment managed by ProcessBuilder.
+     *
+     * Default locale is the current locale for this instance of JVM.
+     *
+     * @param locale locale to be set with charset in environment managed by ProcessBuilder
+     */
+    public static void setLocale(Locale locale) {
+        standardLocale = locale;
     }
 }

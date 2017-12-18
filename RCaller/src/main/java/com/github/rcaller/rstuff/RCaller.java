@@ -34,8 +34,11 @@ import com.github.rcaller.graphics.GraphicsTheme;
 import com.github.rcaller.util.Globals;
 
 import java.io.*;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import static java.lang.String.join;
 
 /**
  *
@@ -191,7 +194,20 @@ public class RCaller {
     }
 
     private Process exec(String command) throws IOException {
-        return Runtime.getRuntime().exec(command);
+        String[] cmd = command.split(" ");
+        ProcessBuilder pb = new ProcessBuilder(cmd);
+        Map<String, String> env = pb.environment();
+        String localeAndCharset = join(".", Globals.standardLocale.toString(), Globals.standardCharset.toString());
+    
+        env.put("LC_COLLATE", localeAndCharset);
+        env.put("LC_CTYPE", localeAndCharset);
+        env.put("LC_MESSAGES", localeAndCharset);
+        env.put("LC_MONETARY", localeAndCharset);
+        env.put("LC_NUMERIC", localeAndCharset);
+        env.put("LC_TIME", localeAndCharset);
+        env.put("LC_ALL", localeAndCharset);
+    
+        return pb.start();
     }
 
     private void runRCode() throws ExecutionException {
@@ -271,7 +287,7 @@ public class RCaller {
             }
 
             try {
-                rInput.write(rCode.toString().getBytes());
+                rInput.write(rCode.toString().getBytes(Globals.standardCharset));
                 rInput.flush();
             } catch (IOException e) {
                 if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
@@ -331,7 +347,7 @@ public class RCaller {
     public void StopRCallerOnline() {
         if (process != null) {
             try {
-                process.getOutputStream().write("q(\"no\")\n".getBytes());
+                process.getOutputStream().write("q(\"no\")\n".getBytes(Globals.standardCharset));
                 process.getOutputStream().flush();
                 process.getOutputStream().close();
             } catch (Exception e) {
@@ -411,10 +427,10 @@ public class RCaller {
         EventHandler eh = new EventHandler() {
             public void messageReceived(String senderName, String msg) {
                 try {
-                    o.write(senderName.getBytes());
-                    o.write(":".getBytes());
-                    o.write(msg.getBytes());
-                    o.write("\n".getBytes());
+                    o.write(senderName.getBytes(Globals.standardCharset));
+                    o.write(":".getBytes(Globals.standardCharset));
+                    o.write(msg.getBytes(Globals.standardCharset));
+                    o.write("\n".getBytes(Globals.standardCharset));
                     o.flush();
                 } catch (IOException ex) {
                     Logger.getLogger(RCaller.class.getName()).log(Level.SEVERE, null, ex);
