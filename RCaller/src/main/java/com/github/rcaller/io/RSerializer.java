@@ -25,6 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.rcaller.io;
 
+import com.github.rcaller.util.Globals;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
@@ -88,11 +90,11 @@ public class RSerializer {
     }
 
     byte[] getBytes(String s) {
-        return ((s + "\n").getBytes());
+        return ((s + "\n").getBytes(Globals.standardCharset));
     }
 
     byte[] getBytes(double d) {
-        return ((String.valueOf(d) + "\n").getBytes());
+        return ((String.valueOf(d) + "\n").getBytes(Globals.standardCharset));
     }
 
     public void save(String filename) throws IOException {
