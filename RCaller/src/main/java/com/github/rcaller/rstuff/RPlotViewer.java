@@ -49,7 +49,7 @@ public class RPlotViewer extends JFrame {
   public RPlotViewer(ImageIcon img) {
     this.img = img;
     this.setSize(img.getIconWidth() + 20, img.getIconHeight() + 60);
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     this.setTitle(Globals.version + " - Generated Plot");
     repaint();
   }
