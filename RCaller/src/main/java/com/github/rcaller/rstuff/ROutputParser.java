@@ -251,9 +251,9 @@ public class ROutputParser {
         double[][] result = new double[n][m];
         double[] arr = this.getAsDoubleArray(name);
         int c = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                result[i][j] = arr[c];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                result[j][i] = arr[c];
                 c++;
             }
         }
