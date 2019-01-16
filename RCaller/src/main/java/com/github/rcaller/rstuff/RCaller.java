@@ -310,6 +310,8 @@ public class RCaller {
                         processKilled = true;
                     }
                 }
+
+                Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace(); //quite lame, sorry
             }
