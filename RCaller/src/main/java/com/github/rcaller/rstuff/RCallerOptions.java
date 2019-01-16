@@ -11,10 +11,11 @@ public class RCallerOptions {
     private FailurePolicy failurePolicy;
     private long maxWaitTime;
     private long initialWaitTime;
+    private boolean checkForXmlEndTag;
     private RProcessStartUpOptions rProcessStartUpOptions;
     private int retries;
 
-    private RCallerOptions(String rScriptExecutable, String rExecutable, FailurePolicy failurePolicy, long maxWaitTime, long initialWaitTime, RProcessStartUpOptions rProcessStartUpOptions) {
+    private RCallerOptions(String rScriptExecutable, String rExecutable, FailurePolicy failurePolicy, long maxWaitTime, long initialWaitTime, RProcessStartUpOptions rProcessStartUpOptions, boolean checkForXmlEndTag) {
         this.rScriptExecutable = rScriptExecutable;
         this.rExecutable = rExecutable;
         this.failurePolicy = failurePolicy;
@@ -22,6 +23,7 @@ public class RCallerOptions {
         this.initialWaitTime = initialWaitTime;
         this.rProcessStartUpOptions = rProcessStartUpOptions;
         this.retries = 0;
+        this.checkForXmlEndTag = checkForXmlEndTag;
     }
 
     /**
@@ -30,31 +32,35 @@ public class RCallerOptions {
      */
     public static RCallerOptions create() {
         Globals.detect_current_rscript();
-        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, FailurePolicy.RETRY_5, Long.MAX_VALUE, ININITAL_WAIT_TIME, RProcessStartUpOptions.create());
+        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, FailurePolicy.RETRY_5, Long.MAX_VALUE, ININITAL_WAIT_TIME, RProcessStartUpOptions.create(), false);
     }
 
     public static RCallerOptions create(RProcessStartUpOptions rProcessStartUpOptions) {
         Globals.detect_current_rscript();
-        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, FailurePolicy.RETRY_5, Long.MAX_VALUE, ININITAL_WAIT_TIME, rProcessStartUpOptions);
+        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, FailurePolicy.RETRY_5, Long.MAX_VALUE, ININITAL_WAIT_TIME, rProcessStartUpOptions, false);
     }
 
     public static RCallerOptions create(FailurePolicy failurePolicy, long maxWaitTime) {
         Globals.detect_current_rscript();
-        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, failurePolicy, maxWaitTime, ININITAL_WAIT_TIME, RProcessStartUpOptions.create());
+        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, failurePolicy, maxWaitTime, ININITAL_WAIT_TIME, RProcessStartUpOptions.create(), false);
     }
 
     public static RCallerOptions create(FailurePolicy failurePolicy, long maxWaitTime, RProcessStartUpOptions rProcessStartUpOptions) {
         Globals.detect_current_rscript();
-        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, failurePolicy, maxWaitTime, ININITAL_WAIT_TIME, rProcessStartUpOptions);
+        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, failurePolicy, maxWaitTime, ININITAL_WAIT_TIME, rProcessStartUpOptions, false);
     }
 
     public static RCallerOptions create(FailurePolicy failurePolicy, long maxWaitTime, long initialWaitTime, RProcessStartUpOptions rProcessStartUpOptions) {
         Globals.detect_current_rscript();
-        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, failurePolicy, maxWaitTime, initialWaitTime, rProcessStartUpOptions);
+        return new RCallerOptions(Globals.Rscript_current, Globals.R_current, failurePolicy, maxWaitTime, initialWaitTime, rProcessStartUpOptions, false);
     }
 
     public static RCallerOptions create(String rScriptExecutable, String rExecutable, FailurePolicy failurePolicy, long maxWaitTime, long initialWaitTime, RProcessStartUpOptions rProcessStartUpOptions) {
-        return new RCallerOptions(rScriptExecutable, rExecutable, failurePolicy, maxWaitTime, initialWaitTime, rProcessStartUpOptions);
+        return new RCallerOptions(rScriptExecutable, rExecutable, failurePolicy, maxWaitTime, initialWaitTime, rProcessStartUpOptions, false);
+    }
+
+    public static RCallerOptions create(String rScriptExecutable, String rExecutable, FailurePolicy failurePolicy, long maxWaitTime, long initialWaitTime, RProcessStartUpOptions rProcessStartUpOptions, boolean checkForXmlEndTag) {
+        return new RCallerOptions(rScriptExecutable, rExecutable, failurePolicy, maxWaitTime, initialWaitTime, rProcessStartUpOptions, checkForXmlEndTag);
     }
 
     public String getrScriptExecutable() {
@@ -102,4 +108,6 @@ public class RCallerOptions {
     public void resetRetries() {
         this.retries = 0;
     }
+
+    public boolean shouldCheckForXmlEndTag() { return checkForXmlEndTag; }
 }

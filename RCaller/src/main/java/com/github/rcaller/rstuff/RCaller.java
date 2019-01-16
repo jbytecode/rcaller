@@ -299,9 +299,6 @@ public class RCaller {
             boolean processKilled = false;
             try {
                 while (!processKilled && outputFile.length() < 1 && isProcessAlive()) {
-                    //TODO checking file length is wrong. R can still be writing to the file when
-                    //java attempts to read, resulting in an xml parse exception. We need to  put in
-                    //a lock file or something like that and only read when that is gone
                     Thread.sleep(1);
                     slept++;
                     if (slept > rCallerOptions.getMaxWaitTime()) {
@@ -311,7 +308,18 @@ public class RCaller {
                     }
                 }
 
-                Thread.sleep(500);
+                while (rCallerOptions.shouldCheckForXmlEndTag() && !processKilled && isProcessAlive()) {
+                    if (checkXmlForEndTag(outputFile))
+                        break;
+                    else
+                        Thread.sleep(10);
+                    slept += 10;
+                    if (slept > rCallerOptions.getMaxWaitTime()) {
+                        process.destroy();
+                        stopStreamConsumers();
+                        processKilled = true;
+                    }
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace(); //quite lame, sorry
             }
@@ -335,6 +343,33 @@ public class RCaller {
 
             done = true; //if we got to there, no exceptions occurred
         } while (!done);
+    }
+
+    private boolean checkXmlForEndTag(File outputFile) {
+        try {
+            FileInputStream fis = new FileInputStream(outputFile);
+            boolean tag = false;
+            boolean closingTag = false;
+
+            char current;
+            while (fis.available() > 0) {
+                current = (char) fis.read();
+                if (current == '<')
+                    tag = true;
+                else if (tag && current == '/')
+                    closingTag = true;
+                else if (closingTag && current == 'r')
+                    return true;
+                else
+                {
+                    tag = false;
+                    closingTag = false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     private boolean isProcessAlive() {
