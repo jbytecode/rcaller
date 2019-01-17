@@ -313,9 +313,10 @@ public class RCaller {
                     System.out.println("waiting time for xml end tag: " + slept);
                     if (checkXmlForEndTag(outputFile))
                         break;
-                    else
+                    else {
                         Thread.sleep(10);
-                    slept += 10;
+                        slept += 10;
+                    }
                     if (slept > rCallerOptions.getMaxWaitTime()) {
                         process.destroy();
                         stopStreamConsumers();
