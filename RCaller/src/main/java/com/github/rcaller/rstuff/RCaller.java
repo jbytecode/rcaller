@@ -35,6 +35,7 @@ import com.github.rcaller.util.Globals;
 
 import java.io.*;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -309,6 +310,7 @@ public class RCaller {
                 }
 
                 while (rCallerOptions.shouldCheckForXmlEndTag() && !processKilled && isProcessAlive()) {
+                    System.out.println("waiting time for xml end tag: " + slept);
                     if (checkXmlForEndTag(outputFile))
                         break;
                     else
@@ -320,6 +322,7 @@ public class RCaller {
                         processKilled = true;
                     }
                 }
+                System.out.println("total wait time for xml end tag: " + slept);
             } catch (InterruptedException e) {
                 e.printStackTrace(); //quite lame, sorry
             }
