@@ -1,15 +1,19 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.github.jbytecode</groupId>
+    <groupId>com.github.heebtob</groupId>
     <artifactId>RCaller</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.2-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>RCaller</name>
-    <url>https://github.com/jbytecode/rcaller</url>
+    <url>https://github.com/heebtob/rcaller</url>
 
     <developers>
+        <developer>
+            <name>Tobias Heeb</name>
+            <email>tobias@heebnet.ch</email>
+        </developer>
         <developer>
             <name>Mehmet Hakan Satman</name>
             <email>mhsatman@gmail.com</email>
@@ -25,9 +29,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/jbytecode/rcaller</url>
-        <connection>scm:git:git://github.com/jbytecode/rcaller.git</connection>
-        <developerConnection>scm:git:git@github.com:jbytecode/rcaller.git</developerConnection>
+        <url>https://github.com/heebtob/rcaller</url>
+        <connection>scm:git:git://github.com/heebtob/rcaller.git</connection>
+        <developerConnection>scm:git:git@github.com:heebtob/rcaller.git</developerConnection>
         <tag>RCaller-3.0</tag>
     </scm>
 
@@ -40,13 +44,13 @@
     </licenses>
 
     <description>
-        http://www.mhsatman.com
+
     </description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>1.7</maven.compiler.source>
-        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
 
     <distributionManagement>
