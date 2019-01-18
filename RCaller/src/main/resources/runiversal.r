@@ -39,7 +39,7 @@ makevectorxml<-function(code,objt,name=""){
     xmlcode<-paste(xmlcode,"<variable name=\"",varname,"\" type=\"numeric\" n=\"", n, "\"  m=\"", m, "\">",sep="")
     for(j in 1:m){
        for (i in 1:n) {
-         paste(xmlcode, "<v>", obj[i,j], "</v>", sep="")
+         xmlcode <- paste(xmlcode, "<v>", obj[i,j], "</v>", sep="")
        }
     }
     xmlcode<-paste(xmlcode,"</variable>\n")
