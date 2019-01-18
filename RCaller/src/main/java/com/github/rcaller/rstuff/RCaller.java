@@ -314,8 +314,8 @@ public class RCaller {
                     if (checkXmlForEndTag(outputFile))
                         break;
                     else {
-                        Thread.sleep(10);
-                        slept += 10;
+                        Thread.sleep(1000);
+                        slept += 1000;
                     }
                     if (slept > rCallerOptions.getMaxWaitTime()) {
                         process.destroy();
