@@ -246,11 +246,13 @@ public class RCaller {
      * @throws ExecutionException if R cannot be started
      */
     public void runAndReturnResultOnline(String var) throws ExecutionException {
+        long startTime = System.currentTimeMillis();
         rCallerOptions.resetRetries();
         boolean done = false;
         do {
             if (rCallerOptions.getRetries() > 0) {
                 logger.log(Level.INFO, "Retrying online R execution");
+                System.out.println("Retrying online R execution");
             }
 
             File outputFile;
@@ -271,6 +273,9 @@ public class RCaller {
                 }
             }
 
+            System.out.println("startup runAndReturnResultOnline " + (System.currentTimeMillis() - startTime));
+            startTime = System.currentTimeMillis();
+
             rCode.appendStandardCodeToAppend(outputFile, var);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
@@ -278,7 +283,8 @@ public class RCaller {
                     process = exec(commandline);
                     rInput = process.getOutputStream();
                     startStreamConsumers(process);
-
+                    System.out.println("execute command " + (System.currentTimeMillis() - startTime));
+                    startTime = System.currentTimeMillis();
                 } catch (Exception e) {
                     if (handleRFailure("Can not run " + rCallerOptions.getrExecutable() + ". Reason: "
                             + e.toString())) {
@@ -290,6 +296,8 @@ public class RCaller {
             try {
                 rInput.write(rCode.toString().getBytes(Globals.standardCharset));
                 rInput.flush();
+                System.out.println("write code and flush " + (System.currentTimeMillis() - startTime));
+                startTime = System.currentTimeMillis();
             } catch (IOException e) {
                 if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
                     continue;
@@ -309,6 +317,9 @@ public class RCaller {
                     }
                 }
 
+                System.out.println("output file has some content " + (System.currentTimeMillis() - startTime));
+                startTime = System.currentTimeMillis();
+
                 while (rCallerOptions.shouldCheckForXmlEndTag() && !processKilled && isProcessAlive()) {
                     if (checkXmlForEndTag(outputFile))
                         break;
@@ -322,6 +333,9 @@ public class RCaller {
                         processKilled = true;
                     }
                 }
+
+                System.out.println("output file has valid xml " + (System.currentTimeMillis() - startTime));
+                startTime = System.currentTimeMillis();
             } catch (InterruptedException e) {
                 e.printStackTrace(); //quite lame, sorry
             }
@@ -335,6 +349,9 @@ public class RCaller {
 
             parser.setXMLFile(outputFile);
 
+            System.out.println("xml file set " + (System.currentTimeMillis() - startTime));
+            startTime = System.currentTimeMillis();
+
             try {
                 parser.parse();
             } catch (ParseException e) {
@@ -342,6 +359,9 @@ public class RCaller {
                     continue;
                 }
             }
+
+            System.out.println("xml parsing done " + (System.currentTimeMillis() - startTime));
+            startTime = System.currentTimeMillis();
 
             done = true; //if we got to there, no exceptions occurred
         } while (!done);
