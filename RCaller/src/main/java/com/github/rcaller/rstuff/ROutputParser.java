@@ -75,7 +75,6 @@ public class ROutputParser {
     }
 
     public void parse() throws ParseException {
-        long startTime = System.currentTimeMillis();
         if (this.XMLFile.length() == 0) {
             throw new ParseException("Can not parse output: The generated file " + this.XMLFile.toString() + " is empty");
         }
@@ -86,18 +85,11 @@ public class ROutputParser {
             throw new ParseException("Can not create parser builder: " + e.toString());
         }
 
-        System.out.println("xml parsing - prepare " + (System.currentTimeMillis() - startTime));
-        startTime = System.currentTimeMillis();
-
         try {
             FileInputStream in = new FileInputStream(XMLFile);
             InputSource is = new InputSource(in);
             is.setEncoding("UTF-8");
-            System.out.println("xml parsing input streams prepared " + (System.currentTimeMillis() - startTime));
-            startTime = System.currentTimeMillis();
             document = builder.parse(is);
-            System.out.println("xml document parsed " + (System.currentTimeMillis() - startTime));
-            startTime = System.currentTimeMillis();
         } catch (Exception e) {
             StackTraceElement[] frames = e.getStackTrace();
             String msgE = "";
@@ -109,8 +101,6 @@ public class ROutputParser {
         }
 
         document.getDocumentElement().normalize();
-        System.out.println("xml document normalized " + (System.currentTimeMillis() - startTime));
-        startTime = System.currentTimeMillis();
     }
 
     public ROutputParser(File XMLFile) {
