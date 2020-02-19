@@ -344,6 +344,10 @@ public class RCaller {
         }
     }
 
+    /**
+     * Stops underlying R process gracefully.
+     * No calculations should be running.
+     */
     public void StopRCallerOnline() {
         if (process != null) {
             try {
@@ -356,6 +360,17 @@ public class RCaller {
             if(Globals.isWindows()){
                 process.destroy();
             }
+        }
+    }
+
+    /**
+     * Stops underlying R process anyway.
+     * May be used from separate thread to terminate running calculations.
+     */
+    public void StopRCallerAsync() {
+        if (process != null) {
+            process.destroy();
+            stopStreamConsumers();
         }
     }
 
