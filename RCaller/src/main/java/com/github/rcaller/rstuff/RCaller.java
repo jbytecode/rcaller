@@ -53,6 +53,7 @@ public class RCaller {
     private RCode rCode;
     private ROutputParser parser;
     private Process process;
+    private String tmpDir;
     private OutputStream rInput;
     private RStreamHandler rOutput;
     private RStreamHandler rError;
@@ -206,7 +207,7 @@ public class RCaller {
         env.put("LC_NUMERIC", localeAndCharset);
         env.put("LC_TIME", localeAndCharset);
         env.put("LC_ALL", localeAndCharset);
-    
+
         return pb.start();
     }
 
@@ -272,11 +273,7 @@ public class RCaller {
             rCode.appendStandardCodeToAppend(outputFile, var);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
-                    String commandline = rCallerOptions.getrExecutable() + rCallerOptions.getStartUpOptionsAsCommand();
-                    process = exec(commandline);
-                    rInput = process.getOutputStream();
-                    startStreamConsumers(process);
-
+                    startOnlineProcess();
                 } catch (Exception e) {
                     if (handleRFailure("Can not run " + rCallerOptions.getrExecutable() + ". Reason: "
                             + e.toString())) {
@@ -294,23 +291,10 @@ public class RCaller {
                 }
             }
 
-            long slept = 0;
-            boolean processKilled = false;
             try {
-                while (!processKilled && outputFile.length() < 1 && isProcessAlive()) {
-                    //TODO checking file length is wrong. R can still be writing to the file when
-                    //java attempts to read, resulting in an xml parse exception. We need to  put in
-                    //a lock file or something like that and only read when that is gone
-                    Thread.sleep(1);
-                    slept++;
-                    if (slept > rCallerOptions.getMaxWaitTime()) {
-                        process.destroy();
-                        stopStreamConsumers();
-                        processKilled = true;
-                    }
-                }
+                waitRExecute(outputFile);
             } catch (InterruptedException e) {
-                e.printStackTrace(); //quite lame, sorry
+                Thread.currentThread().interrupt();
             }
 
             // an error might occur before any output is written
@@ -334,6 +318,54 @@ public class RCaller {
         } while (!done && isProcessAlive());
     }
 
+    private void waitRExecute(File outputFile) throws InterruptedException {
+        long slept = 0;
+        boolean processKilled = false;
+        while (!processKilled && outputFile.length() < 1 && isProcessAlive()) {
+            //TODO checking file length is wrong. R can still be writing to the file when
+            //java attempts to read, resulting in an xml parse exception. We need to  put in
+            //a lock file or something like that and only read when that is gone
+            Thread.sleep(1);
+            slept++;
+            if (slept > rCallerOptions.getMaxWaitTime()) {
+                process.destroy();
+                stopStreamConsumers();
+                processKilled = true;
+            }
+        }
+    }
+
+    /**
+     * Start underlying R process for several usages by {@link #runAndReturnResultOnline(String)}
+     */
+    private void startOnlineProcess() throws IOException {
+        String commandline = rCallerOptions.getrExecutable() + rCallerOptions.getStartUpOptionsAsCommand();
+        process = exec(commandline);
+        rInput = process.getOutputStream();
+        startStreamConsumers(process);
+        try {
+            RCode getTmpDirCode = RCode.create();
+            File getTmpDirFile = tempFileService.createTempFile("getTmpDir", "");
+            getTmpDirCode.addRCode("tempDirOut <- tempdir()\n");
+            getTmpDirCode.appendStandardCodeToAppend(getTmpDirFile, "tempDirOut");
+            rInput.write(getTmpDirCode.toString().getBytes(Globals.standardCharset));
+            rInput.flush();
+            waitRExecute(getTmpDirFile);
+
+            parser.setXMLFile(getTmpDirFile);
+            parser.parse();
+            tmpDir = parser.getAsStringArray("tempDirOut")[0];
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ParseException e) {
+            logger.log(Level.SEVERE, "Could not get R tempdir", e);
+        }
+    }
+
+    /**
+     * Check if underlying R process exists and is alive
+     * @return true if R process is not null and is alive, false otherwise
+     */
     private boolean isProcessAlive() {
         if (process == null) {
             return false;
@@ -369,6 +401,22 @@ public class RCaller {
             process.destroy();
             stopStreamConsumers();
             process = null;
+            deleteDirectory(new File(tmpDir));
+        }
+    }
+
+    /**
+     * Remove directory recursively
+     * @param f
+     */
+    private void deleteDirectory(File f) {
+        if (f.isDirectory()) {
+            for (File c : f.listFiles()) {
+                deleteDirectory(c);
+            }
+        }
+        if (!f.delete()) {
+            throw new ExecutionException("Failed to delete file: " + f);
         }
     }
 
