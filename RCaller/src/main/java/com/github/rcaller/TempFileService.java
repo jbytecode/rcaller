@@ -58,6 +58,7 @@ public class TempFileService {
                 logger.log(Level.WARNING, "Couldn't delete file ".concat(tempFile.getName()));
             }
         }
+        tempFiles.clear();
     }
 
     public File createOutputFile() {

@@ -91,7 +91,7 @@ public class RCode {
 
     public void appendStandardCodeToAppend(File outputFile, String var) {
         this.code.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
-                append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");
+                append("\"), file=\"").append(outputFile.getAbsolutePath().replace("\\", "/")).append("\")\n");
     }
     
     public void clearOnline(){
