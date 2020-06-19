@@ -220,7 +220,6 @@ public class RCaller {
         errorMessageSaver.resetMessage();
         int returnCode;
         try {
-            //this Process object is local to this method. Do not use the public one.
             process = exec(rCallerOptions.getrScriptExecutable() + " " + Globals.getSystemSpecificRPathParameter(rSourceFile));
             startStreamConsumers(process);
             returnCode = process.waitFor();
@@ -332,16 +331,14 @@ public class RCaller {
             }
 
             done = true; //if we got to there, no exceptions occurred
-        } while (!done);
+        } while (!done && isProcessAlive());
     }
 
     private boolean isProcessAlive() {
-        try {
-            process.exitValue();
+        if (process == null) {
             return false;
-        } catch (IllegalThreadStateException  e) {
-            return true;
         }
+        return process.isAlive();
     }
 
     /**
@@ -371,6 +368,7 @@ public class RCaller {
         if (process != null) {
             process.destroy();
             stopStreamConsumers();
+            process = null;
         }
     }
 
