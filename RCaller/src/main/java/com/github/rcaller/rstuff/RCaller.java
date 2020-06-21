@@ -35,10 +35,12 @@ import com.github.rcaller.util.Globals;
 
 import java.io.*;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.lang.String.join;
+import static java.lang.System.currentTimeMillis;
 
 /**
  *
@@ -60,6 +62,7 @@ public class RCaller {
     private MessageSaver errorMessageSaver;
     private TempFileService tempFileService;
     private RCallerOptions rCallerOptions;
+    private Random rand = new Random(System.currentTimeMillis());
 
     protected RCaller(RCode rCode,
                    ROutputParser parser,
@@ -252,7 +255,7 @@ public class RCaller {
                 logger.log(Level.INFO, "Retrying online R execution");
             }
 
-            File outputFile;
+            File outputFile, resultReadyControlFile;
 
             if (rCallerOptions.getrExecutable() == null) {
                 if (handleRFailure("RExecutable is not defined.Please set this" + " variable to full path of R executable binary file.")) {
@@ -262,6 +265,7 @@ public class RCaller {
 
             try {
                 outputFile = tempFileService.createOutputFile();
+                resultReadyControlFile = tempFileService.createControlFile();
             } catch (Exception e) {
                 if (handleRFailure("Can not create a temporary file for storing the R results: " + e.getMessage())) {
                     continue;
@@ -271,6 +275,9 @@ public class RCaller {
             }
 
             rCode.appendStandardCodeToAppend(outputFile, var);
+            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
+            rCode.addRCode(resultReadyVarName + " <- 1");
+            rCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
                     startOnlineProcess();
@@ -292,7 +299,7 @@ public class RCaller {
             }
 
             try {
-                waitRExecute(outputFile);
+                waitRExecute(resultReadyControlFile);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
@@ -318,16 +325,18 @@ public class RCaller {
         } while (!done && isProcessAlive());
     }
 
-    private void waitRExecute(File outputFile) throws InterruptedException {
-        long slept = 0;
+    /**
+     * Sleep while controlFile is empty and timeout {$link #rCallerOptions$getMaxWaitTime()} is not expired.
+     * Kill underlying ricess if timeout is expired.
+     * @param controlFile Sygnal file (separated fron the main result), when it is not empty, calculation is finished
+     * @throws InterruptedException
+     */
+    private void waitRExecute(File controlFile) throws InterruptedException {
+        long startedAt = currentTimeMillis();
         boolean processKilled = false;
-        while (!processKilled && outputFile.length() < 1 && isProcessAlive()) {
-            //TODO checking file length is wrong. R can still be writing to the file when
-            //java attempts to read, resulting in an xml parse exception. We need to  put in
-            //a lock file or something like that and only read when that is gone
+        while (!processKilled && controlFile.length() < 1 && isProcessAlive()) {
             Thread.sleep(1);
-            slept++;
-            if (slept > rCallerOptions.getMaxWaitTime()) {
+            if (currentTimeMillis() - startedAt > rCallerOptions.getMaxWaitTime()) {
                 process.destroy();
                 stopStreamConsumers();
                 processKilled = true;
@@ -345,16 +354,24 @@ public class RCaller {
         startStreamConsumers(process);
         try {
             RCode getTmpDirCode = RCode.create();
+
             File getTmpDirFile = tempFileService.createTempFile("getTmpDir", "");
-            getTmpDirCode.addRCode("tempDirOut <- tempdir()\n");
-            getTmpDirCode.appendStandardCodeToAppend(getTmpDirFile, "tempDirOut");
+            String tempDirOutVarName = "tempDirOut" + Math.abs(rand.nextLong());
+            getTmpDirCode.addRCode(tempDirOutVarName + " <- tempdir()");
+            getTmpDirCode.appendStandardCodeToAppend(getTmpDirFile, tempDirOutVarName);
+
+            File resultReadyControlFile = tempFileService.createControlFile();
+            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
+            getTmpDirCode.addRCode(resultReadyVarName + " <- 1");
+            getTmpDirCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
+
             rInput.write(getTmpDirCode.toString().getBytes(Globals.standardCharset));
             rInput.flush();
-            waitRExecute(getTmpDirFile);
+            waitRExecute(resultReadyControlFile);
 
             parser.setXMLFile(getTmpDirFile);
             parser.parse();
-            tmpDir = parser.getAsStringArray("tempDirOut")[0];
+            tmpDir = parser.getAsStringArray(tempDirOutVarName)[0];
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (ParseException e) {

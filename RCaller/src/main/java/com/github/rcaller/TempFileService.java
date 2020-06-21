@@ -68,4 +68,12 @@ public class TempFileService {
             throw new ExecutionException("Can not create a temporary file for storing the R results: " + e.getMessage());
         }
     }
+
+    public File createControlFile() {
+        try {
+            return createTempFile("RControl", "");
+        } catch (Exception e) {
+            throw new ExecutionException("Can not create a temporary file for storing the R results: " + e.getMessage());
+        }
+    }
 }
