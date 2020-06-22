@@ -35,10 +35,12 @@ import com.github.rcaller.util.Globals;
 
 import java.io.*;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static java.lang.String.join;
+import static java.lang.System.currentTimeMillis;
 
 /**
  *
@@ -53,12 +55,14 @@ public class RCaller {
     private RCode rCode;
     private ROutputParser parser;
     private Process process;
+    private String tmpDir;
     private OutputStream rInput;
     private RStreamHandler rOutput;
     private RStreamHandler rError;
     private MessageSaver errorMessageSaver;
     private TempFileService tempFileService;
     private RCallerOptions rCallerOptions;
+    private Random rand = new Random(System.currentTimeMillis());
 
     protected RCaller(RCode rCode,
                    ROutputParser parser,
@@ -206,7 +210,7 @@ public class RCaller {
         env.put("LC_NUMERIC", localeAndCharset);
         env.put("LC_TIME", localeAndCharset);
         env.put("LC_ALL", localeAndCharset);
-    
+
         return pb.start();
     }
 
@@ -220,7 +224,6 @@ public class RCaller {
         errorMessageSaver.resetMessage();
         int returnCode;
         try {
-            //this Process object is local to this method. Do not use the public one.
             process = exec(rCallerOptions.getrScriptExecutable() + " " + Globals.getSystemSpecificRPathParameter(rSourceFile));
             startStreamConsumers(process);
             returnCode = process.waitFor();
@@ -252,7 +255,7 @@ public class RCaller {
                 logger.log(Level.INFO, "Retrying online R execution");
             }
 
-            File outputFile;
+            File outputFile, resultReadyControlFile;
 
             if (rCallerOptions.getrExecutable() == null) {
                 if (handleRFailure("RExecutable is not defined.Please set this" + " variable to full path of R executable binary file.")) {
@@ -262,6 +265,7 @@ public class RCaller {
 
             try {
                 outputFile = tempFileService.createOutputFile();
+                resultReadyControlFile = tempFileService.createControlFile();
             } catch (Exception e) {
                 if (handleRFailure("Can not create a temporary file for storing the R results: " + e.getMessage())) {
                     continue;
@@ -271,13 +275,12 @@ public class RCaller {
             }
 
             rCode.appendStandardCodeToAppend(outputFile, var);
+            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
+            rCode.addRCode(resultReadyVarName + " <- 1");
+            rCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
-                    String commandline = rCallerOptions.getrExecutable() + rCallerOptions.getStartUpOptionsAsCommand();
-                    process = exec(commandline);
-                    rInput = process.getOutputStream();
-                    startStreamConsumers(process);
-
+                    startOnlineProcess();
                 } catch (Exception e) {
                     if (handleRFailure("Can not run " + rCallerOptions.getrExecutable() + ". Reason: "
                             + e.toString())) {
@@ -295,23 +298,10 @@ public class RCaller {
                 }
             }
 
-            long slept = 0;
-            boolean processKilled = false;
             try {
-                while (!processKilled && outputFile.length() < 1 && isProcessAlive()) {
-                    //TODO checking file length is wrong. R can still be writing to the file when
-                    //java attempts to read, resulting in an xml parse exception. We need to  put in
-                    //a lock file or something like that and only read when that is gone
-                    Thread.sleep(1);
-                    slept++;
-                    if (slept > rCallerOptions.getMaxWaitTime()) {
-                        process.destroy();
-                        stopStreamConsumers();
-                        processKilled = true;
-                    }
-                }
+                waitRExecute(resultReadyControlFile);
             } catch (InterruptedException e) {
-                e.printStackTrace(); //quite lame, sorry
+                Thread.currentThread().interrupt();
             }
 
             // an error might occur before any output is written
@@ -332,16 +322,72 @@ public class RCaller {
             }
 
             done = true; //if we got to there, no exceptions occurred
-        } while (!done);
+        } while (!done && isProcessAlive());
     }
 
-    private boolean isProcessAlive() {
-        try {
-            process.exitValue();
-            return false;
-        } catch (IllegalThreadStateException  e) {
-            return true;
+    /**
+     * Sleep while controlFile is empty and timeout {$link #rCallerOptions$getMaxWaitTime()} is not expired.
+     * Kill underlying ricess if timeout is expired.
+     * @param controlFile Sygnal file (separated fron the main result), when it is not empty, calculation is finished
+     * @throws InterruptedException
+     */
+    private void waitRExecute(File controlFile) throws InterruptedException {
+        long startedAt = currentTimeMillis();
+        boolean processKilled = false;
+        while (!processKilled && controlFile.length() < 1 && isProcessAlive()) {
+            Thread.sleep(1);
+            if (currentTimeMillis() - startedAt > rCallerOptions.getMaxWaitTime()) {
+                process.destroy();
+                stopStreamConsumers();
+                processKilled = true;
+            }
         }
+    }
+
+    /**
+     * Start underlying R process for several usages by {@link #runAndReturnResultOnline(String)}
+     */
+    private void startOnlineProcess() throws IOException {
+        String commandline = rCallerOptions.getrExecutable() + rCallerOptions.getStartUpOptionsAsCommand();
+        process = exec(commandline);
+        rInput = process.getOutputStream();
+        startStreamConsumers(process);
+        try {
+            RCode getTmpDirCode = RCode.create();
+
+            File getTmpDirFile = tempFileService.createTempFile("getTmpDir", "");
+            String tempDirOutVarName = "tempDirOut" + Math.abs(rand.nextLong());
+            getTmpDirCode.addRCode(tempDirOutVarName + " <- tempdir()");
+            getTmpDirCode.appendStandardCodeToAppend(getTmpDirFile, tempDirOutVarName);
+
+            File resultReadyControlFile = tempFileService.createControlFile();
+            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
+            getTmpDirCode.addRCode(resultReadyVarName + " <- 1");
+            getTmpDirCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
+
+            rInput.write(getTmpDirCode.toString().getBytes(Globals.standardCharset));
+            rInput.flush();
+            waitRExecute(resultReadyControlFile);
+
+            parser.setXMLFile(getTmpDirFile);
+            parser.parse();
+            tmpDir = parser.getAsStringArray(tempDirOutVarName)[0];
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ParseException e) {
+            logger.log(Level.SEVERE, "Could not get R tempdir", e);
+        }
+    }
+
+    /**
+     * Check if underlying R process exists and is alive
+     * @return true if R process is not null and is alive, false otherwise
+     */
+    private boolean isProcessAlive() {
+        if (process == null) {
+            return false;
+        }
+        return process.isAlive();
     }
 
     /**
@@ -371,6 +417,23 @@ public class RCaller {
         if (process != null) {
             process.destroy();
             stopStreamConsumers();
+            process = null;
+            deleteDirectory(new File(tmpDir));
+        }
+    }
+
+    /**
+     * Remove directory recursively
+     * @param f
+     */
+    private void deleteDirectory(File f) {
+        if (f.isDirectory()) {
+            for (File c : f.listFiles()) {
+                deleteDirectory(c);
+            }
+        }
+        if (!f.delete()) {
+            throw new ExecutionException("Failed to delete file: " + f);
         }
     }
 

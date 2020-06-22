@@ -10,8 +10,8 @@ import org.junit.Test;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static java.lang.System.currentTimeMillis;
+import static org.junit.Assert.*;
 
 public class RunOnlineTest {
 
@@ -147,7 +147,8 @@ public class RunOnlineTest {
         RCaller rcaller = RCaller.create(RCallerOptions.create(FailurePolicy.CONTINUE, 100)); //don't retry
         RCode code = RCode.create();
 
-        code.addRCode("a<-1:100000");
+        code.addRCode("Sys.sleep(10)");
+        code.addRCode("a<-1");
 
         rcaller.setRCode(code);
 
@@ -169,6 +170,42 @@ public class RunOnlineTest {
         rcaller.deleteTempFiles();
         rcaller.stopStreamConsumers();
         rcaller.StopRCallerOnline();
+    }
+
+    @Test
+    public void stopAsyncTest() {
+        System.out.println("STOP ASYNC TEST");
+        RCaller rcaller = RCaller.create(); //Create like regularly (eg. if we do not know timeout beforehand)
+        RCode code = RCode.create();
+
+        code.addRCode("Sys.sleep(10)");
+        code.addRCode("a<-1");
+
+        rcaller.setRCode(code);
+
+        try {
+            //Start calculation in separate thread
+            Thread rCallerCalculation = new Thread(() -> {rcaller.runAndReturnResultOnline("a");});
+            rCallerCalculation.start();
+            long startedAt = currentTimeMillis();
+            int timeout = 1;
+            //Sleep while timeout not expired and calculation actually performs
+            //In this test, the timeout (1 second) is definitly less than calculation (10 seconds)
+            while ((currentTimeMillis() - startedAt) / 1000 < timeout && rCallerCalculation.isAlive()) {
+                Thread.sleep(1);
+            }
+            //Timeout is expired, program must terminate now
+            assertTrue(rCallerCalculation.isAlive());
+            rcaller.StopRCallerAsync();
+            rcaller.deleteTempFiles();
+            Thread.sleep(10); //Wait a little, allow rCallerCalculation to finish
+            assertFalse(rCallerCalculation.isAlive());
+
+            System.out.println("done");
+        } catch (InterruptedException e) {
+            System.out.println("interrupted");
+            Thread.currentThread().interrupt();
+        }
     }
 
     @Test

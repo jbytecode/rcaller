@@ -58,11 +58,20 @@ public class TempFileService {
                 logger.log(Level.WARNING, "Couldn't delete file ".concat(tempFile.getName()));
             }
         }
+        tempFiles.clear();
     }
 
     public File createOutputFile() {
         try {
             return createTempFile("ROutput", "");
+        } catch (Exception e) {
+            throw new ExecutionException("Can not create a temporary file for storing the R results: " + e.getMessage());
+        }
+    }
+
+    public File createControlFile() {
+        try {
+            return createTempFile("RControl", "");
         } catch (Exception e) {
             throw new ExecutionException("Can not create a temporary file for storing the R results: " + e.getMessage());
         }
