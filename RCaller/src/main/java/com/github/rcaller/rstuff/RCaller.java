@@ -327,7 +327,7 @@ public class RCaller {
 
     /**
      * Sleep while controlFile is empty and timeout {$link #rCallerOptions$getMaxWaitTime()} is not expired.
-     * Kill underlying ricess if timeout is expired.
+     * Kill underlying process if timeout is expired.
      * @param controlFile Sygnal file (separated fron the main result), when it is not empty, calculation is finished
      * @throws InterruptedException
      */
@@ -424,7 +424,7 @@ public class RCaller {
 
     /**
      * Remove directory recursively
-     * @param f
+     * @param f Directory to remove (or it's file in recursion)
      */
     private void deleteDirectory(File f) {
         if (f.isDirectory()) {
