@@ -17,7 +17,7 @@ bibliography: paper.bib
 ---
 
 # Summary
-
+RCaller is a Java library for interfacing R from within Java [@satman2014rcaller]
 
 
 # Acknowledgements
