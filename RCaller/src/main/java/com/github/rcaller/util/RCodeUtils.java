@@ -39,31 +39,31 @@ import java.util.logging.Logger;
 
 public class RCodeUtils {
 
-    public static void addIntArray(StringBuffer rCode, String name, int[] arr, boolean useEquals) {
+    public static void addIntArray(StringBuilder rCode, String name, int[] arr, boolean useEquals) {
         addArray(rCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
-    public static void addLongArray(StringBuffer rCode, String name, long[] arr, boolean useEquals) {
+    public static void addLongArray(StringBuilder rCode, String name, long[] arr, boolean useEquals) {
         addArray(rCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
-    public static void addFloatArray(StringBuffer rCode, String name, float[] arr, boolean useEquals) {
+    public static void addFloatArray(StringBuilder rCode, String name, float[] arr, boolean useEquals) {
         addArray(rCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
-    public static void addDoubleArray(StringBuffer rCode, String name, double[] arr, boolean useEquals) {
+    public static void addDoubleArray(StringBuilder rCode, String name, double[] arr, boolean useEquals) {
         addArray(rCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
-    public static void addStringArray(StringBuffer rCode, String name, String[] arr, boolean useEquals) {
+    public static void addStringArray(StringBuilder rCode, String name, String[] arr, boolean useEquals) {
         addArray(rCode, name, arr, useEquals, true);
     }
 
-    public static void addShortArray(StringBuffer rCode, String name, short[] arr, boolean useEquals) {
+    public static void addShortArray(StringBuilder rCode, String name, short[] arr, boolean useEquals) {
         addArray(rCode, name, ArrayUtils.toObject(arr), useEquals, false);
     }
 
-    public static void addLogicalArray(StringBuffer rCode, String name, boolean[] arr, boolean useEquals) {
+    public static void addLogicalArray(StringBuilder rCode, String name, boolean[] arr, boolean useEquals) {
         String[] stringArray = new String[arr.length];
         for (int i = 0; i < arr.length; i++) {
             stringArray[i] = String.valueOf(arr[i]).toUpperCase();
@@ -71,7 +71,7 @@ public class RCodeUtils {
         addArray(rCode, name, stringArray, useEquals, false);
     }
 
-    public static <T> void addArray(StringBuffer rCode, String name, T[] array, boolean useEquals, boolean isString) {
+    public static <T> void addArray(StringBuilder rCode, String name, T[] array, boolean useEquals, boolean isString) {
         if (!name.equals("")) {
             if (useEquals) {
                 rCode.append(name).append("=");
@@ -98,14 +98,14 @@ public class RCodeUtils {
         }
     }
 
-    public static void addJavaObject(StringBuffer rCode, Object o, boolean useEquals) throws IllegalAccessException {
+    public static void addJavaObject(StringBuilder rCode, Object o, boolean useEquals) throws IllegalAccessException {
         rCode.append(((JavaObject) o).produceRCode(useEquals));
         if (!useEquals) {
             rCode.append("\n");
         }
     }
 
-    public static void addDoubleMatrix(StringBuffer rCode, String name, double[][] matrix, boolean useEquals) {
+    public static void addDoubleMatrix(StringBuilder rCode, String name, double[][] matrix, boolean useEquals) {
         int dim2 = matrix[0].length;
         int counter = 0;
         if (!name.equals("")) {
@@ -131,31 +131,31 @@ public class RCodeUtils {
         }
     }
 
-    public static void addDouble(StringBuffer rCode, String name, double d, boolean useEquals) {
+    public static void addDouble(StringBuilder rCode, String name, double d, boolean useEquals) {
         addValue(rCode, name, d, useEquals);
     }
 
-    public static void addInt(StringBuffer rCode, String name, int i, boolean useEquals) {
+    public static void addInt(StringBuilder rCode, String name, int i, boolean useEquals) {
         addValue(rCode, name, i, useEquals);
     }
 
-    public static void addLong(StringBuffer rCode, String name, long l, boolean useEquals) {
+    public static void addLong(StringBuilder rCode, String name, long l, boolean useEquals) {
         addValue(rCode, name, l, useEquals);
     }
 
-    public static void addFloat(StringBuffer rCode, String name, float f, boolean useEquals) {
+    public static void addFloat(StringBuilder rCode, String name, float f, boolean useEquals) {
         addValue(rCode, name, String.valueOf(f).toUpperCase(), useEquals);
     }
 
-    public static void addShort(StringBuffer rCode, String name, short s, boolean useEquals) {
+    public static void addShort(StringBuilder rCode, String name, short s, boolean useEquals) {
         addValue(rCode, name, s, useEquals);
     }
 
-    public static void addBoolean(StringBuffer rCode, String name, boolean b, boolean useEquals) {
+    public static void addBoolean(StringBuilder rCode, String name, boolean b, boolean useEquals) {
         addValue(rCode, name, String.valueOf(b).toUpperCase(), useEquals);
     }
 
-    public static void addString(StringBuffer rCode, String name, String value, boolean useEquals) {
+    public static void addString(StringBuilder rCode, String name, String value, boolean useEquals) {
         if (!name.equals("")) {
             if (useEquals) {
                 rCode.append(name).append("=");
@@ -173,7 +173,7 @@ public class RCodeUtils {
         }
     }
 
-    private static void addValue(StringBuffer rCode, String name, Object value, boolean useEquals) {
+    private static void addValue(StringBuilder rCode, String name, Object value, boolean useEquals) {
         if (!name.equals("")) {
             if (useEquals) {
                 rCode.append(name).append("=").append(value);
@@ -189,7 +189,7 @@ public class RCodeUtils {
         }
     }
 
-    public static void addRespectToType(StringBuffer rCode, String name, Object o, boolean useEquals) {
+    public static void addRespectToType(StringBuilder rCode, String name, Object o, boolean useEquals) {
         if (o instanceof double[]) {
             RCodeUtils.addDoubleArray(rCode, name, (double[]) o, useEquals);
         } else if (o instanceof int[]) {
@@ -230,7 +230,7 @@ public class RCodeUtils {
 
     }
 
-    public static void addDataFrame(StringBuffer rCode, String name, DataFrame dataFrame) {
+    public static void addDataFrame(StringBuilder rCode, String name, DataFrame dataFrame) {
         try {
             File file = File.createTempFile("dataFrame", ".csv");
             CSVFileWriter csvFileWriter = CSVFileWriter.create(file.getAbsolutePath());

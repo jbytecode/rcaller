@@ -109,7 +109,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     @Override
     public void put(String name, Object o) {
         rcode.clearOnline();
-        StringBuffer code = new StringBuffer();
+        StringBuilder code = new StringBuilder();
         RCodeUtils.addRespectToType(code, name, o, false);
         rcode.addRCode("result <- list(a=0)");
         rcode.setCode(code);

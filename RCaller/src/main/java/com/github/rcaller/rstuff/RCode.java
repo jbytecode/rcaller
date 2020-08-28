@@ -39,12 +39,12 @@ import java.io.*;
 
 public class RCode {
 
-    private StringBuffer code;
+    private StringBuilder code;
     private TempFileService tempFileService = null;
 
 
     private RCode() {
-        this.code = new StringBuffer();
+        this.code = new StringBuilder();
     }
 
     public static RCode create() {
@@ -56,17 +56,23 @@ public class RCode {
     public static RCode create(StringBuffer stringBuffer) {
         RCode rCode = RCode.create();
         rCode.clear();
-        rCode.getCode().append(stringBuffer);
+        rCode.getCode().append(stringBuffer.toString());
         return rCode;
     }
 
     public void setCode(StringBuffer sb) {
-        this.code = new StringBuffer();
+        this.code = new StringBuilder();
+        clear();
+        this.code.append(sb.toString());
+    }
+
+    public void setCode(StringBuilder sb) {
+        this.code = new StringBuilder();
         clear();
         this.code.append(sb);
     }
 
-    public StringBuffer getCode() {
+    public StringBuilder getCode() {
         return (this.code);
     }
 

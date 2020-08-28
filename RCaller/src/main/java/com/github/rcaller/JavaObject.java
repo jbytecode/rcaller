@@ -57,7 +57,7 @@ public class JavaObject {
 
     public static String ConvertToRCode(String name, Object javaobject, boolean useList, boolean useEquals) throws IllegalAccessException {
         StringBuilder builder = new StringBuilder();
-        StringBuffer tempbuffer = new StringBuffer();
+        StringBuilder tempbuffer = new StringBuilder();
         String className, varName;
         Object o;
         Field f;

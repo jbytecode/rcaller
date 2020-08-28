@@ -146,6 +146,7 @@ public class RunOnlineTest {
     @Test
     public void timeoutTest() {
         System.out.println("TIMEOUT TEST");
+        System.out.println("*** This must throw an exception:");
         RCaller rcaller = RCaller.create(RCallerOptions.create(FailurePolicy.CONTINUE, 100)); //don't retry
         RCode code = RCode.create();
 
