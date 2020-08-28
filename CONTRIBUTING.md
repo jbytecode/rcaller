@@ -15,17 +15,17 @@ Then send a pull request as decribed in [Creating pull requests](https://docs.gi
 ## Writing blogposts
 Many users have blogposts about RCaller. If you have one, tell us to be visible in this repo. Here is some blogposts:
 - [Practical code solutions](http://stdioe.blogspot.com/search/label/rcaller).
-- [Scott Hoover] (https://scottdhoover.wordpress.com/2013/05/08/a-basic-rcaller-example/).
-- [Baeldung] (https://www.baeldung.com/java-r-integration).
-- [Renjin] (http://docs.renjin.org/en/latest/introduction.html).
+- [Scott Hoover](https://scottdhoover.wordpress.com/2013/05/08/a-basic-rcaller-example/).
+- [Baeldung](https://www.baeldung.com/java-r-integration).
+- [Renjin](http://docs.renjin.org/en/latest/introduction.html).
 
 ## Making youtube videos
 Videos are perfect tools for tutorials. Here is some examples:
-- [video by Bryan Downing - 1] (https://www.youtube.com/watch?v=hZDwuCV2fO8).
-- [video by Bryan Downing - 2] (https://www.youtube.com/watch?v=fHt0cq-6BvM).
+- [video by Bryan Downing - 1](https://www.youtube.com/watch?v=hZDwuCV2fO8).
+- [video by Bryan Downing - 2](https://www.youtube.com/watch?v=fHt0cq-6BvM).
 
 ## Posting answers in stackoverflow
 Stackoverflow is the defacto forum for nearly all tools in area of software. RCaller questions can be found using the tag **rcaller**.
-- [Questions on stackoverflow] (https://stackoverflow.com/questions/tagged/rcaller).
+- [Questions on stackoverflow](https://stackoverflow.com/questions/tagged/rcaller).
 
 We are just here waiting to hear from you!
