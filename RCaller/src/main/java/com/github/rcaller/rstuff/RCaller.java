@@ -83,17 +83,31 @@ public class RCaller {
     }
 
     /**
-     *
+     * Static factory creator for the default object
+     * 
      * @return default RCaller object
      */
     public static RCaller create() {
         return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), RCallerOptions.create());
     }
 
+    /***
+     * Static factory creater with startup options
+     * 
+     * @param rCallerOptions given startup options
+     * @return RCaller object
+     */
     public static RCaller create(RCallerOptions rCallerOptions) {
         return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
+    /**
+     * Static factory creator with given R code and startup options
+     * 
+     * @param rcode RCode object that contains R code that will be run at the startup
+     * @param rCallerOptions given startup object
+     * @return RCaller object
+     */
     public static RCaller create(RCode rcode, RCallerOptions rCallerOptions) {
         return new RCaller(rcode, new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
@@ -122,6 +136,10 @@ public class RCaller {
         rError.start();
     }
 
+    /**
+     * 
+     * @return The default Cran repository
+     */
     public String getCranRepos() {
         return Globals.cranRepos;
     }
@@ -142,6 +160,11 @@ public class RCaller {
         Globals.theme = theme;
     }
 
+    /**
+     * RCaller uses temp directory for many cases. This sometimes causes 
+     * inflations of number of temporary files. This method deletes the
+     * file created by RCaller in temp directory.
+     */
     public void deleteTempFiles() {
         tempFileService.deleteRCallerTempFiles();
         this.rCode.deleteTempFiles();
