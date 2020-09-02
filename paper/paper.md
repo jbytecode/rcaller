@@ -21,11 +21,11 @@ Nowadays, the interest on statistical computation and data analysis increased th
 
 
 # Statement of need 
-RCaller is a Java library for interfacing R from within Java [@satman2014rcaller]. R is a popular programming language and a programming environment with hundreds of packages written in C, C++, Fortran, and R itself [@rcoreteam]. These huge collection of computation tools are not directly accessible for the other languages, especially for Java. RCaller supplies a clean API for calling R functions, managing interactions, and transfering objects between languages. There are other options in the literature including Rserve [@urbanek2003fast] and rJava [@urbanek2009talk] which are based on TCP sockets and JNI (Java Native Interface), respectively. RCaller provides a set of easier calling schemes without any dependencies. Previous works showed that the performance of the library is suitable for more cases and studies with moderate datasets can be handled in reasonable times [@satmancurcean2016].
+RCaller is a Java library for interfacing R from within Java [@satman2014rcaller]. R is a popular programming language and a programming environment with hundreds of packages written in C, C++, Fortran, and R itself [@rcoreteam]. These huge collection of computation tools are not directly accessible for the other languages, especially for Java. RCaller supplies a clean API for calling R functions, managing interactions, and transfering objects between languages. There are other options in the literature including Rserve [@urbanek2003fast] and rJava [@urbanek2009talk] which are based on TCP sockets and JNI (Java Native Interface), respectively. RCaller provides a set of easier calling schemes without any dependencies. Previous works showed that the performance of the library is suitable for more cases and studies with moderate datasets can be handled in reasonable times [@satmancurcean2016]. After being introduced in paper [@satman2014rcaller], support for DataFrame objects, R start-up options, automatic Rscript executable locator, and Java Scripting API (JSR 223) are implemented besides minor library changes and performance improvements.   
 
 
 # Java scripting interface
-RCaller also implements the scripting API of Java (JSR 223). In other words, the engine behaves like a Java implementation of R. Here is an example of sorting a Java array in R side and handling the result in 
+RCaller also implements the scripting API of Java (JSR 223) after version 3 and above. In other words, the engine behaves like a Java implementation of R. Here is an example of sorting a Java array in R side and handling the result in 
 Java:
 
 ```Java
