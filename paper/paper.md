@@ -25,7 +25,7 @@ RCaller is a Java library for interfacing R from within Java [@satman2014rcaller
 
 
 # Java scripting interface
-RCaller also implements the scripting API of Java (JSR 223) after version 3 and above. In other words, the engine behaves like a Java implementation of R. Here is an example of sorting a Java array in R side and handling the result in 
+RCaller also implements the scripting API of Java (JSR 223) after version 3 and above. In other words, the engine behaves like a Java implementation of R. With this feature of RCaller, calling R from Java is seemingly the same as in the other JSR 223 implementations such as JavaScript, Python, Groovy, and Ruby. However the performance is not directly comparable with native counterparts (Rhino, Jython, JGroovy, JRuby, etc.) since the target language is not reimplemented in Java. Here is an example of sorting a Java array in R side and handling the result in 
 Java:
 
 ```Java
@@ -33,8 +33,8 @@ ScriptEngineManager manager = new ScriptEngineManager();
 ScriptEngine en = manager.getEngineByName("RCaller");
 double[] a = new double[]{19.0, 17.0, 23.0};
 engine.put("a", a);
-engine.eval("a <- sort(a)");
-double[] result = (double[]) engine.get("a");
+engine.eval("sortedA <- sort(a)");
+double[] result = (double[]) engine.get("sortedA");
 ```
 
 RCaller, as a scripting engine in Java, creates an R process, encodes Java objects to XML, runs commands in R side, gets back the results as XML, and parses the result to Java objects. Since a single R process is created and used for consecutive calls, XML parsing is the only calculation overhead.
