@@ -11,10 +11,12 @@ authors:
     affiliation: 1
   - name: Kopilov Aleksandr
     orcid: 0000-0002-8223-2168
-    affiliation: ?
+    affiliation: 2
 affiliations:
  - name: Department of Econometrics, Istanbul University
    index: 1
+ - name: Department of Math Optimisation and Modeling, BIA-Technologies
+   index: 2
 date: 24 August 2020
 bibliography: paper.bib
 ---
