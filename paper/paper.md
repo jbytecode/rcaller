@@ -9,6 +9,9 @@ authors:
   - name: Mehmet Hakan Satman
     orcid: 0000-0002-9402-1982
     affiliation: 1
+  - name: Kopilov Aleksandr
+    orcid: 0000-0002-8223-2168
+    affiliation: ?
 affiliations:
  - name: Department of Econometrics, Istanbul University
    index: 1
@@ -41,7 +44,8 @@ RCaller, as a scripting engine in Java, creates an R process, encodes Java objec
 
 # Acknowledgements
 
-We acknowledge contributions from Paul Curcean, Miroslav Batchkarov, Kopilov Aleksandr, Joel Wong, Kejo Starosta, Steven Sotelo, Edinei Piovesan, and others of this project.
+We acknowledge contributions from Paul Curcean, Miroslav Batchkarov, Joel Wong, Kejo Starosta, Steven Sotelo, Edinei Piovesan, and others of this project.
 
 # References
 
+RCaller is used as as core of [RCallerService](https://github.com/Kopilov/RCallerService), free microservice solution for running R-scripts from any other languages using HTTP.
