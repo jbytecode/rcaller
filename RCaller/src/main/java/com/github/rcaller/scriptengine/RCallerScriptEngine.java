@@ -180,7 +180,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     }
 
     public void close() {
-        this.rcaller.StopRCallerOnline();
+        this.rcaller.stopRCallerOnline();
     }
 
     /*
