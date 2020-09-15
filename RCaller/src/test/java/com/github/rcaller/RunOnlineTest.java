@@ -55,7 +55,7 @@ public class RunOnlineTest {
         //System.out.println("Deleting temp files:");
         rcaller.deleteTempFiles();
         //System.out.println("Stopping RCaller online");
-        rcaller.StopRCallerOnline();
+        rcaller.stopRCallerOnline();
     }
 
     @Test
@@ -104,7 +104,7 @@ public class RunOnlineTest {
         assertTrue(rcaller.stopStreamConsumers());
         //both consumer threads are dead, program must terminate now
         rcaller.deleteTempFiles();
-        rcaller.StopRCallerOnline();
+        rcaller.stopRCallerOnline();
     }
 
     /**
@@ -139,7 +139,7 @@ public class RunOnlineTest {
         System.out.println("done");
         assertTrue(rcaller.stopStreamConsumers());
         //both consumer threads are dead, program must terminate now
-        rcaller.StopRCallerOnline();
+        rcaller.stopRCallerOnline();
         rcaller.deleteTempFiles();
     }
 
@@ -161,7 +161,7 @@ public class RunOnlineTest {
         } catch (ExecutionException ex) {
             Logger.getLogger(RunOnlineTest.class.getName()).log(Level.SEVERE, ex.getMessage());
             exceptionThrown = true;
-            rcaller.StopRCallerOnline();
+            rcaller.stopRCallerOnline();
         }
         assertTrue(exceptionThrown);
 
@@ -172,7 +172,7 @@ public class RunOnlineTest {
         System.out.println("done");
         rcaller.deleteTempFiles();
         rcaller.stopStreamConsumers();
-        rcaller.StopRCallerOnline();
+        rcaller.stopRCallerOnline();
     }
 
     @Test
@@ -199,7 +199,7 @@ public class RunOnlineTest {
             }
             //Timeout is expired, program must terminate now
             assertTrue(rCallerCalculation.isAlive());
-            rcaller.StopRCallerAsync();
+            rcaller.stopRCallerAsync();
             rcaller.deleteTempFiles();
             Thread.sleep(10); //Wait a little, allow rCallerCalculation to finish
             assertFalse(rCallerCalculation.isAlive());
@@ -229,7 +229,7 @@ public class RunOnlineTest {
             if (ex.getMessage().contains("R stderr:")) {
                 exceptionThrown = true;
             }
-            rcaller.StopRCallerOnline();
+            rcaller.stopRCallerOnline();
         }
         assertTrue(exceptionThrown);
 
@@ -240,6 +240,6 @@ public class RunOnlineTest {
         System.out.println("done");
         rcaller.deleteTempFiles();
         rcaller.stopStreamConsumers();
-        rcaller.StopRCallerOnline();
+        rcaller.stopRCallerOnline();
     }
 }

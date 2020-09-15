@@ -35,6 +35,6 @@ public class RServiceExample {
         result = service.get("product", "list(product=x*y)", RService.type_double);
         System.out.println(result[0]);        
         
-        service.getRCaller().StopRCallerOnline();
+        service.getRCaller().stopRCallerOnline();
     }
 }

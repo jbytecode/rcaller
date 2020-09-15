@@ -58,7 +58,7 @@ public class EventHandlerTest {
         caller.stopStreamConsumers();
 
         caller.deleteTempFiles();
-        caller.StopRCallerOnline();
+        caller.stopRCallerOnline();
 
         BufferedReader reader = new BufferedReader(new FileReader("oneCopy.txt"));
         String s;

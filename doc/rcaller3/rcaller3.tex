@@ -421,11 +421,11 @@ System.out.println(
    caller.getParser().getAsDoubleArray("mymed")[0]
 );
 
-caller.StopRCallerOnline();
+caller.stopRCallerOnline();
 \end{lstlisting}
 \end{minipage}
 
-In Listing \ref{code_java_online}, an array in type of \texttt{double[]} is sent to \texttt{R}. Using the same external process, the mean, the variance and the median of variable \texttt{d} are calculated and sent to \texttt{Java} sequentially. Since the process is kept alive during the calculations, it is terminated by calling the function \texttt{StopRCallerOnline} of object \texttt{caller} in type of \texttt{RCaller}.
+In Listing \ref{code_java_online}, an array in type of \texttt{double[]} is sent to \texttt{R}. Using the same external process, the mean, the variance and the median of variable \texttt{d} are calculated and sent to \texttt{Java} sequentially. Since the process is kept alive during the calculations, it is terminated by calling the function \texttt{stopRCallerOnline} of object \texttt{caller} in type of \texttt{RCaller}.
 
 \section{Features in Version 3.0}
 \label{sec:features_in_version_3}

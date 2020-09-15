@@ -38,7 +38,7 @@ public class Stackoverflow1 {
         double mad = rcaller.getParser().getAsDoubleArray("result")[0];
         System.out.println("mad: " + mad);
         rcaller.stopStreamConsumers();
-        rcaller.StopRCallerOnline();
+        rcaller.stopRCallerOnline();
     }
 
 }

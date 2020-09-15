@@ -413,11 +413,21 @@ public class RCaller {
         return process.isAlive();
     }
 
+
     /**
      * Stops underlying R process gracefully.
      * No calculations should be running.
      */
+    @Deprecated
     public void StopRCallerOnline() {
+        stopRCallerOnline();
+    }
+
+    /**
+     * Stops underlying R process gracefully.
+     * No calculations should be running.
+     */
+    public void stopRCallerOnline() {
         if (process != null) {
             try {
                 process.getOutputStream().write("q(\"no\")\n".getBytes(Globals.standardCharset));
@@ -436,7 +446,16 @@ public class RCaller {
      * Stops underlying R process anyway.
      * May be used from separate thread to terminate running calculations.
      */
+    @Deprecated
     public void StopRCallerAsync() {
+        stopRCallerAsync();
+    }
+
+    /**
+     * Stops underlying R process anyway.
+     * May be used from separate thread to terminate running calculations.
+     */
+    public void stopRCallerAsync() {
         if (process != null) {
             process.destroy();
             stopStreamConsumers();
