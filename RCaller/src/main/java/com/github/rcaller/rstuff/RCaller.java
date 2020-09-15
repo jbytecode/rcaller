@@ -441,7 +441,9 @@ public class RCaller {
             process.destroy();
             stopStreamConsumers();
             process = null;
-            deleteDirectory(new File(tmpDir));
+            if (tmpDir != null) {
+                deleteDirectory(new File(tmpDir));
+            }
         }
     }
 
