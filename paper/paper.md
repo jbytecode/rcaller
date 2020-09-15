@@ -46,6 +46,6 @@ RCaller, as a scripting engine in Java, creates an R process, encodes Java objec
 
 # Acknowledgements
 
-We acknowledge contributions from Paul Curcean, Miroslav Batchkarov, Joel Wong, Kejo Starosta, Steven Sotelo, Edinei Piovesan, and others of this project.
+We acknowledge contributions from Paul Curcean, Miroslav Batchkarov, Joel Wong, Kejo Starosta, Steven Sotelo, Edinei Piovesan, Simon Carter, and others of this project.
 
 # References
