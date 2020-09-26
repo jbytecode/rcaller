@@ -1,8 +1,8 @@
 # Overview
 
 [![Join the chat at https://gitter.im/jbytecode/rcaller](https://badges.gitter.im/jbytecode/rcaller.svg)](https://gitter.im/jbytecode/rcaller?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://github.com/jbytecode/rcaller/workflows/build/badge.svg)](https://github.com/jbytecode/rcallerservice/workflows/build/badge.svg)
-[![Test Status](https://github.com/jbytecode/rcaller/workflows/test/badge.svg)](https://github.com/jbytecode/rcallerservice/workflows/test/badge.svg)
+[![Build Status](https://github.com/jbytecode/rcaller/workflows/build/badge.svg)](https://github.com/jbytecode/rcaller/workflows/build/badge.svg)
+[![Test Status](https://github.com/jbytecode/rcaller/workflows/test/badge.svg)](https://github.com/jbytecode/rcaller/workflows/test/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jbytecode/RCaller/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.jbytecode/RCaller)
 
 
