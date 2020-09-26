@@ -5,7 +5,7 @@ name: build
 
 on:
   push:
-    branches: [ master, citest ]
+    branches: [ master ]
   pull_request:
     branches: [ master ]
 
