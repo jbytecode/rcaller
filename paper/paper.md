@@ -34,12 +34,19 @@ RCaller also implements the scripting API of Java (JSR 223) after version 3 and 
 Java:
 
 ```Java
-ScriptEngineManager manager = new ScriptEngineManager();
-ScriptEngine en = manager.getEngineByName("RCaller");
-double[] a = new double[]{19.0, 17.0, 23.0};
-engine.put("a", a);
-engine.eval("sortedA <- sort(a)");
-double[] result = (double[]) engine.get("sortedA");
+	ScriptEngineManager manager = new ScriptEngineManager();
+	ScriptEngine en = manager.getEngineByName("RCaller");
+			
+	try {
+		double[] a = new double[] {19.0, 17.0, 23.0};
+		en.put("a", a);
+		en.eval("sortedA <- sort(a)");
+		double[] result = (double[])en.get("sortedA");
+		System.out.println(result[0]);
+	} catch (ScriptException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
 ```
 
 RCaller, as a scripting engine in Java, creates an R process, encodes Java objects to XML, runs commands in R side, gets back the results as XML, and parses the result to Java objects. Since a single R process is created and used for consecutive calls, XML parsing is the only calculation overhead.
