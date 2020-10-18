@@ -223,17 +223,6 @@ public class RCaller {
     private Process exec(String command) throws IOException {
         String[] cmd = command.split(" ");
         ProcessBuilder pb = new ProcessBuilder(cmd);
-        Map<String, String> env = pb.environment();
-        String localeAndCharset = join(".", Globals.standardLocale.toString(), Globals.standardCharset.toString());
-    
-        env.put("LC_COLLATE", localeAndCharset);
-        env.put("LC_CTYPE", localeAndCharset);
-        env.put("LC_MESSAGES", localeAndCharset);
-        env.put("LC_MONETARY", localeAndCharset);
-        env.put("LC_NUMERIC", localeAndCharset);
-        env.put("LC_TIME", localeAndCharset);
-        env.put("LC_ALL", localeAndCharset);
-
         return pb.start();
     }
 
