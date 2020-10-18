@@ -224,7 +224,14 @@ public class RCaller {
         String[] cmd = command.split(" ");
         ProcessBuilder pb = new ProcessBuilder(cmd);
         Map<String, String> env = pb.environment();
-        String localeAndCharset = join(".", Globals.standardLocale.toString(), Globals.standardCharset.toString());
+        String locale = Globals.standardLocale.toString();
+        if (locale.equals("en")) { //Java shows no-lang locales as "en", R does not understand
+            String langEnv = System.getenv().get("LANG");
+            if ("C.UTF-8".equals(langEnv) || "C".equals(langEnv) || "POSIX".equals(langEnv)) {
+                locale = "C";
+            }
+        }
+        String localeAndCharset = join(".", locale, Globals.standardCharset.toString());
     
         env.put("LC_COLLATE", localeAndCharset);
         env.put("LC_CTYPE", localeAndCharset);
