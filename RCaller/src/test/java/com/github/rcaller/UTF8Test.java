@@ -18,7 +18,6 @@ public class UTF8Test {
     public UTF8Test() {
     }
 
-    /*
     @Test
     public void Utf8CharactersTest() {
         String s = "ǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦ";
@@ -33,7 +32,6 @@ public class UTF8Test {
         String[] result = caller.getParser().getAsStringArray("s");
         assertTrue(result[0].equals(s));
     }
-    */
     
     @Test
     public void VariableNameContainsAndCharacterTest() throws IOException{
