@@ -25,11 +25,47 @@ suitable for the projects which have many clients that request relatively single
 
 [RCaller3 Documentation](https://github.com/jbytecode/rcaller/blob/master/doc/rcaller3/rcaller3.pdf)
 
+
+
+
+# Dependencies
+RCaller compiled jar library requires JRE (v1.8 or higher) and R installed in the runtime environment. If you want to compile from source, JDK (v.1.8 or higher) and maven are also required 
+for building process. Maven is responsible for downloading and install additional Java dependencies 
+defined in [pom file](https://github.com/jbytecode/rcaller/blob/master/RCaller/pom.xml). RCaller
+does not use any version specific property of R. 
+
+
 # Usage
 
 It is recommended to take a look at the existing [tests](https://github.com/jbytecode/rcaller/tree/master/RCaller/src/test/java/com/github/rcaller)
  and 
 [examples](https://github.com/jbytecode/rcaller/tree/master/RCaller/src/main/java/examples)
+ 
+
+### Here is a set of selected examples:
+
+- [Basic Graphics](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/BasicGraphics.java)
+
+- [Basic Script Engine](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/BasicScriptEngine.java)
+
+- [Descriptive Statistics](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/DescriptiveStatistics.java)
+
+- [Handling Empty Arrays](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/EmptyArray.java)
+
+- [Automatic ARIMA Model Selection](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/Forecasting.java)
+
+- [Graphics with Themes](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/GraphicsWithThemes.java)
+
+- [Multiple Sequential Calls using a Single R Instance](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/MultipleCalls.java)
+
+- [Ordinary Least Squares](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/OrdinaryLeastSquares.java)
+
+- [Swing R GUI](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/SampleRGui.java)
+
+- [Invoke R Functions](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/ScriptEngineInvocable.java)
+
+
+
 
 # Building RCaller
 
