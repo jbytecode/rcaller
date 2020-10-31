@@ -18,6 +18,7 @@
 \usepackage{url}
 \usepackage{float}
 \usepackage{menukeys}
+\usepackage[nottoc,notlot,notlof]{tocbibind}
 
 
 
@@ -86,10 +87,6 @@ In this paper, we introduce the version $3.0$ of the software library \texttt{RC
   basicstyle=\ttfamily,
   frame=single,
   morekeywords={version,dependency,groupId,artifactId,classifier,c}
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
   backgroundcolor=\color{color_code_back_gray}
 }
 \begin{lstlisting}[caption=Downloading source code, label=code:git]
@@ -106,10 +103,6 @@ The most straightforward way of including \texttt{RCaller} in a project as a dep
   basicstyle=\ttfamily,
   frame=single,
   morekeywords={version,dependency,groupId,artifactId,classifier,c}
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
   backgroundcolor=\color{color_code_back_gray}
 }
 \begin{lstlisting}[caption=Maven dependency code, label=code:maven_dependency]
@@ -140,12 +133,7 @@ The class \texttt{RCaller} includes methods for creating external processes and 
 \lstset{
   language=Java,
   showstringspaces=false,
-  numbers=left,
   frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
   backgroundcolor=\color{color_code_back_gray}
 }
 \begin{lstlisting}[caption=Simple call,label=code_simple_call]
@@ -185,17 +173,12 @@ In Listing \ref{code_simple_call}, the mean of an vector is calculated on \textt
 \noindent where the arguments for variable names in type of \texttt{String} and values in corresponding type. Listing \ref{code_java_pass_data} shows an example of passing different types of data to \texttt{R} and getting back the results in \texttt{Java}.
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Passing Data,label=code_java_pass_data]
 RCode code = RCode.create();
 RCaller caller = RCaller.create();
@@ -234,17 +217,12 @@ In addition to array-passing functions, the function \texttt{addDoubleMatrix} ca
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Transferring Matrices,label=code_java_svd]
 RCaller caller = RCaller.create();
 RCode code = RCode.create();
@@ -268,17 +246,12 @@ double[][] v = caller.getParser().getAsDoubleMatrix("v");
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  showstringspaces=false,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  backgroundcolor=\color{color_code_back_gray}
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Default DataFrame Creator,label=code_dataframe_way1]
 public static DataFrame create(int n, int m) {
     return new DataFrame(
@@ -293,17 +266,12 @@ Since only the dimension is given, the data matrix is filled with \texttt{null} 
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  showstringspaces=false,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  backgroundcolor=\color{color_code_back_gray}
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Custom DataFrame Creator, label=code_dataframe_way2]
 public static DataFrame create(Object[][] objects, String[] names) {
     if (objects.length != names.length) {
@@ -327,17 +295,12 @@ Note that the current version of \texttt{RCaller} supports only the one-way tran
 A \texttt{Java} object can be passed to \texttt{R} and calculations can be performed on the fields that are declared using \texttt{public} keyword on the \texttt{R} side. Any \texttt{Java} object can be passed as an \texttt{R} \texttt{List} object with elements corresponding to the public fields of the \texttt{Java} object. In Listing \ref{code_java_simple_object}, a \texttt{Java} class is declared with three public fields. 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=A Plain Java Object Class,label=code_java_simple_object]
 public class PlainJavaObject {
     public double[] d = new double[]{1.0, 2.0, 3.0};
@@ -350,17 +313,12 @@ public class PlainJavaObject {
 The class \texttt{RCode} defines the method \texttt{addJavaObject} which takes only one argument in type of \texttt{com.github.rcaller.JavaObject}. The constructor of the \texttt{JavaObject} class takes two arguments that define the name of object and the object itself. The object then will be converted to an \texttt{R} \texttt{List} with the given name. In Listing \ref{code_java_pass_object}, an instance of the \texttt{PlainJavaObject} is passed from \texttt{Java} to \texttt{R}. The declared fields \texttt{d}, \texttt{i}, and \texttt{s} are accessable in \texttt{R} using the \texttt{\$} operator like \texttt{myobject\$d}, \texttt{myobject\$i}, and \texttt{myobject\$s}, respectively.
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Passing Java Objects,label=code_java_pass_object]
 RCaller caller = RCaller.create();
 RCode code = RCode.create();
@@ -384,17 +342,12 @@ The method \texttt{runAndReturnResult} that is mentioned in previous sections cr
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=RCaller Online,label=code_java_online]
 RCaller caller = RCaller.create();
 RCode code = RCode.create();
@@ -438,17 +391,12 @@ Listing \ref{code_java_script} demonstrates a simple example of calling \texttt{
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Calling JavaScript,label=code_java_script]
 ScriptEngineManager manager = new ScriptEngineManager();
 ScriptEngine engine = manager.getEngineByName("JavaScript");
@@ -464,17 +412,12 @@ System.out.println(engine.get("c"));
 The code shown in Listing \ref{code_r_script} presents a simple example for interfacing \texttt{R} in \texttt{Java} throughout \emph{Java Scripting Interface}. An instance of \texttt{ScriptEngine} is created by calling the \texttt{getEngineByName} method with argument \texttt{RCaller}. The code passed to \texttt{eval} method hosts native \texttt{R} code for creating the variable \texttt{a} in line 4. In line 5, the value of $7.0$ in \texttt{Java} is sent to \texttt{R} and saved as variable \texttt{b}. In line 6, sum of \texttt{a} and  \texttt{b} is assigned to the variable \texttt{mysum}. Finally, by using the \texttt{get} method, the calculated value of \texttt{mysum} variable is retrieved on the \texttt{Java} side. Differently, \texttt{mysum} is in type of \texttt{vector} rather than \texttt{scaler}, the object \texttt{result} in \texttt{Java} is in type of \texttt{double[]}. Since length of the vector is unit, the retrieved result is handled using \texttt{result[0]}.
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Calling R,label=code_r_script]
 ScriptEngineManager manager = new ScriptEngineManager();
 ScriptEngine engine = manager.getEngineByName("RCaller");
@@ -493,17 +436,12 @@ System.out.println(result[0]);
 Listing \ref{code_r_script_array} demonstrates an other simple example of sending an array from \texttt{Java} to \texttt{R}, performing a sorting operation on the \texttt{R} side, and retrieving the sorted array from \texttt{R} to \texttt{Java}. The \texttt{Java} array \texttt{a} is of type \texttt{double[]} and it is sent using the method \texttt{put()}. Since the code \texttt{b <- sort(a)} is native to \texttt{R}, it is evaluated using the \texttt{eval()} method. Finally, the sorted array \texttt{b} is retrieved using the method \texttt{get()}. These three methods are defined in the scripting API and the behaivour is in the same way of calling other scripting languages in \texttt{Java}. 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Passing Java Arrays,label=code_r_script_array]
 double[] a = new double[]{19.0, 17.0, 23.0};
 engine.put("a", a);
@@ -516,17 +454,12 @@ Function calls can be performed using the \texttt{eval()} method as shown in the
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Invoking runif,label=code_invoke_runif]
 Invocable invocable = (Invocable) engine;
 Object result = invocable.invokeFunction(
@@ -545,17 +478,12 @@ double[] dresult = (double[]) allresults.get(0).getObj();
 The example given in Listing \ref{code_invoke_sqrt} is similar with the one given in Listing \ref{code_invoke_runif}. The \texttt{sqrt} function defined in \texttt{R} takes the argument \texttt{x} and returns the square root of \texttt{x}. The function call can be performed using \texttt{sqrt(x = 5.0)} as well as using \texttt{sqrt(5.0)}. If the orders of arguments are not important, the \texttt{Named} function can be used without argument names. In Listing \ref{code_invoke_sqrt}, the \texttt{sqrt} is called with value of $25.0$ without an argument name. Since the function returns a scaler rather than an array, it is stored in the first element of the return list and handled by object \texttt{dresult[0]}. Note that the \texttt{invokeFunction} method can call any \texttt{R} function including the user-defined functions. Listing \ref{code_invoke_userfunction} shows an example of calling a user-defined \texttt{R} function which is defined on the \texttt{Java} side. Function \texttt{f} takes only one argument \texttt{a} and returns the power of $2$.
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Invoking sqrt,label=code_invoke_sqrt]
 Invocable invocable = (Invocable) engine;
 ArrayList<NamedArgument> allresults = 
@@ -571,17 +499,12 @@ double[] dresult = (double[]) allresults.get(0).getObj();
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  showstringspaces=false,
-  backgroundcolor=\color{color_code_back_gray} 
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Invoking user-defined functions,label=code_invoke_userfunction]
 Invocable invocable = (Invocable) engine;
 double[] x = new double[]{1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0};
@@ -608,17 +531,12 @@ For a performance improvement, some implemented methods can be stored in \texttt
 The static method \texttt{RProcessStartUpOptions} is encapsulated in the \texttt{RCallerOptions} class and it is called with default values in instantiation of a new \texttt{RCaller} object. Creating a \texttt{RStartUpOtions} object can be performed by either with the default values of arguments or with the user-defined values. Listing \ref{code_options_way1} shows the factory method for creating an \texttt{RPocessStartUpOptions} object with default arguments and the argument for the option \texttt{--vanilla} is set to \texttt{true}. 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  showstringspaces=false,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  backgroundcolor=\color{color_code_back_gray}
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Default RProcessStartUpOptions Creator,label=code_options_way1]
  public static RProcessStartUpOptions create() {
         return new RProcessStartUpOptions(
@@ -633,17 +551,12 @@ The static method \texttt{RProcessStartUpOptions} is encapsulated in the \texttt
 
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  showstringspaces=false,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  backgroundcolor=\color{color_code_back_gray}
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Custom RProcessStartUpOptions Creator,label=code_options_way2]
 public static RProcessStartUpOptions create(
       boolean save, boolean noSave, boolean noEnviron,
@@ -670,17 +583,12 @@ public static RProcessStartUpOptions create(
 Listing \ref{code_options_way2} shows the factory method \texttt{create} for creating a configuration for starting up options. Invoking the \texttt{create} method with the arguments that are given in Listing \ref{code_options_example} produces the option string that is passed to external \texttt{R} process as in shown in Listing \ref{code_options_gen}.
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  showstringspaces=false,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  backgroundcolor=\color{color_code_back_gray}
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[caption=Custom RProcessStartUpOptions Creator,label=code_options_example]
 RProcessStartUpOptions rProcessStartUpOptions = 
 	RProcessStartUpOptions.create(
@@ -695,17 +603,12 @@ RProcessStartUpOptions rProcessStartUpOptions =
 %\keys{\return}
 
 \begin{minipage}{\linewidth}
-\lstset{
-  language=Java,
-  showstringspaces=false,
-  numbers=left,
-  frame=single,
-  numbers=left,                    
-  numbersep=5pt,                   
-  numberstyle=\tiny\color{color_black},
-  numberfirstline=true,
-  backgroundcolor=\color{color_code_back_gray}
-}
+  \lstset{
+    language=Java,
+    showstringspaces=false,
+    frame=single,
+    backgroundcolor=\color{color_code_back_gray}
+  }
 \begin{lstlisting}[escapeinside={<@}{@>},caption=Generated Options,label=code_options_gen]
 --save --no-init-file --restore --quiet --silent <@\keys{\return}@>
 --slave --min-vsize=10 --gui=test
@@ -798,7 +701,7 @@ Coefficients:
 n              -7.127311   0.444450 -16.036  < 2e-16 ***
 n^2             0.192632   0.002835  67.956  < 2e-16 ***
 ---
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 
+Signif. codes:  0 *** 0.001 ** 0.01 * 0.05 
 
 Residual standard error: 57.25 on 146 degrees of freedom
 Multiple R-squared:  0.9968,	Adjusted R-squared:  0.9968 
@@ -883,8 +786,6 @@ British Journal of Mathematics & Computer Science 4.15 (2014): 2188.
 
 \noindent \\ for other text editors.
 
-%\begin{thebibliography}{}
-%\end{thebibliography}
 
 \scriptsize\-----------------------------------------------------------------------------------------------------------------------------------------\\\copyright \it 2016  Mehmet Hakan Satman \& Paul Curcean; This is an Open Access article distributed under the terms of the Creative Commons Attribution License
 \href{http://creativecommons.org/licenses/by/2.0}{http://creativecommons.org/licenses/by/2.0},  which permits unrestricted use, distribution, and reproduction in any medium,
