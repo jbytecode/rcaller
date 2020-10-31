@@ -8,13 +8,17 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ForecastExample {
+/**
+ * In this example, an automatic ARIMA model
+ * selection is performed using the R package forecast.
+ */
+public class Forecasting {
 
   public static void main(String[] args) {
-    new ForecastExample();
+    new Forecasting();
   }
 
-  public ForecastExample() {
+  public Forecasting() {
     Random random = new Random(12345);
     double[] stockClosePrices = new double[100];
     stockClosePrices[0] = 0;
@@ -33,8 +37,8 @@ public class ForecastExample {
 
       code.addDoubleArray("x", stockClosePrices);
       code.R_require("forecast");
-      code.addRCode("ww<-auto.arima(x)");
-      code.addRCode("tt<-forecast(ww,h=20)");
+      code.addRCode("ww <- auto.arima(x)");
+      code.addRCode("tt <- forecast(ww,h=20)");
 
       code.addRCode("myResult <- list(upper=tt$upper, lower=tt$lower, fitted = as.double(tt$fitted))");
 
@@ -56,7 +60,7 @@ public class ForecastExample {
       }
 
     } catch (Exception e) {
-      Logger.getLogger(ForecastExample.class.getName()).log(Level.SEVERE, e.getMessage());
+      Logger.getLogger(Forecasting.class.getName()).log(Level.SEVERE, e.getMessage());
     }
 
   }
