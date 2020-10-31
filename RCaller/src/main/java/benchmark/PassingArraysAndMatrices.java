@@ -4,8 +4,8 @@ import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 
 /**
- * Passing a double[] array of size VectorSize to R, calculating a^2 for each
- * element, handling the result in Java.
+ * Passing a double[] array (or matrix) to R, calculating a^2 (or transpose) 
+ * handling the result in Java.
  * 
  * This benchmark reports the minimum, maximum median, average calculation times
  * with standard deviation and median absolute deviations scale measures.
