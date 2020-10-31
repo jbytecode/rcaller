@@ -71,7 +71,8 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
 - [Invoke R Functions](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/ScriptEngineInvocable.java)
 
 
-
+# API Docs
+[Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/v3.0.2/RCaller-3.0.2-SNAPSHOT-javadoc.jar). 
 
 # Building and Installing RCaller
 There are many options to integrate RCaller with a Java Project. First option is to download pre-compiled jar file and add it to the classpath or pom.xml. [pre-compiled jar files](https://github.com/jbytecode/rcaller/releases) are here.
