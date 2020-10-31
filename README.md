@@ -98,6 +98,8 @@ The last option is to use maven dependency:
 
 The RCaller is located in the Maven Central Repository.
 
+# Benchmarks
+You can test the performance of the library using the benchmark tool hosted [here](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/benchmark/PassingArraysAndMatrices.java). This file tests passing vectors and matrices from Java to R and vice versa. 
 
 # Join us
 If you want to join us, please follow the community guidelines [here](https://github.com/jbytecode/rcaller/blob/master/CONTRIBUTING.md). We look forward to seeing your contributions.
