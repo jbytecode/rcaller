@@ -96,3 +96,7 @@ The last option is to use maven dependency:
 ```
 
 The RCaller is located in the Maven Central Repository.
+
+
+# Join us
+If you want to join us, please follow the community guidelines [here](https://github.com/jbytecode/rcaller/blob/master/CONTRIBUTING.md). We look forward to seeing your contributions.
