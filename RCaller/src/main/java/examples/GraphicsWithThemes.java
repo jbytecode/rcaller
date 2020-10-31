@@ -12,15 +12,15 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author hako
+ * @author Mehmet Hakan Satman
  */
-public class Example7 {
+public class GraphicsWithThemes {
 
   public static void main(String[] args) {
-    new Example7();
+    new GraphicsWithThemes();
   }
 
-  public Example7() {
+  public GraphicsWithThemes() {
     try {
 
       RCaller caller = RCaller.create();
@@ -35,12 +35,7 @@ public class Example7 {
        */
       caller.setGraphicsTheme(new BlackTheme());
 
-      /**
-       * After version 2.0.6
-       * We build the code using RCode class. Older 
-       * methods are deprecated and will no longer will be
-       * available in RCaller 3.0
-       */
+
       RCode code = RCode.create();
 
 
@@ -52,20 +47,20 @@ public class Example7 {
       code.addRCode("plot.ts(x)");
       code.endPlot();
 
-      /**
-       * After version 2.0.6
-       * We set the code.
-       */
       caller.setRCode(code);
       
       caller.runOnly();
       
+      /** 
+       * Handling generated plot as an ImageIcon 
+      */
       ImageIcon ii = code.getPlot(file);
+      
       code.showPlot(file);
       
       System.out.println("success");
     } catch (Exception e) {
-      Logger.getLogger(Example7.class.getName()).log(Level.SEVERE, e.getMessage());
+      Logger.getLogger(GraphicsWithThemes.class.getName()).log(Level.SEVERE, e.getMessage());
     }
   }
 }

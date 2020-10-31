@@ -8,6 +8,9 @@ import com.github.rcaller.rstuff.RCode;
 import java.awt.event.KeyEvent;
 import java.io.ByteArrayOutputStream;
 
+/**
+ * A Swing interface for R using RCaller.
+ */
 public class SampleRGui extends javax.swing.JFrame {
 
     RCaller caller;

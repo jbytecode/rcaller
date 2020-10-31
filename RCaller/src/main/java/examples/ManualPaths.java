@@ -10,7 +10,7 @@ import javax.script.ScriptException;
 /**
  * Examples showing how to set the path to the R executable manually
  */
-public class ManualPathExample {
+public class ManualPaths {
     public static void main(String[] args) {
         try {
             RCallerScriptEngineExample();

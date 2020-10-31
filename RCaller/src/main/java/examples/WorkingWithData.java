@@ -8,13 +8,18 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 
+/**
+ * This example shows how RCaller
+ * handles data sent from R. The 
+ * data used is imported using 
+ * read.table() in R side.
+ */
+public class WorkingWithData {
 
-public class DataFileExample {
-
-  public DataFileExample(){
+  public WorkingWithData(){
 
     /**
-     *  Creating a RCaller
+     *  Creating an RCaller instance
      */
     RCaller caller = RCaller.create();
 
@@ -52,7 +57,7 @@ public class DataFileExample {
      * Now, writing some R Code
      */
     if (f != null) {
-      code.addRCode("data<-read.table(\""+f.getAbsoluteFile()+"\", header=TRUE)");
+      code.addRCode("data <- read.table (\""+f.getAbsoluteFile()+"\", header=TRUE)");
     }
 
     /**
@@ -75,6 +80,6 @@ public class DataFileExample {
   }
 
   public static void main(String[] args){
-    new DataFileExample();
+    new WorkingWithData();
   }
 }

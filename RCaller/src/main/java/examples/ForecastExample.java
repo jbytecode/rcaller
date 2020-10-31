@@ -56,7 +56,7 @@ public class ForecastExample {
       }
 
     } catch (Exception e) {
-      Logger.getLogger(Example7.class.getName()).log(Level.SEVERE, e.getMessage());
+      Logger.getLogger(ForecastExample.class.getName()).log(Level.SEVERE, e.getMessage());
     }
 
   }

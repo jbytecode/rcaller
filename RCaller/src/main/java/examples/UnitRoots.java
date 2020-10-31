@@ -1,5 +1,4 @@
 /*
- * 
  * This example simply demonstrates calling S4 methods 
  * using RCaller.
  */
@@ -12,13 +11,17 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class UnitRootsExample {
+/**
+ * Finding unit roots using a package 
+ * which is not pre-installed.
+ */
+public class UnitRoots {
 
   public static void main(String[] args) {
-    new UnitRootsExample();
+    new UnitRoots();
   }
 
-  public UnitRootsExample() {
+  public UnitRoots() {
     try {
       /**
        * Creating a Random object
@@ -43,9 +46,9 @@ public class UnitRootsExample {
 
       code.R_require("fUnitRoots");
 
-      code.addRCode("ww<-diff(x, differences=1)");
+      code.addRCode("ww <- diff(x, differences = 1)");
 
-      code.addRCode("tt<-unitrootTest(ww, lags=0)");
+      code.addRCode("tt <- unitrootTest(ww, lags=0)");
 
       caller.setRCode(code);
       caller.runAndReturnResult("tt@test");
@@ -54,7 +57,7 @@ public class UnitRootsExample {
       System.out.println(res[0]);
       System.out.println("success");
     } catch (Exception e) {
-      Logger.getLogger(UnitRootsExample.class.getName()).log(Level.SEVERE, e.getMessage());
+      Logger.getLogger(UnitRoots.class.getName()).log(Level.SEVERE, e.getMessage());
     }
 
   }
