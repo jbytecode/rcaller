@@ -28,4 +28,9 @@ Videos are perfect tools for tutorials. Here is some examples:
 Stackoverflow is the defacto forum for nearly all tools in area of software. RCaller questions can be found using the tag **rcaller**.
 - [Questions on stackoverflow](https://stackoverflow.com/questions/tagged/rcaller).
 
+
+## Have problems?
+Please create an issue that adresses your problem. We will be happy to help to you.
+
+
 We are just here waiting to hear from you!
