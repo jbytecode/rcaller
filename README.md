@@ -26,6 +26,12 @@ suitable for the projects which have many clients that request relatively single
 [RCaller3 Documentation](https://github.com/jbytecode/rcaller/blob/master/doc/rcaller3/rcaller3.pdf)
 
 
+# Who uses RCaller?
+RCaller is a production ready library for calling R functions from within Java. If you are developing 
+Java software that needs enhanced statistical calculations, RCaller is a practical solution to integrate
+these languages. R has many well-tested and matured packages for automatic time series model selection, 
+clustering, segmentation and classification, non-linear and robust regression estimations, data and text
+mining, linear and non-linear programming, generating plots, function optimization besides other research tools. RCaller brings all of the functionality that R serves in Java. Easy installation and integration steps and steep learning curve make RCaller a suitable solution. RCaller's computation overhead is generating XML files in R side and parsing XML to Java objects in Java side.  
 
 
 # Dependencies
@@ -67,17 +73,26 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
 
 
 
-# Building RCaller
+# Building and Installing RCaller
+There are many options to integrate RCaller with a Java Project. First option is to download pre-compiled jar file and add it to the classpath or pom.xml. [pre-compiled jar files](https://github.com/jbytecode/rcaller/releases) are here.
 
-download the [.jar file](https://github.com/jbytecode/rcaller/releases) and added it to your pom.xml.
+The second option is to compile from source. R should be installed to run tests. After building process, if everything is okay, a jar file is located in the target directory.
 
-import RCaller in your project using `maven`. add following dependency to `pom.xml`:
+```BASH
+$ git clone https://github.com/jbytecode/rcaller.git
+$ cd RCaller
+$ mvn package
+```
 
+The last option is to use maven dependency: 
 
-    <dependency>
-	    <groupId>com.github.jbytecode</groupId>
-	    <artifactId>RCaller</artifactId>
-	    <version>2.8</version>
-    </dependency>
-    
+```XML
+<dependency>
+  <groupId>com.github.jbytecode</groupId>
+  <artifactId>RCaller</artifactId>
+  <version>3.0</version>
+  <classifier>jar-with-dependencies</classifier>
+</dependency>
+```
+
 The RCaller is located in the Maven Central Repository.
