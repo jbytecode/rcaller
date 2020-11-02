@@ -1,5 +1,5 @@
 ---
-title: 'RCaller 3.0: A Java package for interfacing R'
+title: 'RCaller: A Java package for interfacing R'
 tags:
   - R
   - Java
