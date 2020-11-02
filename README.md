@@ -5,6 +5,7 @@
 [![Test Status](https://github.com/jbytecode/rcaller/workflows/test/badge.svg)](https://github.com/jbytecode/rcaller/workflows/test/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.jbytecode/RCaller/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.jbytecode/RCaller)
 [![status](https://joss.theoj.org/papers/de28eed555632371f4dcbe82efce5075/status.svg)](https://joss.theoj.org/papers/de28eed555632371f4dcbe82efce5075)
+
 [![doi](https://zenodo.org/badge/doi/10.5281/zenodo.4189769.svg)]
 
 RCaller is a software library which is developed to simplify calling R from Java. Despite it is not
