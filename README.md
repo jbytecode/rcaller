@@ -104,3 +104,6 @@ You can test the performance of the library using the benchmark tool hosted [her
 
 # Join us
 If you want to join us, please follow the community guidelines [here](https://github.com/jbytecode/rcaller/blob/master/CONTRIBUTING.md). We look forward to seeing your contributions.
+
+# Citation
+Please refer to citation information given in file [bibtex](https://github.com/jbytecode/rcaller/blob/master/bibtex.bib) in your publications.
