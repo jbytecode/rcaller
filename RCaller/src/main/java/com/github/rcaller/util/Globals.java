@@ -54,7 +54,7 @@ public class Globals {
     
     public static GraphicsTheme theme = new DefaultTheme();
 
-    public final static String version = "RCaller 3.0";
+    public final static String version = "RCaller 3.0.3";
     public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
     public final static String license = "LGPL v3.0";
 
