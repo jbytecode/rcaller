@@ -3,7 +3,7 @@
 
     <groupId>com.github.jbytecode</groupId>
     <artifactId>RCaller</artifactId>
-    <version>3.0.2-SNAPSHOT</version>
+    <version>3.0.2</version>
     <packaging>jar</packaging>
 
     <name>RCaller</name>
@@ -24,7 +24,7 @@
         </developer>
         <developer>
             <name>Kopilov Alexander</name>
-            <email></email>
+            <email>kopilov.ad@gmail.com</email>
         </developer>
     </developers>
 
@@ -32,7 +32,6 @@
         <url>https://github.com/jbytecode/rcaller</url>
         <connection>scm:git:git://github.com/jbytecode/rcaller.git</connection>
         <developerConnection>scm:git:git@github.com:jbytecode/rcaller.git</developerConnection>
-        <tag>RCaller-3.0</tag>
     </scm>
 
     <licenses>
@@ -44,7 +43,8 @@
     </licenses>
 
     <description>
-        http://www.mhsatman.com
+        RCaller is a software library which simplifies performing data analysis and statistical calculations in Java using R.
+        The details are hidden from users including transferring data between platforms, function calls, and retrieving results.
     </description>
 
     <properties>

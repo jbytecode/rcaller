@@ -92,7 +92,7 @@ The last option is to use maven dependency:
 <dependency>
   <groupId>com.github.jbytecode</groupId>
   <artifactId>RCaller</artifactId>
-  <version>3.0</version>
+  <version>3.0.2</version>
   <classifier>jar-with-dependencies</classifier>
 </dependency>
 ```
