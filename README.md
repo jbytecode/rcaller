@@ -24,6 +24,8 @@ suitable for the projects which have many clients that request relatively single
 
 [Official publication](https://doi.org/10.9734/BJMCS/2014/10902)
 
+[Official publication in JOSS](https://joss.theoj.org/papers/10.21105/joss.02722)
+
 [RCaller3 Documentation](https://github.com/jbytecode/rcaller/blob/master/doc/rcaller3/rcaller3.pdf)
 
 
