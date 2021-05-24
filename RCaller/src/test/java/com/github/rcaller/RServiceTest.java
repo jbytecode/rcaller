@@ -39,7 +39,7 @@ public class RServiceTest {
         service.getRCode().addDoubleArray("y", new double[]{2, 4, 6});
         o = service.get("coefficients", "lm(y~x)", RService.type_double);
 
-        double delta = 1 / 10000;
+        double delta = 1.0 / 10000;
         Assert.assertEquals(0.0, ((Double) o[0]), delta);
         Assert.assertEquals(2.0, ((Double) o[1]), delta);
     }

@@ -48,7 +48,16 @@ public class Globals {
     public static String R_Linux = "/usr/bin/R";
     public static String R_Mac = "/usr/local/bin/R";
     public static String R_current;
-    
+
+    /**
+     * Whether we should try to use Apache Arrow for transferring output data
+     */
+    public static boolean useArrowIfAvailable = true;
+    /**
+     * Whether we should not use XML as backward behavior if {@link #useArrowIfAvailable} is true but Arrow is not available
+     */
+    public static boolean failIfArrowNotAvailable = false;
+
     public static Locale standardLocale = Locale.getDefault();
     public static Charset standardCharset = StandardCharsets.UTF_8;
     

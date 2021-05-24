@@ -30,7 +30,7 @@ import com.github.rcaller.datatypes.DataFrame;
 import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.io.CSVFileWriter;
 import com.github.rcaller.scriptengine.LanguageElement;
-import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;

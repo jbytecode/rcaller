@@ -36,15 +36,24 @@ import com.github.rcaller.util.Globals;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RCode {
 
     private StringBuilder code;
     private TempFileService tempFileService = null;
+    private final RCallerOptions rCallerOptions;
 
 
     private RCode() {
         this.code = new StringBuilder();
+        rCallerOptions = RCallerOptions.create();
+    }
+
+    private RCode(RCallerOptions rCallerOptions) {
+        this.code = new StringBuilder();
+        this.rCallerOptions = rCallerOptions;
     }
 
     public static RCode create() {
@@ -55,7 +64,18 @@ public class RCode {
 
     public static RCode create(StringBuffer stringBuffer) {
         RCode rCode = RCode.create();
+        rCode.getCode().append(stringBuffer.toString());
+        return rCode;
+    }
+
+    public static RCode create(RCallerOptions rCallerOptions) {
+        RCode rCode = new RCode(rCallerOptions);
         rCode.clear();
+        return rCode;
+    }
+
+    public static RCode create(StringBuffer stringBuffer, RCallerOptions rCallerOptions) {
+        RCode rCode = RCode.create(rCallerOptions);
         rCode.getCode().append(stringBuffer.toString());
         return rCode;
     }
@@ -78,20 +98,34 @@ public class RCode {
 
     public final void clear() {
         this.code.setLength(0);
-        try {
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("runiversal.r");
-            InputStreamReader inputStreamReader = new InputStreamReader(is);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            while (true) {
-                String s = bufferedReader.readLine();
-                if (s == null) {
-                    break;
-                }
-                addRCode(s);
+        List<String> resourcesWithDependencies = new ArrayList<>();
+        if (rCallerOptions.useArrowIfAvailable()) {
+            //Use Arrow by default if enabled
+            resourcesWithDependencies.add("arrow_bridge.R");
+            if (!rCallerOptions.failIfArrowNotAvailable()) {
+                //Use XML if Arrow is enabled but not available and we should not fail
+                resourcesWithDependencies.add("xml_exporting.R");
             }
-            addRCode("\n");
-        } catch (IOException e) {
-            throw new ExecutionException("runiversal.R in package: " + e.toString());
+        } else {
+            //Use XML if Arrow is disabled
+            resourcesWithDependencies.add("xml_exporting.R");
+        }
+        for (String resource: resourcesWithDependencies) {
+            try (
+                InputStream is = this.getClass().getClassLoader().getResourceAsStream(resource);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+            ) {
+                while (true) {
+                    String s = bufferedReader.readLine();
+                    if (s == null) {
+                        break;
+                    }
+                    addRCode(s);
+                }
+                addRCode("\n");
+            } catch (IOException e) {
+                throw new ExecutionException(resource + " loading from package failed: " + e.toString());
+            }
         }
     }
 

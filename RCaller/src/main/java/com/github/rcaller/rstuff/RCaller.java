@@ -358,7 +358,7 @@ public class RCaller {
     /**
      * Sleep while controlFile is empty and timeout {$link #rCallerOptions$getMaxWaitTime()} is not expired.
      * Kill underlying process if timeout is expired.
-     * @param controlFile Sygnal file (separated fron the main result), when it is not empty, calculation is finished
+     * @param controlFile Signal file (separated from the main result), when it is not empty, calculation is finished
      * @throws InterruptedException
      */
     private void waitRExecute(File controlFile) throws InterruptedException {
