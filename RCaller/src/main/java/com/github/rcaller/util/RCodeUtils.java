@@ -34,6 +34,9 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -241,5 +244,23 @@ public class RCodeUtils {
             Logger.getLogger(RCodeUtils.class.getName()).log(Level.WARNING, "Couldn't export data frame to csv-file!", e.getStackTrace());
         }
 
+    }
+
+    public static void addResourceScript(StringBuilder rCode, String name) {
+        try (
+                InputStream is = RCodeUtils.class.getClassLoader().getResourceAsStream(name);
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
+        ) {
+            while (true) {
+                String s = bufferedReader.readLine();
+                if (s == null) {
+                    break;
+                }
+                rCode.append(s).append("\n");
+            }
+            rCode.append("\n");
+        } catch (IOException e) {
+            throw new ExecutionException(name + " loading from package failed", e);
+        }
     }
 }

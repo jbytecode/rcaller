@@ -46,4 +46,12 @@ public class ExecutionException extends RuntimeException {
   public ExecutionException(String msg) {
     super(msg);
   }
+  /**
+   * Constructs an instance of <code>RCallerExecutionException</code> with the specified detail message and cause.
+   * @param msg the detail message.
+   * @param cause the cause exception.
+   */
+  public ExecutionException(String msg, Throwable cause) {
+    super(msg, cause);
+  }
 }

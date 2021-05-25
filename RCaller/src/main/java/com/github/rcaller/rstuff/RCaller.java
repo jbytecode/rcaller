@@ -98,7 +98,7 @@ public class RCaller {
      * @return RCaller object
      */
     public static RCaller create(RCallerOptions rCallerOptions) {
-        return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(RCode.create(rCallerOptions), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
     /**

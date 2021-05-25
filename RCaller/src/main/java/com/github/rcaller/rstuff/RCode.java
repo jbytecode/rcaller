@@ -29,15 +29,14 @@ package com.github.rcaller.rstuff;
 import com.github.rcaller.FunctionCall;
 import com.github.rcaller.TempFileService;
 import com.github.rcaller.datatypes.DataFrame;
-import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.graphics.GraphicsType;
+import com.github.rcaller.io.RCodeIO;
 import com.github.rcaller.util.RCodeUtils;
 import com.github.rcaller.util.Globals;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.net.URI;
 
 public class RCode {
 
@@ -98,40 +97,11 @@ public class RCode {
 
     public final void clear() {
         this.code.setLength(0);
-        List<String> resourcesWithDependencies = new ArrayList<>();
-        if (rCallerOptions.useArrowIfAvailable()) {
-            //Use Arrow by default if enabled
-            resourcesWithDependencies.add("arrow_bridge.R");
-            if (!rCallerOptions.failIfArrowNotAvailable()) {
-                //Use XML if Arrow is enabled but not available and we should not fail
-                resourcesWithDependencies.add("xml_exporting.R");
-            }
-        } else {
-            //Use XML if Arrow is disabled
-            resourcesWithDependencies.add("xml_exporting.R");
-        }
-        for (String resource: resourcesWithDependencies) {
-            try (
-                InputStream is = this.getClass().getClassLoader().getResourceAsStream(resource);
-                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
-            ) {
-                while (true) {
-                    String s = bufferedReader.readLine();
-                    if (s == null) {
-                        break;
-                    }
-                    addRCode(s);
-                }
-                addRCode("\n");
-            } catch (IOException e) {
-                throw new ExecutionException(resource + " loading from package failed: " + e.toString());
-            }
-        }
+        addRCode(RCodeIO.getInterprocessDependencies(rCallerOptions));
     }
 
     public void appendStandardCodeToAppend(File outputFile, String var) {
-        this.code.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
-                append("\"), file=\"").append(outputFile.getAbsolutePath().replace("\\", "/")).append("\")\n");
+        addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, URI.create(outputFile.getAbsolutePath())));
     }
     
     public void clearOnline(){
