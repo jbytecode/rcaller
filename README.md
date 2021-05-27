@@ -73,7 +73,8 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
 
 - [Invoke R Functions](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/ScriptEngineInvocable.java)
 
-
+- [Calling R from within Clojure](https://github.com/jbytecode/rcaller/blob/master/markdown/clojure.md)
+  
 # API Docs
 [Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/v3.0.2/RCaller-3.0.2-SNAPSHOT-javadoc.jar). 
 
