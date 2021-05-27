@@ -24,7 +24,8 @@ public class RCodeIO {
 
         @Override
         public String getVariableExporting(String variableName, URI target) {
-            throw new NotImplementedException();
+            return "send_by_arrow(obj=" + variableName + ", name=\"" + variableName +
+                    "\", uri=\"" + target.getPath().replace("\\", "/") + "\")\n";
         }
     }
     private static final RCodeIOGenerator rCodeIOGeneratorArrow = new RCodeIOGeneratorArrow();
@@ -50,7 +51,6 @@ public class RCodeIO {
             if (ArrowBridge.isArrowAvailable()) {
                 //Use Arrow by default if enabled
                 return rCodeIOGeneratorArrow;
-                //resourcesWithDependencies.add();
             } else {
                 if (rCallerOptions.failIfArrowNotAvailable()) {
                     throw new ExecutionException("Arrow is enabled but not available");
@@ -68,7 +68,7 @@ public class RCodeIO {
     /**
      * Prepare R script with functions or/and module loadings that would be used in following IPC
      * @param rCallerOptions Current parameters for selecting implementation
-     * @return R script to be added to user's code
+     * @return R script with functions or/and module loadings to be added to user's code
      */
     public static String getInterprocessDependencies(RCallerOptions rCallerOptions)  {
         return getRCodeIOGenerator(rCallerOptions).getInterprocessDependencies();
@@ -79,7 +79,7 @@ public class RCodeIO {
      * @param rCallerOptions Current parameters for selecting implementation
      * @param variableName R variable to be exported
      * @param target file or socket where export should be saved
-     * @return
+     * @return R script for exporting variable to be added to user's code
      */
     public static String getVariableExporting(RCallerOptions rCallerOptions, String variableName, URI target) {
         return getRCodeIOGenerator(rCallerOptions).getVariableExporting(variableName, target);

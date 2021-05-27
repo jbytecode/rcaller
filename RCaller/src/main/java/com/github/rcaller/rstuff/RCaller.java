@@ -88,17 +88,18 @@ public class RCaller {
      * @return default RCaller object
      */
     public static RCaller create() {
-        return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), RCallerOptions.create());
+        RCallerOptions rCallerOptions = RCallerOptions.create();
+        return new RCaller(RCode.create(), ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
     /***
-     * Static factory creater with startup options
+     * Static factory creator with startup options
      * 
      * @param rCallerOptions given startup options
      * @return RCaller object
      */
     public static RCaller create(RCallerOptions rCallerOptions) {
-        return new RCaller(RCode.create(rCallerOptions), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(RCode.create(rCallerOptions), ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
     /**
@@ -109,7 +110,7 @@ public class RCaller {
      * @return RCaller object
      */
     public static RCaller create(RCode rcode, RCallerOptions rCallerOptions) {
-        return new RCaller(rcode, new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(rcode, ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
 

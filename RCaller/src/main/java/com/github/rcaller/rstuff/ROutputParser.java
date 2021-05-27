@@ -25,8 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package com.github.rcaller.rstuff;
 
+import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.exception.ParseException;
 import com.github.rcaller.exception.XMLParseException;
+import com.github.rcaller.io.ArrowBridge;
+import com.github.rcaller.io.ROutputParserArrow;
+import com.github.rcaller.io.ROutputParserXML;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -36,233 +40,118 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URI;
 import java.util.ArrayList;
 
 /**
- *
+ * API for reading R IPC output.
  * @author Mehmet Hakan Satman
  */
-public class ROutputParser {
+public interface ROutputParser {
 
-    protected File XMLFile;
-    protected DocumentBuilderFactory factory;
-    protected DocumentBuilder builder;
-    protected Document document;
-    final private String variable_tag_name = "variable";
-
-    public Document getDocument() {
-        return document;
-    }
-
-    public void setDocument(Document document) {
-        this.document = document;
-    }
-
-    public File getXMLFile() {
-        return XMLFile;
-    }
-
-    public String getXMLFileAsString() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(XMLFile));
-        long filesize = XMLFile.length();
-        char[] chars = new char[(int) filesize];
-        reader.read(chars);
-        return (new String(chars));
-    }
-
-    public void setXMLFile(File XMLFile) {
-        this.XMLFile = XMLFile;
-    }
-
-    public void parse() throws ParseException {
-        if (this.XMLFile.length() == 0) {
-            throw new ParseException("Can not parse output: The generated file " + this.XMLFile.toString() + " is empty");
-        }
-        factory = DocumentBuilderFactory.newInstance();
-        try {
-            builder = factory.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new ParseException("Can not create parser builder: " + e.toString());
-        }
-
-        try {
-            FileInputStream in = new FileInputStream(XMLFile);
-            InputSource is = new InputSource(in);
-            is.setEncoding("UTF-8");
-            document = builder.parse(is);
-        } catch (Exception e) {
-            StackTraceElement[] frames = e.getStackTrace();
-            String msgE = "";
-            for (StackTraceElement frame : frames) {
-                msgE += frame.getClassName() + "-" + frame.getMethodName() + "-" + String.valueOf(frame.getLineNumber());
+    /**
+     * Static factory implementation creator with given options.
+     * Returned implementation uses XML or Arrow IPC format.
+     * @param rCallerOptions given options
+     * @return ROutputParser implementing object
+     */
+    static ROutputParser create(RCallerOptions rCallerOptions) {
+        if (rCallerOptions.useArrowIfAvailable()) {
+            if (ArrowBridge.isArrowAvailable()) {
+                //Use Arrow by default if enabled
+                return new ROutputParserArrow();
+            } else {
+                if (rCallerOptions.failIfArrowNotAvailable()) {
+                    throw new ExecutionException("Arrow is enabled but not available");
+                } else {
+                    //Use XML if Arrow is enabled but not available and we should not fail
+                    return new ROutputParserXML();
+                }
             }
-            System.out.println(e + msgE);
-            throw new XMLParseException("Can not parse the R output: " + e.toString());
+        } else {
+            //Use XML if Arrow is disabled
+            return new ROutputParserXML();
         }
-
-        document.getDocumentElement().normalize();
     }
 
-    public ROutputParser(File XMLFile) {
-        this.XMLFile = XMLFile;
-    }
+    /**
+     * Returns parsed XML document.
+     * @deprecated Do not use if you are not using XML consciously
+     * @return parsed XML document
+     * @throw NotImplementedException if Arrow implementation is used
+     */
+    @Deprecated
+    Document getDocument();
 
-    public ROutputParser() {
-    }
+    /**
+     * Inits parsed XML document.
+     * @deprecated Do not use if you are not using XML consciously
+     * @throw NotImplementedException if Arrow implementation is used
+     */
+    @Deprecated
+    void setDocument(Document document);
 
-    public ArrayList<String> getNames() {
-        ArrayList<String> names = new ArrayList<String>();
-        NodeList nodes = document.getElementsByTagName(variable_tag_name);
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            names.add(node.getAttributes().getNamedItem("name").getNodeValue());
-        }
-        return (names);
-    }
+    /**
+     * Returns XML file.
+     * @deprecated Do not use if you are not using XML consciously. Can be replaced with {@link #getIPCResource}
+     * @return XML file
+     * @throw NotImplementedException if Arrow implementation is used
+     */
+    @Deprecated
+    File getXMLFile();
 
-    public String getType(String variablename) {
-        NodeList nodes = document.getElementsByTagName(variable_tag_name);
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getAttributes().getNamedItem("name").getNodeValue().equals(variablename)) {
-                return (node.getAttributes().getNamedItem("type").getNodeValue());
-            }
-        }
-        return (null);
-    }
+    URI getIPCResource();
 
-    public int[] getDimensions(String name) {
-        int[] result = new int[2];
-        int n = 0, m = 0;
-        NodeList nodes = document.getElementsByTagName(variable_tag_name);
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getAttributes().getNamedItem("name").getNodeValue().equals(name)) {
-                String sn = node.getAttributes().getNamedItem("n").getNodeValue();
-                String sm = node.getAttributes().getNamedItem("m").getNodeValue();
-                n = Integer.parseInt(sn);
-                m = Integer.parseInt(sm);
-                break;
-            }
-        }
-        result[0] = n;
-        result[1] = m;
-        return (result);
-    }
+    /**
+     * Returns raw XML document.
+     * @deprecated Do not use if you are not using XML consciously
+     * @return raw XML document
+     * @throw NotImplementedException if Arrow implementation is used
+     */
+    @Deprecated
+    String getXMLFileAsString() throws IOException;
 
-    public NodeList getValueNodes(String name) {
-        NodeList nodes = document.getElementsByTagName(variable_tag_name);
-        NodeList content = null;
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getAttributes().getNamedItem("name").getNodeValue().equals(name)) {
-                content = node.getChildNodes();
-                break;
-            }
-        }
-        return (content);
-    }
+    /**
+     * Inits XML file.
+     * @deprecated Do not use if you are not using XML consciously. Can be replaced with {@link #setIPCResource}
+     * @throw NotImplementedException if Arrow implementation is used
+     */
+    @Deprecated
+    void setXMLFile(File XMLFile);
 
-    public String[] getAsStringArray(String name) throws ParseException {
-        NodeList nodes = getValueNodes(name);
-        if (nodes == null) {
-            throw new ParseException("Variable " + name + " not found");
-        }
-        ArrayList<String> values = new ArrayList<>();
-        for (int i = 0; i < nodes.getLength(); i++) {
-            Node node = nodes.item(i);
-            if (node.getNodeType() == Node.ELEMENT_NODE) {
-                values.add(node.getTextContent());
-            }
-        }
-        String[] result = new String[values.size()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = values.get(i);
-        }
-        return (result);
-    }
+    void setIPCResource(URI ipcResourceURI);
 
-    public double[] getAsDoubleArray(String name) throws ParseException {
-        String[] strResults = getAsStringArray(name);
-        double[] d = new double[strResults.length];
-        for (int i = 0; i < strResults.length; i++) {
-            try {
-                d[i] = Double.parseDouble(strResults[i]);
-            } catch (NumberFormatException e) {
-                throw new ParseException("String value '" + strResults[i] + "' can not convert to double");
-            }
-        }
-        return (d);
-    }
+    void parse() throws ParseException;
 
-    public float[] getAsFloatArray(String name) throws ParseException {
-        String[] strResults = getAsStringArray(name);
-        float[] f = new float[strResults.length];
-        for (int i = 0; i < strResults.length; i++) {
-            try {
-                f[i] = Float.parseFloat(strResults[i]);
-            } catch (NumberFormatException e) {
-                throw new ParseException("String value '" + strResults[i] + "' can not convert to float");
-            }
-        }
-        return (f);
-    }
+    ArrayList<String> getNames();
 
-    public int[] getAsIntArray(String name) throws ParseException {
-        String[] strResults = getAsStringArray(name);
-        int[] ints = new int[strResults.length];
-        for (int i = 0; i < strResults.length; i++) {
-            try {
-                ints[i] = Integer.parseInt(strResults[i]);
-            } catch (NumberFormatException e) {
-                throw new ParseException("String value '" + strResults[i] + "' can not convert to int");
-            }
-        }
-        return (ints);
-    }
+    String getType(String variablename);
 
-    public long[] getAsLongArray(String name) throws ParseException {
-        String[] strResults = getAsStringArray(name);
-        long[] longs = new long[strResults.length];
-        for (int i = 0; i < strResults.length; i++) {
-            try {
-                longs[i] = Long.parseLong(strResults[i]);
-            } catch (NumberFormatException e) {
-                throw new ParseException("String value '" + strResults[i] + "' can not convert to long");
-            }
-        }
-        return (longs);
-    }
+    int[] getDimensions(String name);
 
-    public boolean[] getAsLogicalArray(String name) throws ParseException {
-        String[] strResults = getAsStringArray(name);
-        boolean[] bools = new boolean[strResults.length];
-        for (int i = 0; i < strResults.length; i++) {
-            try {
-                bools[i] = Boolean.parseBoolean(strResults[i]);
-            } catch (Exception e) {
-                throw new ParseException("String value '" + strResults[i] + "' can not convert to boolean");
-            }
-        }
-        return (bools);
-    }
+    /**
+     * Returns nodes from parsed XML document.
+     * @deprecated Do not use if you are not using XML consciously
+     * @return nodes from parsed XML document
+     * @throw NotImplementedException if Arrow implementation is used
+     */
+    @Deprecated
+    NodeList getValueNodes(String name);
 
-    public double[][] getAsDoubleMatrix(String name, int n, int m) throws ParseException {
-        double[][] result = new double[n][m];
-        double[] arr = this.getAsDoubleArray(name);
-        int c = 0;
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                result[i][j] = arr[c];
-                c++;
-            }
-        }
-        return (result);
-    }
+    String[] getAsStringArray(String name) throws ParseException;
 
-    public double[][] getAsDoubleMatrix(String name) throws ParseException {
-        int[] dims = this.getDimensions(name);
-        return (this.getAsDoubleMatrix(name, dims[0], dims[1]));
-    }
+    double[] getAsDoubleArray(String name) throws ParseException;
+
+    float[] getAsFloatArray(String name) throws ParseException;
+
+    int[] getAsIntArray(String name) throws ParseException;
+
+    long[] getAsLongArray(String name) throws ParseException;
+
+    boolean[] getAsLogicalArray(String name) throws ParseException;
+
+    double[][] getAsDoubleMatrix(String name, int n, int m) throws ParseException;
+
+    double[][] getAsDoubleMatrix(String name) throws ParseException;
 
 }
