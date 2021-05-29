@@ -46,4 +46,13 @@ public class ParseException extends ExecutionException {
   public ParseException(String msg) {
     super(msg);
   }
+
+  /**
+   * Constructs an instance of <code>RCallerParseException</code> with the specified detail message and cause.
+   * @param msg the detail message.
+   * @param cause the cause exception.
+   */
+  public ParseException(String msg, Throwable cause) {
+    super(msg, cause);
+  }
 }

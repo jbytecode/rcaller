@@ -117,7 +117,7 @@ public interface ROutputParser {
      * @throw NotImplementedException if Arrow implementation is used
      */
     @Deprecated
-    void setXMLFile(File XMLFile);
+    void setXMLFile(File xmlFile);
 
     void setIPCResource(URI ipcResourceURI);
 

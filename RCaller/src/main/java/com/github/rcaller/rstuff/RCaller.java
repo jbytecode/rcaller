@@ -324,6 +324,7 @@ public class RCaller {
                 rInput.write(rCode.toString().getBytes(Globals.standardCharset));
                 rInput.flush();
             } catch (IOException e) {
+                rInput = null;
                 if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
                     continue;
                 }
@@ -342,7 +343,7 @@ public class RCaller {
                 }
             }
 
-            parser.setXMLFile(outputFile);
+            parser.setIPCResource(outputFile.toURI());
 
             try {
                 parser.parse();
@@ -400,7 +401,7 @@ public class RCaller {
             rInput.flush();
             waitRExecute(resultReadyControlFile);
 
-            parser.setXMLFile(getTmpDirFile);
+            parser.setIPCResource(getTmpDirFile.toURI());
             parser.parse();
             tmpDir = parser.getAsStringArray(tempDirOutVarName)[0];
         } catch (InterruptedException e) {
@@ -540,12 +541,12 @@ public class RCaller {
         rCode.appendStandardCodeToAppend(outputFile, var);
         runRCode();
 
-        parser.setXMLFile(outputFile);
+        parser.setIPCResource(outputFile.toURI());
         try {
             parser.parse();
         } catch (Exception e) {
             Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rCode.toString());
-            throw new ParseException("Can not handle R results due to : " + e.getMessage());
+            throw new ParseException("Can not handle R results due to", e);
         }
     }
 

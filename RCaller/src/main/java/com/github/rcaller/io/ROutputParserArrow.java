@@ -46,6 +46,7 @@ import java.util.ArrayList;
  * @author Kopilov Aleksandr
  */
 public class ROutputParserArrow implements ROutputParser {
+    ArrowBridge bridge = ArrowBridge.newInstance();
     URI ipcResourceURI;
 
     @Override
@@ -79,21 +80,22 @@ public class ROutputParserArrow implements ROutputParser {
     }
 
     @Override
-    public void setXMLFile(File XMLFile) {
+    public void setXMLFile(File xmlFile) {
         throw new NotImplementedException("Not accessible in Arrow implementation");
     }
 
     @Override
     public void parse() throws ParseException {
-
-    }
-
-    public ROutputParserArrow() {
+        try {
+            bridge.loadArrowData(ipcResourceURI);
+        } catch (IOException e) {
+            throw new ParseException("Could not load Arrow data", e);
+        }
     }
 
     @Override
     public ArrayList<String> getNames() {
-        throw new NotImplementedException("TODO");
+        return bridge.getNames();
     }
 
     @Override
@@ -103,7 +105,7 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public int[] getDimensions(String name) {
-        throw new NotImplementedException("TODO");
+        return bridge.getDimensions(name);
     }
 
     @Override
@@ -118,7 +120,7 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public double[] getAsDoubleArray(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
+        return bridge.getAsDoubleArray(name);
     }
 
     @Override
@@ -131,20 +133,38 @@ public class ROutputParserArrow implements ROutputParser {
         throw new NotImplementedException("TODO");
     }
 
+    @Override
     public long[] getAsLongArray(String name) throws ParseException {
         throw new NotImplementedException("TODO");
     }
 
+    @Override
     public boolean[] getAsLogicalArray(String name) throws ParseException {
         throw new NotImplementedException("TODO");
     }
 
+    @Override
     public double[][] getAsDoubleMatrix(String name, int n, int m) throws ParseException {
-        throw new NotImplementedException("TODO");
+        int[] dimensions = getDimensions(name);
+        if (dimensions[0] == n && dimensions[1] == m) {
+            return bridge.getAsDoubleMatrix(name);
+        } else {
+            double[][] result = new double[n][m];
+            double[] arr = this.getAsDoubleArray(name);
+            int c = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < m; j++) {
+                    result[i][j] = arr[c];
+                    c++;
+                }
+            }
+            return (result);
+        }
     }
 
+    @Override
     public double[][] getAsDoubleMatrix(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
+        return bridge.getAsDoubleMatrix(name);
     }
 
 }

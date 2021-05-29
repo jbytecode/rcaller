@@ -38,6 +38,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URI;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 
 /**
@@ -46,7 +49,7 @@ import java.util.ArrayList;
  */
 public class ROutputParserXML implements ROutputParser {
 
-    protected File XMLFile;
+    protected File xmlFile;
     protected DocumentBuilderFactory factory;
     protected DocumentBuilder builder;
     protected Document document;
@@ -64,47 +67,46 @@ public class ROutputParserXML implements ROutputParser {
 
     @Override
     public File getXMLFile() {
-        return XMLFile;
+        return xmlFile;
     }
 
     @Override
     public URI getIPCResource() {
-        return null;
+        return xmlFile.toURI();
     }
 
     @Override
     public void setIPCResource(URI ipcResourceURI) {
-
+        xmlFile = new File(ipcResourceURI);
     }
 
     @Override
     public String getXMLFileAsString() throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(XMLFile));
-        long filesize = XMLFile.length();
+        BufferedReader reader = new BufferedReader(new FileReader(xmlFile));
+        long filesize = xmlFile.length();
         char[] chars = new char[(int) filesize];
         reader.read(chars);
         return (new String(chars));
     }
 
     @Override
-    public void setXMLFile(File XMLFile) {
-        this.XMLFile = XMLFile;
+    public void setXMLFile(File xmlFile) {
+        this.xmlFile = xmlFile;
     }
 
     @Override
     public void parse() throws ParseException {
-        if (this.XMLFile.length() == 0) {
-            throw new ParseException("Can not parse output: The generated file " + this.XMLFile.toString() + " is empty");
+        if (this.xmlFile.length() == 0) {
+            throw new ParseException("Can not parse output: The generated file " + this.xmlFile.toString() + " is empty");
         }
         factory = DocumentBuilderFactory.newInstance();
         try {
             builder = factory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new ParseException("Can not create parser builder: " + e.toString());
+            throw new ParseException("Can not create parser builder", e);
         }
 
-        try {
-            FileInputStream in = new FileInputStream(XMLFile);
+        try (InputStream in = Channels.newInputStream(FileChannel.open(xmlFile.toPath()))){
             InputSource is = new InputSource(in);
             is.setEncoding("UTF-8");
             document = builder.parse(is);
@@ -119,13 +121,6 @@ public class ROutputParserXML implements ROutputParser {
         }
 
         document.getDocumentElement().normalize();
-    }
-
-    public ROutputParserXML(File XMLFile) {
-        this.XMLFile = XMLFile;
-    }
-
-    public ROutputParserXML() {
     }
 
     @Override

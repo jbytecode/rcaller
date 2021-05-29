@@ -1,29 +1,54 @@
 require("arrow")
 
-send_by_arrow <- function(obj, name, uri) {
-  print(typeof(obj))
+send_by_arrow <- function(obj, name, uri_result) {
   if (is.data.frame(obj)) {
     #Export by Arrow as is
+    write_feather(obj, uri_result)
+    return()
   }
   if (is.array(obj)) {
     if (is.matrix(obj)){
-      #Convert flat matrix to jagged (list of vectors) that is supported by Arrow
       #Export as Arrow table with one 'fixed-size-list' column
+      #Convert flat matrix to jagged (list of vectors) that is supported by Arrow
+      matrix_jagged_fixedsize <- list()
+      rows <- dim(obj)[1]
+      columns <- dim(obj)[1]
+      for (i in 1:rows) {
+        matrix_jagged_fixedsize[[i]] <- obj[i,]
+      }
+      #Create temporary redcord batch, rows type would be autodetected, matrix type would be 'list'
+      batch_typedetect <- record_batch(matrix_column=matrix_jagged_fixedsize)
+      #Convert 'list' type to 'fixed-size-list'
+      schema_fixed_size <- schema(matrix_column=fixed_size_list_of(type = batch_typedetect$schema$fields[[1]]$type, columns))
+      batch <- record_batch(matrix_column=matrix_jagged_fixedsize, schema_fixed_size)
+      names(batch) <- name
+      write_feather(batch, uri_result)
+      return()
     }
     if (length(dim(obj)) > 2) {
       #3- and more-D arrays are not supported
+      stop(paste(length(dim(obj)), "-D arrays are not supported"))
+      #TODO add try-catch support on toplevel
     }
     if (length(dim(obj)) == 1) {
-      #1-D array should be converted to Vector
+      #1-D array can be converted to Vector
+      dim(obj) <- c()
     }
   }
   if (is.list(obj)){
     #Export as Arrow table with one 'list' column
     #Suppose that each element has the same type
-    #Union typed and nested lists are not supported
+    #Union typed and nested lists might not work
+    batch <- record_batch(list_column=obj)
+    names(batch) <- name
+    write_feather(batch, uri_result)
+    return()
   }
 
   if (is.vector(obj)) {
-
+    batch <- record_batch(vector_column=obj)
+    names(batch) <- name
+    write_feather(batch, uri_result)
+    return()
   }
 }

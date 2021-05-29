@@ -4,10 +4,12 @@ import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.rstuff.RCode;
 
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.StringJoiner;
 
-public abstract class ArrowBridge {
+public abstract class ArrowBridge implements AutoCloseable {
     private static Boolean arrowAvailable = null;
 
     public static synchronized boolean isArrowAvailable() {
@@ -65,6 +67,15 @@ public abstract class ArrowBridge {
         return new com.github.rcaller.io.arrow.ArrowImpl();
     }
 
-    public abstract void invokeArrow();
+    public abstract void loadArrowData(URI ipcResource) throws IOException;
 
+    public abstract ArrayList<String> getNames();
+
+    public abstract int[] getDimensions(String name);
+
+    public abstract double[] getAsDoubleArray(String name);
+
+    public abstract double[][] getAsDoubleMatrix(String name);
+
+    //public abstract Object getUnwrappedField(String name);
 }
