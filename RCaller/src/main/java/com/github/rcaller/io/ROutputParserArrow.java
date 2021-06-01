@@ -95,7 +95,12 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public ArrayList<String> getNames() {
-        return bridge.getNames();
+        var names = bridge.getNames();
+        if (names instanceof ArrayList) {
+            return (ArrayList<String>) names;
+        }
+        var castedNames = new ArrayList<String>(names);
+        return castedNames;
     }
 
     @Override

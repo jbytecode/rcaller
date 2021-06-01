@@ -3,7 +3,7 @@ require("arrow")
 send_by_arrow <- function(obj, name, uri_result) {
   if (is.data.frame(obj)) {
     #Export by Arrow as is
-    write_feather(obj, uri_result)
+    write_ipc_stream(obj, uri_result)
     return()
   }
   if (is.array(obj)) {
@@ -19,10 +19,10 @@ send_by_arrow <- function(obj, name, uri_result) {
       #Create temporary redcord batch, rows type would be autodetected, matrix type would be 'list'
       batch_typedetect <- record_batch(matrix_column=matrix_jagged_fixedsize)
       #Convert 'list' type to 'fixed-size-list'
-      schema_fixed_size <- schema(matrix_column=fixed_size_list_of(type = batch_typedetect$schema$fields[[1]]$type, columns))
-      batch <- record_batch(matrix_column=matrix_jagged_fixedsize, schema_fixed_size)
+      schema_fixed_size <- schema(matrix_column=fixed_size_list_of(type = batch_typedetect$schema$fields[[1]]$type$value_type, columns))
+      batch <- record_batch(matrix_column=matrix_jagged_fixedsize, schema=schema_fixed_size)
       names(batch) <- name
-      write_feather(batch, uri_result)
+      write_ipc_stream(batch, uri_result)
       return()
     }
     if (length(dim(obj)) > 2) {
@@ -36,19 +36,32 @@ send_by_arrow <- function(obj, name, uri_result) {
     }
   }
   if (is.list(obj)){
-    #Export as Arrow table with one 'list' column
-    #Suppose that each element has the same type
-    #Union typed and nested lists might not work
-    batch <- record_batch(list_column=obj)
-    names(batch) <- name
-    write_feather(batch, uri_result)
-    return()
+    if (length(names(obj)) == 0) {
+      #Export as Arrow table with one 'list' column
+      #Suppose that each element has the same type
+      #Union typed and nested lists might not work
+      batch <- record_batch(list_column=obj)
+      names(batch) <- name
+      write_ipc_stream(batch, uri_result)
+      return()
+    } else {
+      stream <- FileOutputStream$create(uri_result)
+      i <- 0
+      for (subj_name in names(obj)) {
+        i <- i + 1
+        subj <- obj[[i]]
+        batch <- record_batch(subj_column=subj)
+        names(batch) <- subj_name
+        write_ipc_stream(batch, stream)
+      }
+      stream$close()
+    }
   }
 
   if (is.vector(obj)) {
     batch <- record_batch(vector_column=obj)
     names(batch) <- name
-    write_feather(batch, uri_result)
+    write_ipc_stream(batch, uri_result)
     return()
   }
 }

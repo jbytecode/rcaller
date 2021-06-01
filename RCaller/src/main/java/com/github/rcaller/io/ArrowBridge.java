@@ -7,6 +7,7 @@ import com.github.rcaller.rstuff.RCode;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 
 public abstract class ArrowBridge implements AutoCloseable {
@@ -69,7 +70,7 @@ public abstract class ArrowBridge implements AutoCloseable {
 
     public abstract void loadArrowData(URI ipcResource) throws IOException;
 
-    public abstract ArrayList<String> getNames();
+    public abstract List<String> getNames();
 
     public abstract int[] getDimensions(String name);
 

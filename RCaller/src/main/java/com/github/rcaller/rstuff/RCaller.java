@@ -264,7 +264,7 @@ public class RCaller {
             stopStreamConsumers();
         }
         if (returnCode != 0) {
-            throw new ExecutionException("R command failed with error. Reason: " + errorMessageSaver.getMessage());
+            throw new ExecutionException("R command evaling " + rSourceFile.getAbsolutePath() + " failed with error. Reason: " + errorMessageSaver.getMessage());
         }
     }
 

@@ -39,12 +39,12 @@ import java.util.Locale;
 public class Globals {
 
     public static String cranRepos = "http://cran.r-project.org";
-    public static String RScript_Windows = "C:\\Program Files\\R\\R-3.0.2\\bin\\Rscript.exe";
+    public static String RScript_Windows = "C:\\Program Files\\R\\R-3.6.3\\bin\\Rscript.exe";
     public static String RScript_Linux = "/usr/bin/Rscript";
     public static String RScript_Mac = "/usr/local/bin/Rscript";
     public static String Rscript_current;
     
-    public static String R_Windows = "C:\\Program Files\\R\\R-3.0.2\\bin\\R.exe";
+    public static String R_Windows = "C:\\Program Files\\R\\R-3.6.3\\bin\\R.exe";
     public static String R_Linux = "/usr/bin/R";
     public static String R_Mac = "/usr/local/bin/R";
     public static String R_current;
@@ -63,7 +63,7 @@ public class Globals {
     
     public static GraphicsTheme theme = new DefaultTheme();
 
-    public final static String version = "RCaller 3.0.3";
+    public final static String version = "RCaller 4.0.0";
     public final static String about = "Author: Mehmet Hakan Satman - mhsatman@yahoo.com";
     public final static String license = "LGPL v3.0";
 
