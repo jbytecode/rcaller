@@ -1,9 +1,9 @@
 require("arrow")
 
-send_by_arrow <- function(obj, name, uri_result) {
+send_element_by_arrow <- function(obj, name, stream) {
   if (is.data.frame(obj)) {
     #Export by Arrow as is
-    write_ipc_stream(obj, uri_result)
+    write_ipc_stream(obj, stream)
     return()
   }
   if (is.array(obj)) {
@@ -12,7 +12,7 @@ send_by_arrow <- function(obj, name, uri_result) {
       #Convert flat matrix to jagged (list of vectors) that is supported by Arrow
       matrix_jagged_fixedsize <- list()
       rows <- dim(obj)[1]
-      columns <- dim(obj)[1]
+      columns <- dim(obj)[2]
       for (i in 1:rows) {
         matrix_jagged_fixedsize[[i]] <- obj[i,]
       }
@@ -22,7 +22,7 @@ send_by_arrow <- function(obj, name, uri_result) {
       schema_fixed_size <- schema(matrix_column=fixed_size_list_of(type = batch_typedetect$schema$fields[[1]]$type$value_type, columns))
       batch <- record_batch(matrix_column=matrix_jagged_fixedsize, schema=schema_fixed_size)
       names(batch) <- name
-      write_ipc_stream(batch, uri_result)
+      write_ipc_stream(batch, stream)
       return()
     }
     if (length(dim(obj)) > 2) {
@@ -42,26 +42,32 @@ send_by_arrow <- function(obj, name, uri_result) {
       #Union typed and nested lists might not work
       batch <- record_batch(list_column=obj)
       names(batch) <- name
-      write_ipc_stream(batch, uri_result)
+      write_ipc_stream(batch, stream)
       return()
     } else {
-      stream <- FileOutputStream$create(uri_result)
-      i <- 0
-      for (subj_name in names(obj)) {
-        i <- i + 1
-        subj <- obj[[i]]
-        batch <- record_batch(subj_column=subj)
-        names(batch) <- subj_name
-        write_ipc_stream(batch, stream)
-      }
-      stream$close()
+      stop("Nested named lists are not supported")
     }
   }
 
   if (is.vector(obj)) {
     batch <- record_batch(vector_column=obj)
     names(batch) <- name
-    write_ipc_stream(batch, uri_result)
+    write_ipc_stream(batch, stream)
     return()
   }
+}
+
+send_by_arrow <- function(obj, name, uri_result) {
+  stream <- FileOutputStream$create(uri_result)
+  if (is.list(obj) && length(names(obj)) > 0) {
+    i <- 0
+    for (subj_name in names(obj)) {
+      i <- i + 1
+      subj <- obj[[i]]
+      send_element_by_arrow(subj, subj_name, stream)
+    }
+  } else {
+    send_element_by_arrow(obj, name, stream)
+  }
+  stream$close()
 }
