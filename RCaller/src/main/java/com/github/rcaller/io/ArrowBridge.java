@@ -81,6 +81,12 @@ public abstract class ArrowBridge implements AutoCloseable {
 
     public abstract double[] getAsDoubleArray(String name);
 
+    public abstract float[] getAsFloatArray(String name);
+
+    public abstract int[] getAsIntArray(String name);
+
+    public abstract long[] getAsLongArray(String name);
+
     public abstract double[][] getAsDoubleMatrix(String name);
 
     //public abstract Object getUnwrappedField(String name);

@@ -130,17 +130,17 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public float[] getAsFloatArray(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
+        return bridge.getAsFloatArray(name);
     }
 
     @Override
     public int[] getAsIntArray(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
+        return bridge.getAsIntArray(name);
     }
 
     @Override
     public long[] getAsLongArray(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
+        return bridge.getAsLongArray(name);
     }
 
     @Override
