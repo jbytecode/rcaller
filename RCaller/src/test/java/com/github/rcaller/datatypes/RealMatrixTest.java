@@ -53,7 +53,7 @@ public class RealMatrixTest {
     public void testGetDeterminant() {
         System.out.println("getDeterminant");
         double det = rm.getDeterminant();
-        assertTrue(det == 1.0);
+        assertEquals(1.0, det, 0.0);
     }
 
     @Test
@@ -86,8 +86,8 @@ public class RealMatrixTest {
         System.out.println("getTranspose");
         double[][] t = rm.getTranspose().getData();
         assertEquals(matrix[0][0], t[0][0], delta);
-        assertEquals(matrix[0][1], t[1][0], delta);
-        assertEquals(matrix[1][0], t[0][1], delta);
+        assertEquals(matrix[0][1], t[0][1], delta);
+        assertEquals(matrix[1][0], t[1][0], delta);
         assertEquals(matrix[1][1], t[1][1], delta);
     }
 
@@ -96,16 +96,16 @@ public class RealMatrixTest {
         System.out.println("product");
         double[][] result = rm.product(another).getData();
         assertEquals(30.0, result[0][0], delta);
-        assertEquals(5.0, result[1][0], delta);
-        assertEquals(131.0, result[0][1], delta);
+        assertEquals(5.0, result[0][1], delta);
+        assertEquals(131.0, result[1][0], delta);
         assertEquals(19.0, result[1][1], delta);
 
         System.out.println("product2");
         RealMatrix resultMat = rm.product(another);
         result = resultMat.getData();
         assertEquals(30.0, result[0][0], delta);
-        assertEquals(5.0, result[1][0], delta);
-        assertEquals(131.0, result[0][1], delta);
+        assertEquals(5.0, result[0][1], delta);
+        assertEquals(131.0, result[1][0], delta);
         assertEquals(19.0, result[1][1], delta);
     }
 
@@ -114,8 +114,8 @@ public class RealMatrixTest {
         System.out.println("sum");
         double[][] result = rm.sum(another).getData();
         assertEquals(9.0, result[0][0], delta);
-        assertEquals(9.0, result[1][0], delta);
-        assertEquals(15.0, result[0][1], delta);
+        assertEquals(9.0, result[0][1], delta);
+        assertEquals(15.0, result[1][0], delta);
         assertEquals(8.0, result[1][1], delta);
     }
 
@@ -125,8 +125,8 @@ public class RealMatrixTest {
         double scaler = 10.0;
         double[][] result = rm.productWithScaler(scaler).getData();
         assertEquals(matrix[0][0] * scaler, result[0][0], delta);
-        assertEquals(matrix[0][1] * scaler, result[1][0], delta);
-        assertEquals(matrix[1][0] * scaler, result[0][1], delta);
+        assertEquals(matrix[0][1] * scaler, result[0][1], delta);
+        assertEquals(matrix[1][0] * scaler, result[1][0], delta);
         assertEquals(matrix[1][1] * scaler, result[1][1], delta);
     }
 
@@ -135,8 +135,8 @@ public class RealMatrixTest {
         System.out.println("subtract");
         double[][] result = rm.subtract(another).getData();
         assertEquals(-7.0, result[0][0], delta);
-        assertEquals(-5.0, result[1][0], delta);
-        assertEquals(-7.0, result[0][1], delta);
+        assertEquals(-5.0, result[0][1], delta);
+        assertEquals(-7.0, result[1][0], delta);
         assertEquals(10.0, result[1][1], delta);
     }
 
@@ -179,8 +179,8 @@ public class RealMatrixTest {
         System.out.println("getColumns");
         double[][] result = rm.getColumns(new int[]{1, 2});
         assertEquals(1.0, result[0][0], delta);
-        assertEquals(2.0, result[0][1], delta);
-        assertEquals(4.0, result[1][0], delta);
+        assertEquals(4.0, result[0][1], delta);
+        assertEquals(2.0, result[1][0], delta);
         assertEquals(9.0, result[1][1], delta);
     }
 

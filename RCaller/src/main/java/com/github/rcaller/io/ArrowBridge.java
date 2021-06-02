@@ -1,5 +1,6 @@
 package com.github.rcaller.io;
 
+import com.github.rcaller.exception.ParseException;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.rstuff.RCode;
@@ -72,7 +73,11 @@ public abstract class ArrowBridge implements AutoCloseable {
 
     public abstract List<String> getNames();
 
+    public abstract String getType(String name);
+
     public abstract int[] getDimensions(String name);
+
+    public abstract String[] getAsStringArray(String name);
 
     public abstract double[] getAsDoubleArray(String name);
 

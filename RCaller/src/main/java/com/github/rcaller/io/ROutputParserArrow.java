@@ -105,7 +105,7 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public String getType(String variablename) {
-        throw new NotImplementedException("TODO");
+        return bridge.getType(variablename);
     }
 
     @Override
@@ -115,12 +115,12 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public NodeList getValueNodes(String name) {
-        throw new NotImplementedException("TODO");
+        throw new NotImplementedException("Not accessible in Arrow implementation");
     }
 
     @Override
     public String[] getAsStringArray(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
+        return bridge.getAsStringArray(name);
     }
 
     @Override

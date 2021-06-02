@@ -11,6 +11,7 @@ import org.apache.arrow.vector.FloatingPointVector;
 import org.apache.arrow.vector.VarCharVector;
 import org.apache.arrow.vector.complex.FixedSizeListVector;
 import org.apache.arrow.vector.complex.ListVector;
+import org.apache.arrow.vector.complex.PromotableVector;
 import org.apache.arrow.vector.ipc.ArrowStreamReader;
 import org.apache.arrow.vector.ipc.ArrowStreamWriter;
 import org.apache.arrow.vector.types.pojo.Field;
@@ -23,6 +24,7 @@ import java.net.URI;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -92,6 +94,24 @@ public class ArrowImpl extends ArrowBridge {
     }
 
     @Override
+    public String getType(String name) {
+        var vector = findVector(name);
+        if (vector instanceof VarCharVector) {
+            return "character";
+        } else if (vector instanceof FloatingPointVector || vector instanceof BaseIntVector) {
+            return "numeric";
+        } else if (vector instanceof PromotableVector) {
+            //((FixedSizeListVector)vector).getChildrenFromFields().get(0).
+//        } else if (vector instanceof ListVector) {
+
+            throw new ParseException("Can not read from this vector");
+        } else {
+            throw new ParseException("Can not read from this vector");
+        }
+
+    }
+
+    @Override
     public int[] getDimensions(String name) {
         var vector = findVector(name);
         int[] result = new int[2];
@@ -102,6 +122,39 @@ public class ArrowImpl extends ArrowBridge {
             result[1] = 1;
         }
         return result;
+    }
+
+    @Override
+    public String[] getAsStringArray(String name) {
+        var vector = findVector(name);
+        if (vector instanceof VarCharVector) {
+            var result = new String[vector.getValueCount()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = ((VarCharVector)vector).getObject(i).toString();
+            }
+            return result;
+        } else if (vector instanceof FloatingPointVector) {
+            var result = new String[vector.getValueCount()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = "" + ((FloatingPointVector)vector).getValueAsDouble(i);
+            }
+            return result;
+        } else if (vector instanceof BaseIntVector) {
+            var result = new String[vector.getValueCount()];
+            for (int i = 0; i < result.length; i++) {
+                result[i] = "" + ((BaseIntVector)vector).getValueAsLong(i);
+            }
+            return result;
+        } else if (vector instanceof PromotableVector) {
+            var buffer = new ArrayList<String>();
+            for (int i = 0; i < vector.getValueCount(); i++) {
+                List<?> row = (List<?>) vector.getObject(i);
+                buffer.addAll(row.stream().map(Object::toString).collect(Collectors.toList()));
+            }
+            return buffer.toArray(new String[0]);
+        } else {
+            throw new ParseException("Can not read from this vector");
+        }
     }
 
     @Override
@@ -126,14 +179,19 @@ public class ArrowImpl extends ArrowBridge {
             }
             return result;
         } else if (vector instanceof FixedSizeListVector || vector instanceof ListVector) {
-            var buffer = new ArrayList<Double>();
+            var buffer = new ArrayList<>();
             for (int i = 0; i < vector.getValueCount(); i++) {
-                List row = (List) vector.getObject(i);
+                List<?> row = (List<?>) vector.getObject(i);
                 buffer.addAll(row);
             }
             var result = new double[buffer.size()];
             for (int i = 0; i < result.length; i++) {
-                result[i] = buffer.get(i);
+                var cell = buffer.get(i);
+                if (cell instanceof Number) {
+                    result[i] = (double) cell;
+                } else {
+                    result[i] = Double.parseDouble(cell.toString());
+                }
             }
             return result;
         } else {

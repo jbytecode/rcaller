@@ -68,10 +68,10 @@ public class RSerializerTest {
 
         double[][] x = caller.getParser().getAsDoubleMatrix("x");
         assertEquals(1.0, x[0][0], delta);
-        assertEquals(2.0, x[0][1], delta);
-        assertEquals(3.0, x[1][0], delta);
-        assertEquals(4.0, x[1][1], delta);
-        assertEquals(5.0, x[2][0], delta);
+        assertEquals(2.0, x[1][0], delta);
+        assertEquals(3.0, x[2][0], delta);
+        assertEquals(4.0, x[0][1], delta);
+        assertEquals(5.0, x[1][1], delta);
         assertEquals(6.0, x[2][1], delta);
 
     }

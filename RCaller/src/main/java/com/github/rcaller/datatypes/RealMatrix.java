@@ -76,7 +76,7 @@ public class RealMatrix {
 
     public double[][] getData() {
         code.clearOnline();
-        code.addRCode(this.HashString + "<- t(" + this.name + ")");
+        code.addRCode(this.HashString + " <- " + this.name);
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
         return (rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
@@ -129,14 +129,14 @@ public class RealMatrix {
             }
         }
         code.clearOnline();
-        code.addRCode(this.HashString + "<- t(" + this.name + "[c(");
+        code.addRCode(this.HashString + "<- " + this.name + "[c(");
         for (int i = 0; i < rows.length; i++) {
             code.addRCode(String.valueOf(rows[i]));
             if (i != rows.length - 1) {
                 code.addRCode(",");
             }
         }
-        code.addRCode("),])");
+        code.addRCode("),]");
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
         return (rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]));
@@ -152,7 +152,7 @@ public class RealMatrix {
 
     public RealMatrix getInverse() {
         code.clearOnline();
-        code.addRCode(this.HashString + " <- t(solve(" + this.name + "))");
+        code.addRCode(this.HashString + " <- solve(" + this.name + ")");
         rcaller.runAndReturnResultOnline(this.HashString);
         double[][] mat = rcaller.getParser().getAsDoubleMatrix(this.HashString, 2, 2);
         RealMatrix matnew = new RealMatrix(service);
@@ -255,7 +255,7 @@ public class RealMatrix {
 
     public RealMatrix getEigenVectors() {
         code.clearOnline();
-        code.addRCode(this.HashString + " <- t(eigen(" + this.name + ")$vectors)");
+        code.addRCode(this.HashString + " <- eigen(" + this.name + ")$vectors");
         rcaller.runAndReturnResultOnline(this.HashString);
         int[] dims = rcaller.getParser().getDimensions(this.HashString);
         double[][] result = rcaller.getParser().getAsDoubleMatrix(this.HashString, dims[0], dims[1]);
