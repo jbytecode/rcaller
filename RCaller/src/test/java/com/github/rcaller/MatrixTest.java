@@ -25,7 +25,7 @@ public class MatrixTest {
 
     double[][] inverse = caller.getParser().getAsDoubleMatrix("s", matrix.length, matrix[0].length);
 
-    double[][] expected = new double[][]{{0.6666667, -0.7500000}, {-0.3333333, 0.5000000}};
+    double[][] expected = new double[][]{{0.6666667, -0.3333333}, {-0.7500000, 0.5000000}};
 
     assertEquals(expected.length, inverse.length);
     for (int i = 0; i < expected.length; i++) {

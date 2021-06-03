@@ -34,6 +34,8 @@ import com.github.rcaller.graphics.GraphicsTheme;
 import com.github.rcaller.util.Globals;
 
 import java.io.*;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
@@ -88,17 +90,18 @@ public class RCaller {
      * @return default RCaller object
      */
     public static RCaller create() {
-        return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), RCallerOptions.create());
+        RCallerOptions rCallerOptions = RCallerOptions.create();
+        return new RCaller(RCode.create(), ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
     /***
-     * Static factory creater with startup options
+     * Static factory creator with startup options
      * 
      * @param rCallerOptions given startup options
      * @return RCaller object
      */
     public static RCaller create(RCallerOptions rCallerOptions) {
-        return new RCaller(RCode.create(), new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(RCode.create(rCallerOptions), ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
     /**
@@ -109,7 +112,7 @@ public class RCaller {
      * @return RCaller object
      */
     public static RCaller create(RCode rcode, RCallerOptions rCallerOptions) {
-        return new RCaller(rcode, new ROutputParser(), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(rcode, ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
     }
 
 
@@ -263,7 +266,7 @@ public class RCaller {
             stopStreamConsumers();
         }
         if (returnCode != 0) {
-            throw new ExecutionException("R command failed with error. Reason: " + errorMessageSaver.getMessage());
+            throw new ExecutionException("R command evaling " + rSourceFile.getAbsolutePath() + " failed with error. Reason: " + errorMessageSaver.getMessage());
         }
     }
 
@@ -305,9 +308,7 @@ public class RCaller {
             }
 
             rCode.appendStandardCodeToAppend(outputFile, var);
-            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
-            rCode.addRCode(resultReadyVarName + " <- 1");
-            rCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
+            rCode.appendEndSignalCode(resultReadyControlFile);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
                     startOnlineProcess();
@@ -323,6 +324,7 @@ public class RCaller {
                 rInput.write(rCode.toString().getBytes(Globals.standardCharset));
                 rInput.flush();
             } catch (IOException e) {
+                rInput = null;
                 if (handleRFailure("Can not send the source code to R file due to: " + e.toString())) {
                     continue;
                 }
@@ -341,7 +343,7 @@ public class RCaller {
                 }
             }
 
-            parser.setXMLFile(outputFile);
+            parser.setIPCResource(outputFile.toURI());
 
             try {
                 parser.parse();
@@ -358,7 +360,7 @@ public class RCaller {
     /**
      * Sleep while controlFile is empty and timeout {$link #rCallerOptions$getMaxWaitTime()} is not expired.
      * Kill underlying process if timeout is expired.
-     * @param controlFile Sygnal file (separated fron the main result), when it is not empty, calculation is finished
+     * @param controlFile Signal file (separated from the main result), when it is not empty, calculation is finished
      * @throws InterruptedException
      */
     private void waitRExecute(File controlFile) throws InterruptedException {
@@ -391,15 +393,13 @@ public class RCaller {
             getTmpDirCode.appendStandardCodeToAppend(getTmpDirFile, tempDirOutVarName);
 
             File resultReadyControlFile = tempFileService.createControlFile();
-            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
-            getTmpDirCode.addRCode(resultReadyVarName + " <- 1");
-            getTmpDirCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
+            getTmpDirCode.appendEndSignalCode(resultReadyControlFile);
 
             rInput.write(getTmpDirCode.toString().getBytes(Globals.standardCharset));
             rInput.flush();
             waitRExecute(resultReadyControlFile);
 
-            parser.setXMLFile(getTmpDirFile);
+            parser.setIPCResource(getTmpDirFile.toURI());
             parser.parse();
             tmpDir = parser.getAsStringArray(tempDirOutVarName)[0];
         } catch (InterruptedException e) {
@@ -539,12 +539,12 @@ public class RCaller {
         rCode.appendStandardCodeToAppend(outputFile, var);
         runRCode();
 
-        parser.setXMLFile(outputFile);
+        parser.setIPCResource(outputFile.toURI());
         try {
             parser.parse();
         } catch (Exception e) {
             Logger.getLogger(RCaller.class.getName()).log(Level.INFO, rCode.toString());
-            throw new ParseException("Can not handle R results due to : " + e.getMessage());
+            throw new ParseException("Can not handle R results due to", e);
         }
     }
 

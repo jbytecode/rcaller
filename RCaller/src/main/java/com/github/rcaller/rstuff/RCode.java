@@ -29,22 +29,30 @@ package com.github.rcaller.rstuff;
 import com.github.rcaller.FunctionCall;
 import com.github.rcaller.TempFileService;
 import com.github.rcaller.datatypes.DataFrame;
-import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.graphics.GraphicsType;
+import com.github.rcaller.io.RCodeIO;
 import com.github.rcaller.util.RCodeUtils;
 import com.github.rcaller.util.Globals;
 
 import javax.swing.*;
 import java.io.*;
+import java.net.URI;
 
 public class RCode {
 
     private StringBuilder code;
     private TempFileService tempFileService = null;
+    private final RCallerOptions rCallerOptions;
 
 
     private RCode() {
         this.code = new StringBuilder();
+        rCallerOptions = RCallerOptions.create();
+    }
+
+    private RCode(RCallerOptions rCallerOptions) {
+        this.code = new StringBuilder();
+        this.rCallerOptions = rCallerOptions;
     }
 
     public static RCode create() {
@@ -55,7 +63,18 @@ public class RCode {
 
     public static RCode create(StringBuffer stringBuffer) {
         RCode rCode = RCode.create();
+        rCode.getCode().append(stringBuffer.toString());
+        return rCode;
+    }
+
+    public static RCode create(RCallerOptions rCallerOptions) {
+        RCode rCode = new RCode(rCallerOptions);
         rCode.clear();
+        return rCode;
+    }
+
+    public static RCode create(StringBuffer stringBuffer, RCallerOptions rCallerOptions) {
+        RCode rCode = RCode.create(rCallerOptions);
         rCode.getCode().append(stringBuffer.toString());
         return rCode;
     }
@@ -78,28 +97,17 @@ public class RCode {
 
     public final void clear() {
         this.code.setLength(0);
-        try {
-            InputStream is = this.getClass().getClassLoader().getResourceAsStream("runiversal.r");
-            InputStreamReader inputStreamReader = new InputStreamReader(is);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            while (true) {
-                String s = bufferedReader.readLine();
-                if (s == null) {
-                    break;
-                }
-                addRCode(s);
-            }
-            addRCode("\n");
-        } catch (IOException e) {
-            throw new ExecutionException("runiversal.R in package: " + e.toString());
-        }
+        addRCode(RCodeIO.getInterprocessDependencies(rCallerOptions));
     }
 
     public void appendStandardCodeToAppend(File outputFile, String var) {
-        this.code.append("cat(makexml(obj=").append(var).append(", name=\"").append(var).
-                append("\"), file=\"").append(outputFile.getAbsolutePath().replace("\\", "/")).append("\")\n");
+        addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, URI.create(outputFile.getAbsolutePath())));
     }
-    
+
+    public void appendEndSignalCode(File outputFile) {
+        addRCode("cat(1, file=\"" + outputFile.getPath().replace("\\", "/") + "\")\n");
+    }
+
     public void clearOnline(){
         code.setLength(0);
     }

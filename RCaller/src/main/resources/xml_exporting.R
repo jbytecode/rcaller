@@ -1,17 +1,3 @@
-cleanNames<-function(names){
-  cln<-paste(unlist(strsplit(names,"\\.")),collapse="_")
-  cln<-paste(unlist(strsplit(cln,"<")),collapse="")
-  cln<-paste(unlist(strsplit(cln,">")),collapse="")
-  cln<-paste(unlist(strsplit(cln," ")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\(")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\)")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\[")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\]")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"\\*")),collapse="")
-  cln<-paste(unlist(strsplit(cln,"&")),collapse="")
-  return(cln)
-}
-
 replaceXMLchars <- function(aStr){
   cln <-paste(unlist(strsplit(aStr,"&")),collapse="&amp;")
   cln <-paste(unlist(strsplit(cln,"<")),collapse="&lt;")

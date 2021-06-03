@@ -34,7 +34,7 @@ public class RunOnlineTest {
         rcaller.setRCode(code);
         rcaller.runAndReturnResultOnline("result");
         double mean = rcaller.getParser().getAsDoubleArray("result")[0];
-        double delta = 1 / 10000;
+        double delta = 1.0 / 10000;
         assertEquals(12.0, mean, delta);
         //System.out.println("mean: " + mean);
 
