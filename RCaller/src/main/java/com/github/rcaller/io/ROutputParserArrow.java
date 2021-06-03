@@ -144,11 +144,6 @@ public class ROutputParserArrow implements ROutputParser {
     }
 
     @Override
-    public boolean[] getAsLogicalArray(String name) throws ParseException {
-        throw new NotImplementedException("TODO");
-    }
-
-    @Override
     public double[][] getAsDoubleMatrix(String name, int n, int m) throws ParseException {
         int[] dimensions = getDimensions(name);
         if (dimensions[0] == n && dimensions[1] == m) {

@@ -49,11 +49,21 @@ send_element_by_arrow <- function(obj, name, stream) {
     }
   }
 
+  if (typeof(obj)=="language") {
+    obj<-toString(obj)
+  } else if(typeof(obj)=="logical") {
+    obj<-as.character(obj)
+  } else if(class(obj)=="factor") {
+    obj<-as.vector(obj)
+  }
+
   if (is.vector(obj)) {
     batch <- record_batch(vector_column=obj)
     names(batch) <- name
     write_ipc_stream(batch, stream)
     return()
+  # } else {
+  #   stop("Probably unsupported output")
   }
 }
 
