@@ -34,6 +34,8 @@ import com.github.rcaller.graphics.GraphicsTheme;
 import com.github.rcaller.util.Globals;
 
 import java.io.*;
+import java.nio.channels.Channels;
+import java.nio.channels.FileChannel;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
@@ -306,9 +308,7 @@ public class RCaller {
             }
 
             rCode.appendStandardCodeToAppend(outputFile, var);
-            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
-            rCode.addRCode(resultReadyVarName + " <- 1");
-            rCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
+            rCode.appendEndSignalCode(resultReadyControlFile);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
                     startOnlineProcess();
@@ -393,9 +393,7 @@ public class RCaller {
             getTmpDirCode.appendStandardCodeToAppend(getTmpDirFile, tempDirOutVarName);
 
             File resultReadyControlFile = tempFileService.createControlFile();
-            String resultReadyVarName = "resultReady" + Math.abs(rand.nextLong());
-            getTmpDirCode.addRCode(resultReadyVarName + " <- 1");
-            getTmpDirCode.appendStandardCodeToAppend(resultReadyControlFile, resultReadyVarName);
+            getTmpDirCode.appendEndSignalCode(resultReadyControlFile);
 
             rInput.write(getTmpDirCode.toString().getBytes(Globals.standardCharset));
             rInput.flush();

@@ -103,7 +103,11 @@ public class RCode {
     public void appendStandardCodeToAppend(File outputFile, String var) {
         addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, URI.create(outputFile.getAbsolutePath())));
     }
-    
+
+    public void appendEndSignalCode(File outputFile) {
+        addRCode("cat(1, file=\"" + outputFile.getPath().replace("\\", "/") + "\")\n");
+    }
+
     public void clearOnline(){
         code.setLength(0);
     }
