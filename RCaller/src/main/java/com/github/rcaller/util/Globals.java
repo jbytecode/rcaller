@@ -52,7 +52,7 @@ public class Globals {
     /**
      * Whether we should try to use Apache Arrow for transferring output data
      */
-    public static boolean useArrowIfAvailable = false;
+    public static boolean useArrowIfAvailable = true;
     /**
      * Whether we should not use XML as backward behavior if {@link #useArrowIfAvailable} is true but Arrow is not available
      */

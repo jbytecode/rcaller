@@ -7,8 +7,8 @@ send_element_by_arrow <- function(obj, name, stream) {
     return()
   }
   if (is.array(obj)) {
-    if (is.matrix(obj)){
-      #Export as Arrow table with one 'fixed-size-list' column
+    if (is.matrix(obj) && dim(obj)[1] > 0 && dim(obj)[2] > 0){
+      #Export filled matrix as Arrow table with one 'fixed-size-list' column
       #Convert flat matrix to jagged (list of vectors) that is supported by Arrow
       matrix_jagged_fixedsize <- list()
       rows <- dim(obj)[1]
@@ -30,13 +30,11 @@ send_element_by_arrow <- function(obj, name, stream) {
       stop(paste(length(dim(obj)), "-D arrays are not supported"))
       #TODO add try-catch support on toplevel
     }
-    if (length(dim(obj)) == 1) {
-      #1-D array can be converted to Vector
-      dim(obj) <- c()
-    }
+    #1-D array and empty matrix can be converted to Vector
+    dim(obj) <- c()
   }
   if (is.list(obj)){
-    if (length(names(obj)) == 0) {
+    if (length(obj) > 0 && length(names(obj)) == 0) {
       #Export as Arrow table with one 'list' column
       #Suppose that each element has the same type
       #Union typed and nested lists might not work
@@ -44,8 +42,17 @@ send_element_by_arrow <- function(obj, name, stream) {
       names(batch) <- name
       write_ipc_stream(batch, stream)
       return()
+    } else if (length(names(obj)) > 0) {
+      #Export each field separatly
+      i <- 0
+      for (subj_name in names(obj)) {
+        i <- i + 1
+        subj <- obj[[i]]
+        send_element_by_arrow(subj, cleanNames(paste0(name, "$", subj_name)), stream)
+      }
     } else {
-      stop("Nested named lists are not supported")
+      #Convert empty List to empty Vector
+      obj <- unlist(obj)
     }
   }
 
@@ -57,10 +64,19 @@ send_element_by_arrow <- function(obj, name, stream) {
     obj<-as.vector(obj)
   }
 
-  if (is.vector(obj)) {
+  if (is.vector(obj) && length(obj) > 0) {
+    #export filled vector with auto type detect
     batch <- record_batch(vector_column=obj)
     names(batch) <- name
     write_ipc_stream(batch, stream)
+    return()
+  } else if (length(obj) == 0) {
+    #export empty element
+    obj <- c(1)
+    type_example_batch <- record_batch(empty_column=obj)
+    length(obj) <- 0
+    empty_batch <- record_batch(empty_column=obj, schema=type_example_batch$schema)
+    write_ipc_stream(empty_batch, stream)
     return()
   # } else {
   #   stop("Probably unsupported output")
@@ -74,10 +90,10 @@ send_by_arrow <- function(obj, name, uri_result) {
     for (subj_name in names(obj)) {
       i <- i + 1
       subj <- obj[[i]]
-      send_element_by_arrow(subj, subj_name, stream)
+      send_element_by_arrow(subj, cleanNames(subj_name), stream)
     }
   } else {
-    send_element_by_arrow(obj, name, stream)
+    send_element_by_arrow(obj, cleanNames(name), stream)
   }
   stream$close()
 }

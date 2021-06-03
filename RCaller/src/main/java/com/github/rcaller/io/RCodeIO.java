@@ -18,6 +18,7 @@ public class RCodeIO {
         @Override
         public String getInterprocessDependencies() {
             var generatingScript = new StringBuilder();
+            RCodeUtils.addResourceScript(generatingScript, "runiversal.R");
             RCodeUtils.addResourceScript(generatingScript, "arrow_bridge.R");
             return generatingScript.toString();
         }
@@ -34,6 +35,7 @@ public class RCodeIO {
         @Override
         public String getInterprocessDependencies() {
             var generatingScript = new StringBuilder();
+            RCodeUtils.addResourceScript(generatingScript, "runiversal.R");
             RCodeUtils.addResourceScript(generatingScript, "xml_exporting.R");
             return generatingScript.toString();
         }
