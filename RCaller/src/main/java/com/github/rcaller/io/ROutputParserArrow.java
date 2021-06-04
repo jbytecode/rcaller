@@ -66,7 +66,7 @@ public class ROutputParserArrow implements ROutputParser {
 
     @Override
     public URI getIPCResource() {
-        return null;
+        return ipcResourceURI;
     }
 
     @Override
