@@ -329,6 +329,7 @@ public class ArrowImpl extends ArrowBridge {
         }
     }
 
+    @Override
     public double[][] getAsDoubleMatrix(String name) {
         var vector = findVector(name);
         if (vector instanceof FixedSizeListVector || vector instanceof ListVector) {

@@ -211,6 +211,14 @@ public class RunOnlineTest {
         }
     }
 
+    @Test(expected = ExecutionException.class)
+    public void exceptionCatchTest() {
+        RCaller rcaller = RCaller.create();
+        RCode code = rcaller.getRCode();
+        code.addRCode("a <- log(\"not a number\")");
+        rcaller.runAndReturnResultOnline("a");
+    }
+
     @Test
     public void rHaltedTest() {
         System.out.println("R HALTED TEST");
@@ -226,7 +234,7 @@ public class RunOnlineTest {
             rcaller.runAndReturnResultOnline("a");
         } catch (ExecutionException ex) {
             Logger.getLogger(RunOnlineTest.class.getName()).log(Level.SEVERE, ex.getMessage());
-            if (ex.getMessage().contains("R stderr:")) {
+            if (ex.getMessage().contains("R code throw an error:")) {
                 exceptionThrown = true;
             }
             rcaller.stopRCallerOnline();

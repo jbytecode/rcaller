@@ -100,12 +100,21 @@ public class RCode {
         addRCode(RCodeIO.getInterprocessDependencies(rCallerOptions));
     }
 
+    /**
+     * Adding R code that exports toplevel var to outputFile for reading by Java. Internal use only.
+     * @param outputFile file to be created
+     * @param var name of variable to be exported
+     */
     public void appendStandardCodeToAppend(File outputFile, String var) {
         addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, URI.create(outputFile.getAbsolutePath())));
     }
 
+    static String createEndSignalCode(File outputFile) {
+        return ("cat(1, file=\"" + outputFile.getPath().replace("\\", "/") + "\")\n");
+    }
+
     public void appendEndSignalCode(File outputFile) {
-        addRCode("cat(1, file=\"" + outputFile.getPath().replace("\\", "/") + "\")\n");
+        addRCode(createEndSignalCode(outputFile));
     }
 
     public void clearOnline(){
@@ -245,7 +254,7 @@ public class RCode {
     }
     
     public void deleteTempFiles(){
-        if(tempFileService != null){
+        if (tempFileService != null){
             tempFileService.deleteRCallerTempFiles();   
         }
     }
@@ -253,5 +262,30 @@ public class RCode {
     @Override
     public String toString() {
         return this.code.toString();
+    }
+
+    /**
+     * Wrap current code to standard tryCatch function.
+     * Error handler saves details to errorOutputFile if the error occurs.
+     * @param errorOutputFile
+     * @return
+     */
+    String toTryCatchScript(File errorOutputFile) {
+        //Using code snippet "An improved “error handler”" with withCallingHandlers nested in tryCatch
+        //from https://cran.r-project.org/web/packages/tryCatchLog/vignettes/tryCatchLog-intro.html
+
+        var script = new StringBuilder("tryCatch(  withCallingHandlers({\n");
+        script.append(this.code);
+
+        script.append("}, error=function(e) {\n" +
+                "  stacktrace <- as.character(sys.calls())\n" +
+                "  exception <- as.character(e)\n" +
+                "  caught <- list()\n" +
+                "  caught[[1]] <- exception\n" +
+                "  caught[[2]] <- stacktrace[6:(length(stacktrace)-2)]\n" + //remove wrapping steps
+                "  names(caught) <- c(\"exception\", \"stacktrace\")\n");
+        script.append(RCodeIO.getVariableExporting(rCallerOptions, "caught", URI.create(errorOutputFile.getAbsolutePath()))).append("\n");
+        script.append("}), error = function(e) {  })\n");
+        return script.toString();
     }
 }

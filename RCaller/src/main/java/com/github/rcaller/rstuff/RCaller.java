@@ -36,6 +36,8 @@ import com.github.rcaller.util.Globals;
 import java.io.*;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
@@ -288,7 +290,7 @@ public class RCaller {
                 logger.log(Level.INFO, "Retrying online R execution");
             }
 
-            File outputFile, resultReadyControlFile;
+            File outputFile, errorFile, resultReadyControlFile;
 
             if (rCallerOptions.getrExecutable() == null) {
                 if (handleRFailure("RExecutable is not defined.Please set this" + " variable to full path of R executable binary file.")) {
@@ -298,6 +300,7 @@ public class RCaller {
 
             try {
                 outputFile = tempFileService.createOutputFile();
+                errorFile = tempFileService.createControlFile();
                 resultReadyControlFile = tempFileService.createControlFile();
             } catch (Exception e) {
                 if (handleRFailure("Can not create a temporary file for storing the R results: " + e.getMessage())) {
@@ -308,7 +311,6 @@ public class RCaller {
             }
 
             rCode.appendStandardCodeToAppend(outputFile, var);
-            rCode.appendEndSignalCode(resultReadyControlFile);
             if (rInput == null || rOutput == null || rError == null || process == null) {
                 try {
                     startOnlineProcess();
@@ -321,7 +323,8 @@ public class RCaller {
             }
 
             try {
-                rInput.write(rCode.toString().getBytes(Globals.standardCharset));
+                var script = rCode.toTryCatchScript(errorFile) + rCode.createEndSignalCode(resultReadyControlFile);
+                rInput.write(script.getBytes(Globals.standardCharset));
                 rInput.flush();
             } catch (IOException e) {
                 rInput = null;
@@ -337,10 +340,19 @@ public class RCaller {
             }
 
             // an error might occur before any output is written
-            if (!isProcessAlive() && errorMessageSaver.getMessage().length() > 0) {
-                if (handleRFailure("R stderr: " + errorMessageSaver.getMessage())) {
+            if (!isProcessAlive()) {
+                if (handleRFailure("R process died, stderr: " + errorMessageSaver.getMessage())) {
                     continue;
                 }
+            }
+
+            if (errorFile.length() > 0) {
+                parser.setIPCResource(errorFile.toURI());
+                parser.parse();
+                String errorMessage = parser.getAsStringArray("exception")[0];
+                String stack = String.join("\n----\n",List.of(parser.getAsStringArray("stacktrace")));
+
+                throw new ExecutionException("R code throw an error:\n" + errorMessage + "\nDetailed stack:\n----\n" + stack);
             }
 
             parser.setIPCResource(outputFile.toURI());
