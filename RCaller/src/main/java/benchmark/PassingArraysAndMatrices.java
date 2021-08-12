@@ -53,7 +53,7 @@ public class PassingArraysAndMatrices {
 
     public static void main(String[] args) {
 
-        performSimulation(/* size of vector */ 10, 10 /* times */ , SimType.Vector);
+        performSimulation(/* size of vector */ 2, 100 /* times */ , SimType.Vector);
 
     }
 
@@ -77,7 +77,7 @@ public class PassingArraysAndMatrices {
                 code.addRCode("result <- t(randommatrix)");
             }
             caller.setRCode(code);
-            caller.runAndReturnResultOnline("result");
+            caller.runAndReturnResultOnline("result", false);
             /* return variable is not handled */ caller.getParser().getAsDoubleArray("result");
             elapsed[simulations] = (int) System.currentTimeMillis() - timeStart;
 

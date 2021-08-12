@@ -278,11 +278,30 @@ public class RCaller {
      * re-used by invoking this method again. When you are done with this
      * process, you must explicitly stop it.
      *
+     * If R raises an error, it is ignored. For throwing them in Java, use
+     * {@link #runAndReturnResultOnline(String, boolean)} with addTryCatch=true
+     *
      * @see #stopStreamConsumers()
      * @param var The R variable to return
      * @throws ExecutionException if R cannot be started
      */
     public void runAndReturnResultOnline(String var) throws ExecutionException {
+        runAndReturnResultOnline(var, false);
+    }
+
+    /**
+     * Runs the current code in the existing R instance (or in a new one) and
+     * returns the R variable "var". The R process is kept alive and can be
+     * re-used by invoking this method again. When you are done with this
+     * process, you must explicitly stop it.
+     *
+     * @since 4.0.0
+     * @see #stopStreamConsumers()
+     * @param var The R variable to return
+     * @param addTryCatch wrap original R code to tryCatch function (can impact performance)
+     * @throws ExecutionException if R cannot be started or raise error inside while addTryCatch parameter is true
+     */
+    public void runAndReturnResultOnline(String var, boolean addTryCatch) throws ExecutionException {
         rCallerOptions.resetRetries();
         boolean done = false;
         do {
@@ -323,7 +342,13 @@ public class RCaller {
             }
 
             try {
-                var script = rCode.toTryCatchScript(errorFile) + rCode.createEndSignalCode(resultReadyControlFile);
+                String script;
+                if (addTryCatch) {
+                    script = rCode.toTryCatchScript(errorFile);
+                } else {
+                    script = rCode.toString();
+                }
+                script += rCode.createEndSignalCode(resultReadyControlFile);
                 rInput.write(script.getBytes(Globals.standardCharset));
                 rInput.flush();
             } catch (IOException e) {

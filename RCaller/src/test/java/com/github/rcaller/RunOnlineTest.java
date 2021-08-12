@@ -216,7 +216,7 @@ public class RunOnlineTest {
         RCaller rcaller = RCaller.create();
         RCode code = rcaller.getRCode();
         code.addRCode("a <- log(\"not a number\")");
-        rcaller.runAndReturnResultOnline("a");
+        rcaller.runAndReturnResultOnline("a", true);
     }
 
     @Test
@@ -234,7 +234,7 @@ public class RunOnlineTest {
             rcaller.runAndReturnResultOnline("a");
         } catch (ExecutionException ex) {
             Logger.getLogger(RunOnlineTest.class.getName()).log(Level.SEVERE, ex.getMessage());
-            if (ex.getMessage().contains("R code throw an error:")) {
+            if (ex.getMessage().contains("R process died, stderr:")) {
                 exceptionThrown = true;
             }
             rcaller.stopRCallerOnline();

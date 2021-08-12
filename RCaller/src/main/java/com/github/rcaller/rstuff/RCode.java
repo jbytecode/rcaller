@@ -267,8 +267,8 @@ public class RCode {
     /**
      * Wrap current code to standard tryCatch function.
      * Error handler saves details to errorOutputFile if the error occurs.
-     * @param errorOutputFile
-     * @return
+     * @param errorOutputFile file to save error if it occurs
+     * @return generated script to be evaluated
      */
     String toTryCatchScript(File errorOutputFile) {
         //Using code snippet "An improved “error handler”" with withCallingHandlers nested in tryCatch

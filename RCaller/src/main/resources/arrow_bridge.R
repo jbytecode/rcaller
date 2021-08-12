@@ -28,7 +28,6 @@ send_element_by_arrow <- function(obj, name, stream) {
     if (length(dim(obj)) > 2) {
       #3- and more-D arrays are not supported
       stop(paste(length(dim(obj)), "-D arrays are not supported"))
-      #TODO add try-catch support on toplevel
     }
     #1-D array and empty matrix can be converted to Vector
     dim(obj) <- c()
