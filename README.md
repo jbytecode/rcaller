@@ -74,9 +74,19 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
 - [Invoke R Functions](https://github.com/jbytecode/rcaller/blob/master/RCaller/src/main/java/examples/ScriptEngineInvocable.java)
 
 - [Calling R from within Clojure](https://github.com/jbytecode/rcaller/blob/master/markdown/clojure.md)
+
+### Performance details
+
+RCaller uses XML for reading R output by default. This is lightweight but not very fast way.
+For speeding up the IO, install R [arrow](https://cran.r-project.org/web/packages/arrow/index.html)
+package and add dependencies `org.apache.arrow:arrow-vector` and `org.apache.arrow:arrow-memory-netty` to your Java project.
+RCaller will use Arrow format automatically if it is available both in R and Java.
+
+Errors handling can impact performance in online mode and is disabled by default.
+Use `RCaller.runAndReturnResultOnline(String var, boolean addTryCatch)` method with `addTryCatch = true` for throwing R exceptions to Java.
   
 # API Docs
-[Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/v3.0.2/RCaller-3.0.2-SNAPSHOT-javadoc.jar). 
+[Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/RCaller-4.0.0/RCaller-4.0.0-javadoc.jar).
 
 # Building and Installing RCaller
 There are many options to integrate RCaller with a Java Project. First option is to download pre-compiled jar file and add it to the classpath or pom.xml. [pre-compiled jar files](https://github.com/jbytecode/rcaller/releases) are here.
@@ -95,7 +105,7 @@ The last option is to use maven dependency:
 <dependency>
   <groupId>com.github.jbytecode</groupId>
   <artifactId>RCaller</artifactId>
-  <version>3.0.2</version>
+  <version>4.0.0</version>
   <classifier>jar-with-dependencies</classifier>
 </dependency>
 ```
