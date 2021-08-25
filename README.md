@@ -86,7 +86,7 @@ Errors handling can impact performance in online mode and is disabled by default
 Use `RCaller.runAndReturnResultOnline(String var, boolean addTryCatch)` method with `addTryCatch = true` for throwing R exceptions to Java.
   
 # API Docs
-[Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/RCaller-4.0.0/RCaller-4.0.0-javadoc.jar).
+[Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/RCaller-4.0.1/RCaller-4.0.1-javadoc.jar).
 
 # Building and Installing RCaller
 There are many options to integrate RCaller with a Java Project. First option is to download pre-compiled jar file and add it to the classpath or pom.xml. [pre-compiled jar files](https://github.com/jbytecode/rcaller/releases) are here.
@@ -105,7 +105,7 @@ The last option is to use maven dependency:
 <dependency>
   <groupId>com.github.jbytecode</groupId>
   <artifactId>RCaller</artifactId>
-  <version>4.0.0</version>
+  <version>4.0.1</version>
   <classifier>jar-with-dependencies</classifier>
 </dependency>
 ```

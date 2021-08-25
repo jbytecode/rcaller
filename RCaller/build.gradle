@@ -8,7 +8,7 @@ repositories {
 }
 
 group = 'com.github.jbytecode'
-version = '4.0.0'
+version = '4.0.1'
 description = 'RCaller is a software library which simplifies performing data analysis and statistical calculations in Java using R. The details are hidden from users including transferring data between platforms, function calls, and retrieving results.'
 
 dependencies {

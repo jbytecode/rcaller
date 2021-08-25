@@ -106,7 +106,7 @@ public class RCode {
      * @param var name of variable to be exported
      */
     public void appendStandardCodeToAppend(File outputFile, String var) {
-        addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, URI.create(outputFile.getAbsolutePath())));
+        addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, outputFile.toPath().toUri()));
     }
 
     static String createEndSignalCode(File outputFile) {
@@ -284,7 +284,7 @@ public class RCode {
                 "  caught[[1]] <- exception\n" +
                 "  caught[[2]] <- stacktrace[6:(length(stacktrace)-2)]\n" + //remove wrapping steps
                 "  names(caught) <- c(\"exception\", \"stacktrace\")\n");
-        script.append(RCodeIO.getVariableExporting(rCallerOptions, "caught", URI.create(errorOutputFile.getAbsolutePath()))).append("\n");
+        script.append(RCodeIO.getVariableExporting(rCallerOptions, "caught", errorOutputFile.toURI())).append("\n");
         script.append("}), error = function(e) {  })\n");
         return script.toString();
     }

@@ -5,6 +5,7 @@ import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.util.RCodeUtils;
 import org.apache.commons.lang3.NotImplementedException;
 
+import java.io.File;
 import java.net.URI;
 
 public class RCodeIO {
@@ -26,7 +27,7 @@ public class RCodeIO {
         @Override
         public String getVariableExporting(String variableName, URI target) {
             return "send_by_arrow(obj=" + variableName + ", name=\"" + variableName +
-                    "\", uri=\"" + target.getPath().replace("\\", "/") + "\")\n";
+                    "\", uri=\"" + new File(target).toString().replace("\\", "/") + "\")\n";
         }
     }
     private static final RCodeIOGenerator rCodeIOGeneratorArrow = new RCodeIOGeneratorArrow();
@@ -43,7 +44,7 @@ public class RCodeIO {
         @Override
         public String getVariableExporting(String variableName, URI target) {
             return "cat(makexml(obj=" + variableName + ", name=\"" + variableName +
-                    "\"), file=\"" + target.getPath().replace("\\", "/") + "\")\n";
+                    "\"), file=\"" + new File(target).toString().replace("\\", "/") + "\")\n";
         }
     }
     private static final RCodeIOGenerator rCodeIOGeneratorXML = new RCodeIOGeneratorXML();
