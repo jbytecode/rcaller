@@ -3,7 +3,7 @@
 
     <groupId>com.github.jbytecode</groupId>
     <artifactId>RCaller</artifactId>
-    <version>4.0.1</version>
+    <version>4.0.2</version>
     <packaging>jar</packaging>
 
     <name>RCaller</name>
@@ -23,7 +23,7 @@
             <email>curcean.paul@gmail.com</email>
         </developer>
         <developer>
-            <name>Kopilov Alexander</name>
+            <name>Kopilov Aleksandr</name>
             <email>kopilov.ad@gmail.com</email>
         </developer>
     </developers>

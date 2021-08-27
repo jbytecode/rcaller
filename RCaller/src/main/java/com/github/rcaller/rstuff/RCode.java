@@ -106,7 +106,7 @@ public class RCode {
      * @param var name of variable to be exported
      */
     public void appendStandardCodeToAppend(File outputFile, String var) {
-        addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, outputFile.toPath().toUri()));
+        addRCode(RCodeIO.getVariableExporting(rCallerOptions, var, outputFile.toURI()));
     }
 
     static String createEndSignalCode(File outputFile) {

@@ -53,7 +53,7 @@ public class PassingArraysAndMatrices {
 
     public static void main(String[] args) {
 
-        performSimulation(/* size of vector */ 2, 100 /* times */ , SimType.Vector);
+        performSimulation(/* size of vector */ 20000, 100 /* times */ , SimType.Vector);
 
     }
 

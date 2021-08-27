@@ -3,7 +3,7 @@ require("arrow")
 send_element_by_arrow <- function(obj, name, stream) {
   if (is.data.frame(obj)) {
     #Export by Arrow as is
-    arrow::write_ipc_stream(obj, stream)
+    arrow::write_ipc_stream(obj, stream, compression = "uncompressed")
     return()
   }
   if (is.array(obj)) {
@@ -22,7 +22,7 @@ send_element_by_arrow <- function(obj, name, stream) {
       schema_fixed_size <- schema(matrix_column=fixed_size_list_of(type = batch_typedetect$schema$fields[[1]]$type$value_type, columns))
       batch <- record_batch(matrix_column=matrix_jagged_fixedsize, schema=schema_fixed_size)
       names(batch) <- name
-      arrow::write_ipc_stream(batch, stream)
+      arrow::write_ipc_stream(batch, stream, compression = "uncompressed")
       return()
     }
     if (length(dim(obj)) > 2) {
@@ -39,7 +39,7 @@ send_element_by_arrow <- function(obj, name, stream) {
       #Union typed and nested lists might not work
       batch <- record_batch(list_column=obj)
       names(batch) <- name
-      arrow::write_ipc_stream(batch, stream)
+      arrow::write_ipc_stream(batch, stream, compression = "uncompressed")
       return()
     } else if (length(names(obj)) > 0) {
       #Export each field separatly
@@ -67,7 +67,7 @@ send_element_by_arrow <- function(obj, name, stream) {
     #export filled vector with auto type detect
     batch <- record_batch(vector_column=obj)
     names(batch) <- name
-    arrow::write_ipc_stream(batch, stream)
+    arrow::write_ipc_stream(batch, stream, compression = "uncompressed")
     return()
   } else if (length(obj) == 0) {
     #export empty element
@@ -75,7 +75,7 @@ send_element_by_arrow <- function(obj, name, stream) {
     type_example_batch <- record_batch(empty_column=obj)
     length(obj) <- 0
     empty_batch <- record_batch(empty_column=obj, schema=type_example_batch$schema)
-    arrow::write_ipc_stream(empty_batch, stream)
+    arrow::write_ipc_stream(empty_batch, stream, compression = "uncompressed")
     return()
   # } else {
   #   stop("Probably unsupported output")
