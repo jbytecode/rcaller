@@ -41,7 +41,7 @@ RCaller's computation overhead is generating XML files in R side and parsing XML
 
 # Dependencies
 RCaller compiled jar library requires JRE (v11 or higher) and R installed in the runtime environment.
-If you want to compile from source, JDK (v.11 or higher) and Maven (or Gradle) are also required
+If you want to compile from source, JDK (v11 or higher) and Maven (or Gradle) are also required
 for building process. Maven is responsible for downloading and install additional Java dependencies
 defined in [pom file](https://github.com/jbytecode/rcaller/blob/master/RCaller/pom.xml). RCaller
 does not use any version specific property of R.
