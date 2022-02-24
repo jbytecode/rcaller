@@ -37,6 +37,18 @@ public class RCallerOptions {
         this.failIfArrowNotAvailable = failIfArrowNotAvailable;
     }
 
+    public RCallerOptions(final RCallerOptions other) {
+        this.rScriptExecutable = other.rScriptExecutable;
+        this.rExecutable = other.rExecutable;
+        this.failurePolicy = other.failurePolicy;
+        this.maxWaitTime = other.maxWaitTime;
+        this.initialWaitTime = other.initialWaitTime;
+        this.rProcessStartUpOptions = new RProcessStartUpOptions(other.rProcessStartUpOptions);
+        this.retries = 0;
+        this.useArrowIfAvailable = other.useArrowIfAvailable;
+        this.failIfArrowNotAvailable = other.failIfArrowNotAvailable;
+    }
+
     /**
      *
      * @return a default RCallerOptions object

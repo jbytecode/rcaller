@@ -27,6 +27,7 @@ package com.github.rcaller.io;
 
 import com.github.rcaller.exception.ParseException;
 import com.github.rcaller.exception.XMLParseException;
+import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.rstuff.ROutputParser;
 import org.apache.commons.lang3.NotImplementedException;
 import org.w3c.dom.Document;
@@ -46,8 +47,16 @@ import java.util.ArrayList;
  * @author Kopilov Aleksandr
  */
 public class ROutputParserArrow implements ROutputParser {
-    ArrowBridge bridge = ArrowBridge.newInstance();
+    ArrowBridge bridge;
     URI ipcResourceURI;
+
+    public ROutputParserArrow() {
+        this.bridge = ArrowBridge.newInstance();
+    }
+
+    public ROutputParserArrow(RCallerOptions rCallerOptions) {
+        this.bridge = ArrowBridge.newInstance(rCallerOptions);
+    }
 
     @Override
     public Document getDocument() {
