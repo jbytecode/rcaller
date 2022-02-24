@@ -57,9 +57,9 @@ public interface ROutputParser {
      */
     static ROutputParser create(RCallerOptions rCallerOptions) {
         if (rCallerOptions.useArrowIfAvailable()) {
-            if (ArrowBridge.isArrowAvailable()) {
+            if (ArrowBridge.isArrowAvailable(rCallerOptions)) {
                 //Use Arrow by default if enabled
-                return new ROutputParserArrow();
+                return new ROutputParserArrow(rCallerOptions);
             } else {
                 if (rCallerOptions.failIfArrowNotAvailable()) {
                     throw new ExecutionException("Arrow is enabled but not available");

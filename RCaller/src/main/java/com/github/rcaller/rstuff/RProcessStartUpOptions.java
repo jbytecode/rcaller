@@ -90,6 +90,34 @@ public class RProcessStartUpOptions {
         this.file = file;
     }
 
+    public RProcessStartUpOptions(final RProcessStartUpOptions other) {
+        this.save = other.save;
+        this.noSave = other.noSave;
+        this.noEnviron = other.noEnviron;
+        this.noSiteFile = other.noSiteFile;
+        this.noInitFile = other.noInitFile;
+        this.restore = other.restore;
+        this.noRestoreData = other.noRestoreData;
+        this.noRestoreHistory = other.noRestoreHistory;
+        this.noRestore = other.noRestore;
+        this.vanilla = other.vanilla;
+        this.noReadLine = other.noReadLine;
+        this.quiet = other.quiet;
+        this.silent = other.silent;
+        this.slave = other.slave;
+        this.interactive = other.interactive;
+        this.verbose = other.verbose;
+        this.maxPPSize = other.maxPPSize;
+        this.minNSize = other.minNSize;
+        this.minVSize = other.minVSize;
+        this.debugger = other.debugger;
+        this.debuggerArgs = other.debuggerArgs;
+        this.gui = other.gui;
+        this.arch = other.arch;
+        this.args = other.args;
+        this.file = other.file;
+    }
+
     /**
      *
      * @return the default RProcessStartUpOptions object

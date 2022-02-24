@@ -51,7 +51,7 @@ public class RCodeIO {
 
     private static RCodeIOGenerator getRCodeIOGenerator(RCallerOptions rCallerOptions) {
         if (rCallerOptions.useArrowIfAvailable()) {
-            if (ArrowBridge.isArrowAvailable()) {
+            if (ArrowBridge.isArrowAvailable(rCallerOptions)) {
                 //Use Arrow by default if enabled
                 return rCodeIOGeneratorArrow;
             } else {

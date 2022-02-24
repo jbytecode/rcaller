@@ -14,9 +14,9 @@ import java.util.StringJoiner;
 public abstract class ArrowBridge implements AutoCloseable {
     private static Boolean arrowAvailable = null;
 
-    public static synchronized boolean isArrowAvailable() {
+    public static synchronized boolean isArrowAvailable(RCallerOptions rCallerOptions) {
         if (arrowAvailable == null) {
-            arrowAvailable = isArrowAvailableInJava() && isArrowAvailableInR();
+            arrowAvailable = isArrowAvailableInJava() && isArrowAvailableInR(rCallerOptions);
         }
         return arrowAvailable;
     }
@@ -40,11 +40,11 @@ public abstract class ArrowBridge implements AutoCloseable {
 
     private static Boolean arrowAvailableInR = null;
 
-    private static synchronized boolean isArrowAvailableInR() {
+    private static synchronized boolean isArrowAvailableInR(RCallerOptions rCallerOptions) {
         if (arrowAvailableInR == null) {
-            var rCallerOptions = RCallerOptions.create();
-            rCallerOptions.setUseArrowIfAvailable(false);
-            RCaller rCaller = RCaller.create(rCallerOptions);
+            var rCallerOptionsTemp = new RCallerOptions(rCallerOptions);
+            rCallerOptionsTemp.setUseArrowIfAvailable(false);
+            RCaller rCaller = RCaller.create(rCallerOptionsTemp);
             RCode rCode = rCaller.getRCode();
             rCode.addRCode("available_arrow <- require(\"arrow\")");
             rCaller.runAndReturnResult("available_arrow");
@@ -56,12 +56,16 @@ public abstract class ArrowBridge implements AutoCloseable {
     }
 
     public static ArrowBridge newInstance() {
-        if (!isArrowAvailable()) {
+        return newInstance(RCallerOptions.create());
+    }
+
+    public static ArrowBridge newInstance(RCallerOptions rCallerOptions) {
+        if (!isArrowAvailable(rCallerOptions)) {
             StringJoiner details = new StringJoiner(", ", "(", ")");
             if (!isArrowAvailableInJava()) {
                 details.add("not linked to Java");
             }
-            if (!isArrowAvailableInR()) {
+            if (!isArrowAvailableInR(rCallerOptions)) {
                 details.add("not installed in R");
             }
             throw new IllegalStateException("Arrow is not available in current context " + details);
