@@ -256,7 +256,8 @@ public class RCaller {
         errorMessageSaver.resetMessage();
         int returnCode;
         try {
-            process = exec(rCallerOptions.getrScriptExecutable() + " " + Globals.getSystemSpecificRPathParameter(rSourceFile));
+            String sourceFileParameter = Globals.getSystemSpecificRPathParameter(rSourceFile);
+            process = exec(rCallerOptions.getrScriptExecutable() + rCallerOptions.getStartUpOptionsAsCommand() + sourceFileParameter);
             startStreamConsumers(process);
             returnCode = process.waitFor();
         } catch (Exception e) {
