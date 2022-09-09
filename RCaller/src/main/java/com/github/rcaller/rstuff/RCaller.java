@@ -218,7 +218,7 @@ public class RCaller {
      * reason
      */
     public void runOnly() throws ExecutionException {
-        this.rCode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
+        this.rCode.getCode().append("q()\n");
         runRCode();
     }
 
