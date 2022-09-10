@@ -528,7 +528,7 @@ Since the \texttt{R} executable can be run with several arguments which can be s
 
 For a performance improvement, some implemented methods can be stored in \texttt{RProfile.site} and possibly be compiled into the \texttt{bytecode} using \texttt{cmpfun} from package \texttt{compiler} \cite{lim2015r,tierney2001compiling}. But in order to use the methods that are exported in this file, \texttt{RCaller} should not be started with the default option \texttt{--vanilla} or the option \texttt{--no-site-file}. 
 
-The static method \texttt{RProcessStartUpOptions} is encapsulated in the \texttt{RCallerOptions} class and it is called with default values in instantiation of a new \texttt{RCaller} object. Creating a \texttt{RStartUpOtions} object can be performed by either with the default values of arguments or with the user-defined values. Listing \ref{code_options_way1} shows the factory method for creating an \texttt{RPocessStartUpOptions} object with default arguments and the argument for the option \texttt{--vanilla} is set to \texttt{true}. 
+The static method \texttt{RProcessStartUpOptions} is encapsulated in the \texttt{RCallerOptions} class and it is called with default values in instantiation of a new \texttt{RCaller} object. Creating a \texttt{RStartUpOtions} object can be performed by either with the default values of arguments or with the user-defined values. Listing \ref{code_options_way1} shows the factory method for creating an \texttt{RProcessStartUpOptions} object with default arguments and the argument for the option \texttt{--vanilla} is set to \texttt{true}. 
 
 \begin{minipage}{\linewidth}
   \lstset{

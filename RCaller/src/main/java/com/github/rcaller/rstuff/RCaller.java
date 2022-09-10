@@ -218,7 +218,7 @@ public class RCaller {
      * reason
      */
     public void runOnly() throws ExecutionException {
-        this.rCode.getCode().append("q(").append("\"").append("yes").append("\"").append(")\n");
+        this.rCode.getCode().append("q()\n");
         runRCode();
     }
 
@@ -256,7 +256,8 @@ public class RCaller {
         errorMessageSaver.resetMessage();
         int returnCode;
         try {
-            process = exec(rCallerOptions.getrScriptExecutable() + " " + Globals.getSystemSpecificRPathParameter(rSourceFile));
+            String sourceFileParameter = Globals.getSystemSpecificRPathParameter(rSourceFile);
+            process = exec(rCallerOptions.getrScriptExecutable() + rCallerOptions.getStartUpOptionsAsCommand() + sourceFileParameter);
             startStreamConsumers(process);
             returnCode = process.waitFor();
         } catch (Exception e) {
@@ -265,7 +266,7 @@ public class RCaller {
             stopStreamConsumers();
         }
         if (returnCode != 0) {
-            throw new ExecutionException("R command evaling " + rSourceFile.getAbsolutePath() + " failed with error. Reason: " + errorMessageSaver.getMessage());
+            throw new ExecutionException("R command evaluating " + rSourceFile.getAbsolutePath() + " failed with error. Reason: " + errorMessageSaver.getMessage());
         }
     }
 
