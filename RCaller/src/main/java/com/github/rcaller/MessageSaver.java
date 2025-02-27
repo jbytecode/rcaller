@@ -1,9 +1,5 @@
 package com.github.rcaller;
 
-/**
- * Date: 25.08.2015
- * Time: 14:08
- */
 public class MessageSaver implements EventHandler {
     private final StringBuilder errorBuffer = new StringBuilder();
 
