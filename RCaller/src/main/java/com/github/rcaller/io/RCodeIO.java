@@ -3,8 +3,6 @@ package com.github.rcaller.io;
 import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.util.RCodeUtils;
-import org.apache.commons.lang3.NotImplementedException;
-
 import java.io.File;
 import java.net.URI;
 

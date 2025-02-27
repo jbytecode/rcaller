@@ -1,18 +1,11 @@
 package com.github.rcaller.io;
 
 import com.github.rcaller.exception.ParseException;
-import com.github.rcaller.exception.XMLParseException;
 import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.rstuff.ROutputParser;
 import org.apache.commons.lang3.NotImplementedException;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
 import java.net.URI;
 import java.util.ArrayList;

@@ -10,7 +10,6 @@ import com.github.rcaller.util.Globals;
 
 import javax.swing.*;
 import java.io.*;
-import java.net.URI;
 
 public class RCode {
 

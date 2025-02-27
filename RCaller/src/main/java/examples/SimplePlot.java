@@ -1,6 +1,5 @@
 package examples;
 
-import com.github.rcaller.util.Globals;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCode;
 

@@ -1,6 +1,5 @@
 package com.github.rcaller.io;
 
-import com.github.rcaller.exception.ParseException;
 import com.github.rcaller.rstuff.RCaller;
 import com.github.rcaller.rstuff.RCallerOptions;
 import com.github.rcaller.rstuff.RCode;
