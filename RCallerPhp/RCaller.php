@@ -20,7 +20,7 @@
 
   Mehmet Hakan Satman - mhsatman@yahoo.com
   http://www.mhsatman.com
-  Google code projec: http://code.google.com/p/rcaller/
+  Google code project: http://code.google.com/p/rcaller/
 
  *
  * @author Mehmet Hakan Satman
@@ -228,7 +228,7 @@ class RCaller {
     try {
     outputFile = File.createTempFile("Routput", "");
     } catch (Exception e) {
-    throw new RCallerExecutionException("Can not create a tempopary file for storing the R results: " + e.toString());
+    throw new RCallerExecutionException("Can not create a temporary file for storing the R results: " + e.toString());
     }
 
     this.rcode.getCode().append("cat(makexml(obj=").append(var).append(", name=\"").append(var).append("\"), file=\"").append(outputFile.toString().replace("\\", "/")).append("\")\n");

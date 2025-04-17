@@ -245,7 +245,7 @@ public class RCode {
      */
     String toTryCatchScript(File errorOutputFile) {
         //Using code snippet "An improved “error handler”" with withCallingHandlers nested in tryCatch
-        //from https://cran.r-project.org/web/packages/tryCatchLog/vignettes/tryCatchLog-intro.html
+        //from https://cran.r-projectt.org/web/packages/tryCatchLog/vignettes/tryCatchLog-intro.html
 
         var script = new StringBuilder("tryCatch(  withCallingHandlers({\n");
         script.append(this.code);

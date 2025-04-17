@@ -19,7 +19,7 @@ whereas, the latter shares a mutual variable pool and clients can communicate as
 written purely in Java and it does not depend on any external libraries, that is, it is ready to run in any
 machines that Java and R installed. Simulation studies show that the other libraries such as Rserve
 and rJava outperform the RCaller by means of interaction times. As a result of this, RCaller is not
-suitable for the projects which have many clients that request relatively single and small computations.
+suitable for the projectts which have many clients that request relatively single and small computations.
 [RCaller: A Software Library for Calling R from Java - M. Hakan Satman]
 
 [Official publication](https://doi.org/10.9734/BJMCS/2014/10902)
@@ -81,10 +81,10 @@ It is recommended to take a look at the existing [tests](https://github.com/jbyt
 ### Performance details
 
 RCaller uses XML for reading R output by default. This is lightweight but not very fast way.
-For speeding up the IO, install R [arrow](https://cran.r-project.org/web/packages/arrow/index.html)
+For speeding up the IO, install R [arrow](https://cran.r-projectt.org/web/packages/arrow/index.html)
 package and add dependencies
 [org.apache.arrow:arrow-vector](https://search.maven.org/artifact/org.apache.arrow/arrow-vector/5.0.0/jar) and
-[org.apache.arrow:arrow-memory-netty](https://search.maven.org/artifact/org.apache.arrow/arrow-memory-netty/5.0.0/jar) to your Java project.
+[org.apache.arrow:arrow-memory-netty](https://search.maven.org/artifact/org.apache.arrow/arrow-memory-netty/5.0.0/jar) to your Java projectt.
 RCaller will use Arrow format automatically if it is available both in R and Java.
 
 Errors handling can impact performance in online mode and is disabled by default.
@@ -94,7 +94,7 @@ Use `RCaller.runAndReturnResultOnline(String var, boolean addTryCatch)` method w
 [Here is the auto-generated Javadocs](https://github.com/jbytecode/rcaller/releases/download/RCaller-4.0.2/RCaller-4.0.2-javadoc.jar).
 
 # Building and Installing RCaller
-There are many options to integrate RCaller with a Java Project. First option is to download pre-compiled jar file and add it to the classpath or pom.xml. [pre-compiled jar files](https://github.com/jbytecode/rcaller/releases) are here.
+There are many options to integrate RCaller with a Java projectt. First option is to download pre-compiled jar file and add it to the classpath or pom.xml. [pre-compiled jar files](https://github.com/jbytecode/rcaller/releases) are here.
 
 The second option is to compile from source. R should be installed to run tests. After building process, if everything is okay, a jar file is located in the target directory.
 

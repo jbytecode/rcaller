@@ -29,7 +29,7 @@ Nowadays, increased interest in statistical computation and data analysis has en
 
 
 # Statement of need 
-RCaller is a Java library for interfacing R from within Java [@satman2014rcaller]. R is a popular programming language and a programming environment with hundreds of packages written in C, C++, Fortran, and R itself [@rcoreteam]. This huge collection of computation tools is not directly accessible for the other languages, especially for Java. RCaller supplies a clean API for calling R functions, managing interactions, and transfering objects between languages. There are other options in the literature including Rserve [@urbanek2003fast] and rJava [@urbanek2009talk] which are based on TCP sockets and JNI (Java Native Interface), respectively. RCaller provides a set of easier calling schemes without any dependencies. Previous works showed that the performance of the library is suitable for more cases, and studies with moderate datasets can be handled in reasonable times [@satmancurcean2016]. Following its first publication [@satman2014rcaller], support for DataFrame objects, R start-up options, automatic Rscript executable locator, and Java Scripting API (JSR 223) have been implemented. 
+RCaller is a Java library for interfacing R from within Java [@satman2014rcaller]. R is a popular programming language and a programming environment with hundreds of packages written in C, C++, Fortran, and R itself [@rcoreteam]. This huge collection of computation tools is not directly accessible for the other languages, especially for Java. RCaller supplies a clean API for calling R functions, managing interactions, and transferring objects between languages. There are other options in the literature including Rserve [@urbanek2003fast] and rJava [@urbanek2009talk] which are based on TCP sockets and JNI (Java Native Interface), respectively. RCaller provides a set of easier calling schemes without any dependencies. Previous works showed that the performance of the library is suitable for more cases, and studies with moderate datasets can be handled in reasonable times [@satmancurcean2016]. Following its first publication [@satman2014rcaller], support for DataFrame objects, R start-up options, automatic Rscript executable locator, and Java Scripting API (JSR 223) have been implemented. 
 
 
 R has many well-tested and mature packages including for automatic time series model selection, clustering, segmentation and classification, non-linear and robust regression estimations, data and text mining, linear and non-linear programming, generating plots, multivariate data analysis, and function optimization. RCaller brings all of the functionality that R provides in Java. RCaller is also used as a core of RCallerService [@rcallerservice], a free microservice solution for running R-scripts from any other languages using HTTP.  
@@ -59,6 +59,6 @@ RCaller, as a scripting engine in Java, creates an R process, encodes Java objec
 
 # Acknowledgements
 
-We acknowledge contributions from Paul Curcean, Miroslav Batchkarov, Joel Wong, Kejo Starosta, Steven Sotelo, Edinei Piovesan, Simon Carter, and others of this project.
+We acknowledge contributions from Paul Curcean, Miroslav Batchkarov, Joel Wong, Kejo Starosta, Steven Sotelo, Edinei Piovesan, Simon Carter, and others of this projectt.
 
 # References

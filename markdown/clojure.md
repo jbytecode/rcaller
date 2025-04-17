@@ -1,13 +1,13 @@
 # Calling R from within Clojure
 
-Clojure is one of the most popular JVM languages. RCaller can directly be used in a Clojure project. Firstly, add the RCaller dependency in your ```project.clj``` file:
+Clojure is one of the most popular JVM languages. RCaller can directly be used in a Clojure projectt. Firstly, add the RCaller dependency in your ```projectt.clj``` file:
 
 ```clojure
 :dependencies [[org.clojure/clojure "1.10.1"]
                  [com.github.jbytecode/RCaller "3.0.2"]]
 ```
 
-The primary Java classes ```RCaller``` and ```RCode``` can be included in the project using
+The primary Java classes ```RCaller``` and ```RCode``` can be included in the projectt using
 
 ```clojure
 (ns rcallertest.core
@@ -17,7 +17,7 @@ The primary Java classes ```RCaller``` and ```RCode``` can be included in the pr
 
 RCaller interacts with ```R``` interpreter in two ways. The first one simply passes the ```R``` code and gets back the calculated results. The ```R``` process is terminated after performing calculations. The second one hangs an ```R``` connection in the memory so sequential calls are faster using these pre-started ```R``` process.
 
-Here is a single pass examle. In this example, an ```R``` process is created, calculations are performed, and the process is terminated:
+Here is a single pass example. In this example, an ```R``` process is created, calculations are performed, and the process is terminated:
 
 ```clojure
 (defn runAndResult [code x y]

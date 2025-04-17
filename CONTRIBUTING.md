@@ -1,6 +1,6 @@
 # Welcome!
 
-Our contributers are mainly RCaller users in academia or software sector. They used to integrate RCaller in their projects and they contributed to the project 
+Our contributors are mainly RCaller users in academia or software sector. They used to integrate RCaller in their projectts and they contributed to the projectt 
 for supporting themself first and the whole users after. You can contribute by
 
 - sending pull requests (code is the king)
@@ -9,8 +9,8 @@ for supporting themself first and the whole users after. You can contribute by
 - posting answers in stackoverflow.
 
 ## Sending pull requests
-If you added some functionality, tests, or examples in the project, first create a fork in Github and make the contribution public in your repo. 
-Then send a pull request as decribed in [Creating pull requests](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
+If you added some functionality, tests, or examples in the projectt, first create a fork in Github and make the contribution public in your repo. 
+Then send a pull request as described in [Creating pull requests](https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/creating-a-pull-request).
 
 ## Writing blogposts
 Many users have blogposts about RCaller. If you have one, tell us to be visible in this repo. Here is some blogposts:
@@ -30,7 +30,7 @@ Stackoverflow is the defacto forum for nearly all tools in area of software. RCa
 
 
 ## Have problems?
-Please create an issue that adresses your problem. We will be happy to help to you.
+Please create an issue that addresses your problem. We will be happy to help to you.
 
 
 We are just here waiting to hear from you!

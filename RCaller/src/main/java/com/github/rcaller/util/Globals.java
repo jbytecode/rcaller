@@ -13,7 +13,7 @@ import java.util.Locale;
 
 public class Globals {
 
-    public static String cranRepos = "http://cran.r-project.org";
+    public static String cranRepos = "http://cran.r-projectt.org";
     public static String RScript_Windows = "C:\\Program Files\\R\\R-4.1.1\\bin\\Rscript.exe";
     public static String RScript_Linux = "/usr/bin/Rscript";
     public static String RScript_Mac = "/usr/local/bin/Rscript";
@@ -94,10 +94,10 @@ public class Globals {
         if (!startingPath.isDirectory()) {
             throw new ExecutionException(startingPath.toString() + " is not a directory:");
         }
-        File[] childs = startingPath.listFiles();
+        File[] children = startingPath.listFiles();
 
-        if (childs != null && childs.length > 0) {
-            for (File child : childs) {
+        if (children != null && children.length > 0) {
+            for (File child : children) {
                 if (child.isFile()) {
                     if (child.getName().equals(filename)) {
                         return (child);

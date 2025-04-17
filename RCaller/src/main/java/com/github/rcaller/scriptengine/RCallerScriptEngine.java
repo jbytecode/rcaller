@@ -159,7 +159,7 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     }
 
     /*
-      Methods for invokable interface
+      Methods for invocable interface
      */
     @Override
     public Object invokeMethod(Object o, String fname, Object... arguments) throws ScriptException, NoSuchMethodException {
@@ -224,6 +224,6 @@ public class RCallerScriptEngine implements ScriptEngine, EventHandler, Invocabl
     }
 
     /*
-      End of Methods for invokable interface
+      End of Methods for invocable interface
      */
 }

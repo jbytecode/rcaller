@@ -52,7 +52,7 @@ public class EventHandlerTest {
         caller.runAndReturnResultOnline("m");
 
         code.clear();
-        code.addRCode("cat(\"This message might be catched by the event handler\")");
+        code.addRCode("cat(\"This message might be caught by the event handler\")");
         caller.runAndReturnResultOnline("m");
 
         caller.stopStreamConsumers();
@@ -69,7 +69,7 @@ public class EventHandlerTest {
             if (s == null) {
                 break;
             }
-            if (s.contains("This message might be catched by the event handler")) {
+            if (s.contains("This message might be caught by the event handler")) {
                 resultFound = true;
                 break;
             }

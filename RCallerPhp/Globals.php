@@ -21,13 +21,13 @@
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
  * http://www.mhsatman.com
- * Google code projec: http://code.google.com/p/rcaller/
+ * Google code project: http://code.google.com/p/rcaller/
  *
  */
 
 class Globals {
 
-  public static $cranRepos = "http://cran.r-project.org";
+  public static $cranRepos = "http://cran.r-projectt.org";
   public static $RScript_Windows = "C:\\Program Files\\R\\R-2.13.0\\bin\\Rscript.exe";
   public static $RScript_Linux = "/usr/bin/Rscript";
   public static $Rscript_current;

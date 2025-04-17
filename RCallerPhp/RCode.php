@@ -21,7 +21,7 @@
  *
  * Mehmet Hakan Satman - mhsatman@yahoo.com
  * http://www.mhsatman.com
- * Google code projec: http://code.google.com/p/rcaller/
+ * Google code project: http://code.google.com/p/rcaller/
  *
  */
 
@@ -73,7 +73,7 @@ class RCode {
     $f = CodeUtils::createTempFile("RcallerPlot");
     //addRCode("png(\"" + f.toString().replace("\\", "/") + "\")");
     /*
-     * File path seperator may be buggy in Windows. Look here again
+     * File path separator may be buggy in Windows. Look here again
      */
     $this->addRCode("png(\"" . $f . "\")");
     return ($f);

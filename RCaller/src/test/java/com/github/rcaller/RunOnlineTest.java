@@ -193,7 +193,7 @@ public class RunOnlineTest {
             long startedAt = currentTimeMillis();
             int timeout = 1;
             //Sleep while timeout not expired and calculation actually performs
-            //In this test, the timeout (1 second) is definitly less than calculation (10 seconds)
+            //In this test, the timeout (1 second) is definitely less than calculation (10 seconds)
             while ((currentTimeMillis() - startedAt) / 1000 < timeout && rCallerCalculation.isAlive()) {
                 Thread.sleep(1);
             }

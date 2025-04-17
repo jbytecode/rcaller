@@ -52,7 +52,7 @@ public class OrdinaryLeastSquares {
       code.addRCode("ols<-lm(y~x)");
 
       /**
-       * Run all! Our regression code returns someting
+       * Run all! Our regression code returns something
        * and we want to handle the variable 'ols'
        */
       caller.setRCode(code);

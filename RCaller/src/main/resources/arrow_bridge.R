@@ -42,7 +42,7 @@ send_element_by_arrow <- function(obj, name, stream) {
       arrow::write_ipc_stream(batch, stream, compression = "uncompressed")
       return()
     } else if (length(names(obj)) > 0) {
-      #Export each field separatly
+      #Export each field separately
       i <- 0
       for (subj_name in names(obj)) {
         i <- i + 1

@@ -149,7 +149,7 @@ public class RCallerOptions {
     }
 
     /**
-     * Whether we should not use XML as backward behavior iif {@link #useArrowIfAvailable} is true but Arrow is not available
+     * Whether we should not use XML as backward behavior if {@link #useArrowIfAvailable} is true but Arrow is not available
      */
     public boolean failIfArrowNotAvailable() {
         return failIfArrowNotAvailable;

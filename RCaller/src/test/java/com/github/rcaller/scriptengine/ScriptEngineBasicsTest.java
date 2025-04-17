@@ -94,7 +94,7 @@ public class ScriptEngineBasicsTest {
     }
 
     @Test
-    public void PutDobleArrayTest() throws ScriptException {
+    public void PutDoubleArrayTest() throws ScriptException {
         message("Passing and retrieving double array to R...");
         double[] a = new double[]{19.0, 17.0, 23.0};
         engine.put("a", a);
@@ -107,7 +107,7 @@ public class ScriptEngineBasicsTest {
 
     @Test
     public void PutIntArrayTest() throws ScriptException {
-        message("Pass & Retreive integer array...");
+        message("Pass & Retrieve integer array...");
         int[] a = new int[]{19, 17, 23};
         engine.put("a", a);
         engine.eval("a <- sort(a)");
@@ -119,7 +119,7 @@ public class ScriptEngineBasicsTest {
 
     @Test
     public void PutLongArrayTest() throws ScriptException {
-        message("Pass & Retreive long array...");
+        message("Pass & Retrieve long array...");
         long[] a = new long[]{19L, 17L, 23L};
         engine.put("a", a);
         engine.eval("a <- sort(a)");
@@ -131,7 +131,7 @@ public class ScriptEngineBasicsTest {
 
     @Test
     public void PutShortArrayTest() throws ScriptException {
-        message("Pass & Retreive short array...");
+        message("Pass & Retrieve short array...");
         short[] a = new short[]{19, 17, 23};
         engine.put("a", a);
         engine.eval("a <- sort(a)");
@@ -143,7 +143,7 @@ public class ScriptEngineBasicsTest {
 
     @Test
     public void PutStringArrayTest() throws ScriptException {
-        message("Pass & Retreive String array...");
+        message("Pass & Retrieve String array...");
         String[] a = new String[]{"19", "17", "23"};
         engine.put("a", a);
         String[] result = (String[]) engine.get("a");
