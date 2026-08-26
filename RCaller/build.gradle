@@ -11,16 +11,23 @@ group = 'com.github.jbytecode'
 version = '4.0.2'
 description = 'RCaller is a software library which simplifies performing data analysis and statistical calculations in Java using R. The details are hidden from users including transferring data between platforms, function calls, and retrieving results.'
 
+java.sourceCompatibility = JavaVersion.VERSION_11
+
 dependencies {
-    implementation 'org.apache.commons:commons-lang3:3.12.0'
-    compileOnly 'org.apache.arrow:arrow-vector:[5.0.0,)'
+    implementation 'org.apache.commons:commons-lang3:3.20.0'
+
+    compileOnly 'org.apache.arrow:arrow-vector:[19.0.0,)'
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.apache.arrow:arrow-vector:[5.0.0,)'
-    testImplementation 'org.apache.arrow:arrow-memory-netty:[5.0.0,)'
+
+    testImplementation 'org.apache.arrow:arrow-vector:[19.0.0,)'
+    testImplementation 'org.apache.arrow:arrow-memory-netty:[19.0.0,)'
 }
 
-java.sourceCompatibility = JavaVersion.VERSION_11
+test {
+    jvmArgs '-Dio.netty.tryReflectionSetAccessible=true',
+            '--add-opens=java.base/java.nio=org.apache.arrow.memory.core,ALL-UNNAMED'
+}
 
 java {
     withSourcesJar()
