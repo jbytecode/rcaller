@@ -2,17 +2,26 @@ package com.github.rcaller.io;
 
 import com.github.rcaller.datatypes.DataFrame;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class CSVFileWriter extends FileWriter{
 
-    private CSVFileWriter(String filePath) throws IOException {
+    private CSVFileWriter(final String filePath) throws IOException {
         super(filePath);
     }
 
-    public static CSVFileWriter create(String filePath) throws IOException {
+    private CSVFileWriter(final File file) throws IOException {
+        super(file);
+    }
+
+    public static CSVFileWriter create(final String filePath) throws IOException {
         return new CSVFileWriter(filePath);
+    }
+
+    public static CSVFileWriter create(final File file) throws IOException {
+        return new CSVFileWriter(file);
     }
 
     public void writeDataFrameToFile(DataFrame dataFrame) throws IOException {
@@ -34,6 +43,5 @@ public class CSVFileWriter extends FileWriter{
         }
         this.flush();
     }
-
 
 }
