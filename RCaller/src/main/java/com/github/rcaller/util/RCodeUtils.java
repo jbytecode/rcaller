@@ -7,11 +7,7 @@ import com.github.rcaller.io.CSVFileWriter;
 import com.github.rcaller.scriptengine.LanguageElement;
 import org.apache.commons.lang3.ArrayUtils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -211,8 +207,9 @@ public class RCodeUtils {
     public static void addDataFrame(StringBuilder rCode, String name, DataFrame dataFrame) {
         try {
             File file = File.createTempFile("dataFrame", ".csv");
-            CSVFileWriter csvFileWriter = CSVFileWriter.create(file.getAbsolutePath());
-            csvFileWriter.writeDataFrameToFile(dataFrame);
+            try (CSVFileWriter csvFileWriter = CSVFileWriter.create(file)) {
+                csvFileWriter.writeDataFrameToFile(dataFrame);
+            }
             rCode.append(name).append(" <- read.csv(\"").append(Globals.getSystemSpecificRPathParameter(file)).append("\")\n");
 
         } catch (IOException e) {
