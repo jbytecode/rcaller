@@ -3,7 +3,7 @@
 
     <groupId>com.github.jbytecode</groupId>
     <artifactId>RCaller</artifactId>
-    <version>4.0.2</version>
+    <version>4.0.3</version>
     <packaging>jar</packaging>
 
     <name>RCaller</name>
@@ -51,6 +51,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
+        <arrow.version>19.0.0</arrow.version>
     </properties>
 
     <distributionManagement>
@@ -75,13 +76,19 @@
         <dependency>
             <groupId>org.apache.arrow</groupId>
             <artifactId>arrow-vector</artifactId>
-            <version>[5.0.0,)</version>
+            <version>${arrow.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.arrow</groupId>
             <artifactId>arrow-memory-netty</artifactId>
-            <version>[5.0.0,)</version>
+            <version>${arrow.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-memory-unsafe</artifactId>
+            <version>${arrow.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -175,6 +182,14 @@
                 <configuration>
                     <source>11</source>
                     <target>11</target>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.5.4</version>
+                <configuration>
+                    <argLine>-Dio.netty.tryReflectionSetAccessible=true -Dio.netty.noUnsafe=true -Darrow.memory.allocation.manager.factory=org.apache.arrow.memory.unsafe.UnsafeAllocationManagerFactory --add-opens=java.base/java.nio=ALL-UNNAMED --add-opens=java.base/sun.nio.ch=ALL-UNNAMED</argLine>
                 </configuration>
             </plugin>
             <plugin>
