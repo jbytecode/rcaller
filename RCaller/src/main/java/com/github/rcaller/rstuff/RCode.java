@@ -39,24 +39,48 @@ public class RCode {
         this.tempFileService = new TempFileService(tempDir);
     }
 
+    /**
+     * Static factory creator for the default object
+     *
+     * @return default RCode object
+     */
     public static RCode create() {
         RCode rCode = new RCode();
         rCode.clear();
         return rCode;
     }
 
+    /**
+     * Static factory creator with given temporary file directory
+     *
+     * @param tempDir the directory to use to store temporary files
+     * @return RCode object
+     */
     public static RCode create(Path tempDir) {
         RCode rCode = new RCode(tempDir);
         rCode.clear();
         return rCode;
     }
 
+    /**
+     * Static factory creator with given string buffer
+     *
+     * @param stringBuffer the string buffer used for holding R code
+     * @return RCode object
+     */
     public static RCode create(StringBuffer stringBuffer) {
         RCode rCode = RCode.create();
         rCode.getCode().append(stringBuffer.toString());
         return rCode;
     }
 
+    /**
+     * Static factory creator with given temporary file directory and string buffer
+     *
+     * @param tempDir the directory to use to store temporary files
+     * @param stringBuffer the string buffer used for holding R code
+     * @return RCode object
+     */
     public static RCode create(Path tempDir,
                                StringBuffer stringBuffer) {
         RCode rCode = RCode.create(tempDir);
@@ -64,12 +88,25 @@ public class RCode {
         return rCode;
     }
 
+    /**
+     * Static factory creator with given startup options
+     *
+     * @param rCallerOptions given startup object
+     * @return RCode object
+     */
     public static RCode create(RCallerOptions rCallerOptions) {
         RCode rCode = new RCode(rCallerOptions);
         rCode.clear();
         return rCode;
     }
 
+    /**
+     * Static factory creator with given temporary file directory and startup options
+     *
+     * @param tempDir the directory to use to store temporary files
+     * @param rCallerOptions given startup object
+     * @return RCode object
+     */
     public static RCode create(Path tempDir,
                                RCallerOptions rCallerOptions) {
         RCode rCode = new RCode(tempDir, rCallerOptions);
@@ -77,6 +114,13 @@ public class RCode {
         return rCode;
     }
 
+    /**
+     * Static factory creator with given string buffer and startup options
+     *
+     * @param stringBuffer the string buffer used for holding R code
+     * @param rCallerOptions given startup object
+     * @return RCode object
+     */
     public static RCode create(StringBuffer stringBuffer,
                                RCallerOptions rCallerOptions) {
         RCode rCode = RCode.create(rCallerOptions);
@@ -84,6 +128,14 @@ public class RCode {
         return rCode;
     }
 
+    /**
+     * Static factory creator with given temporary file directory and string buffer and startup options
+     *
+     * @param tempDir the directory to use to store temporary files
+     * @param stringBuffer the string buffer used for holding R code
+     * @param rCallerOptions given startup object
+     * @return RCode object
+     */
     public static RCode create(Path tempDir,
                                StringBuffer stringBuffer,
                                RCallerOptions rCallerOptions) {
