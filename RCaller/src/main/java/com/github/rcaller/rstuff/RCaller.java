@@ -152,6 +152,7 @@ public class RCaller {
      */
     public void deleteTempFiles() {
         tempFileService.deleteRCallerTempFiles();
+        this.rCode.deleteTempFiles();
     }
 
     /**
