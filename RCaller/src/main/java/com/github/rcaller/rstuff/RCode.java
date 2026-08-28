@@ -10,26 +10,43 @@ import com.github.rcaller.util.Globals;
 
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Path;
 
 public class RCode {
 
-    private StringBuilder code;
-    private TempFileService tempFileService = null;
+    private StringBuilder code = new StringBuilder();
+    private final TempFileService tempFileService;
     private final RCallerOptions rCallerOptions;
 
-
     private RCode() {
-        this.code = new StringBuilder();
-        rCallerOptions = RCallerOptions.create();
+        this.rCallerOptions = RCallerOptions.create();
+        this.tempFileService = new TempFileService();
+    }
+
+    private RCode(Path tempDir) {
+        this.rCallerOptions = RCallerOptions.create();
+        this.tempFileService = new TempFileService(tempDir);
     }
 
     private RCode(RCallerOptions rCallerOptions) {
-        this.code = new StringBuilder();
         this.rCallerOptions = rCallerOptions;
+        this.tempFileService = new TempFileService();
+    }
+
+    private RCode(Path tempDir,
+                  RCallerOptions rCallerOptions) {
+        this.rCallerOptions = rCallerOptions;
+        this.tempFileService = new TempFileService(tempDir);
     }
 
     public static RCode create() {
         RCode rCode = new RCode();
+        rCode.clear();
+        return rCode;
+    }
+
+    public static RCode create(Path tempDir) {
+        RCode rCode = new RCode(tempDir);
         rCode.clear();
         return rCode;
     }
@@ -40,14 +57,37 @@ public class RCode {
         return rCode;
     }
 
+    public static RCode create(Path tempDir,
+                               StringBuffer stringBuffer) {
+        RCode rCode = RCode.create(tempDir);
+        rCode.getCode().append(stringBuffer.toString());
+        return rCode;
+    }
+
     public static RCode create(RCallerOptions rCallerOptions) {
         RCode rCode = new RCode(rCallerOptions);
         rCode.clear();
         return rCode;
     }
 
-    public static RCode create(StringBuffer stringBuffer, RCallerOptions rCallerOptions) {
+    public static RCode create(Path tempDir,
+                               RCallerOptions rCallerOptions) {
+        RCode rCode = new RCode(tempDir, rCallerOptions);
+        rCode.clear();
+        return rCode;
+    }
+
+    public static RCode create(StringBuffer stringBuffer,
+                               RCallerOptions rCallerOptions) {
         RCode rCode = RCode.create(rCallerOptions);
+        rCode.getCode().append(stringBuffer.toString());
+        return rCode;
+    }
+
+    public static RCode create(Path tempDir,
+                               StringBuffer stringBuffer,
+                               RCallerOptions rCallerOptions) {
+        RCode rCode = RCode.create(tempDir, rCallerOptions);
         rCode.getCode().append(stringBuffer.toString());
         return rCode;
     }
@@ -66,6 +106,10 @@ public class RCode {
 
     public StringBuilder getCode() {
         return (this.code);
+    }
+
+    public TempFileService getTempFileService() {
+        return tempFileService;
     }
 
     public final void clear() {
@@ -171,7 +215,7 @@ public class RCode {
     }
 
     public void addDataFrame(String name, DataFrame dataFrame) {
-        RCodeUtils.addDataFrame(code, name, dataFrame);
+        RCodeUtils.addDataFrame(code, name, dataFrame, tempFileService);
     }
     
     public File startPlot() throws IOException {
@@ -179,9 +223,6 @@ public class RCode {
     }
 
     public File startPlot(GraphicsType type) throws IOException {
-        if(tempFileService == null){
-            tempFileService = new TempFileService();
-        }
         //File f = File.createTempFile("RPlot", "." + type.name());
         File f = tempFileService.createTempFile("RPlot", "." + type.name());
         switch (type) {
@@ -227,9 +268,7 @@ public class RCode {
     }
     
     public void deleteTempFiles(){
-        if (tempFileService != null){
-            tempFileService.deleteRCallerTempFiles();   
-        }
+        tempFileService.deleteRCallerTempFiles();
     }
 
     @Override

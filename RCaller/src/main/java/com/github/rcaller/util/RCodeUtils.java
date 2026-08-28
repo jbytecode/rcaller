@@ -1,6 +1,7 @@
 package com.github.rcaller.util;
 
 import com.github.rcaller.JavaObject;
+import com.github.rcaller.TempFileService;
 import com.github.rcaller.datatypes.DataFrame;
 import com.github.rcaller.exception.ExecutionException;
 import com.github.rcaller.io.CSVFileWriter;
@@ -201,21 +202,25 @@ public class RCodeUtils {
                 throw new ExecutionException("Cannot convert Java object " + o.toString() + " in type of " + o.getClass().getCanonicalName() + " to R code due to " + iae.toString());
             }
         }
-
     }
 
     public static void addDataFrame(StringBuilder rCode, String name, DataFrame dataFrame) {
+        addDataFrame(rCode, name, dataFrame, null);
+    }
+
+    public static void addDataFrame(StringBuilder rCode, String name, DataFrame dataFrame, TempFileService tempFileService) {
+        if (tempFileService == null) {
+            tempFileService = new TempFileService();
+        }
         try {
-            File file = File.createTempFile("dataFrame", ".csv");
+            File file = tempFileService.createTempFile("dataFrame", ".csv");
             try (CSVFileWriter csvFileWriter = CSVFileWriter.create(file)) {
                 csvFileWriter.writeDataFrameToFile(dataFrame);
             }
             rCode.append(name).append(" <- read.csv(\"").append(Globals.getSystemSpecificRPathParameter(file)).append("\")\n");
-
         } catch (IOException e) {
             Logger.getLogger(RCodeUtils.class.getName()).log(Level.WARNING, "Couldn't export data frame to csv-file!", e.getStackTrace());
         }
-
     }
 
     public static void addResourceScript(StringBuilder rCode, String name) {

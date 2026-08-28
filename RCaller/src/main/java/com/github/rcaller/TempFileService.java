@@ -7,24 +7,30 @@ import org.apache.commons.lang3.tuple.Pair;
 import java.io.File;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class TempFileService {
 
     private static final Logger logger = Logger.getLogger(TempFileService.class.getName());
 
-    private final ArrayList<Pair<File, FileChannel>> tempFiles;
-    
-    public TempFileService(){
-        tempFiles = new ArrayList<>();
+    private final ArrayList<Pair<File, FileChannel>> tempFiles = new ArrayList<>();
+    private final Path tempDir;
+
+    public TempFileService() {
+        this.tempDir = null;
     }
-    
-    public File createTempFile(String prefix, String suffix) throws IOException {
-        File f = File.createTempFile(prefix, suffix);
+
+    public TempFileService(final Path tempDir) {
+        this.tempDir = tempDir;
+    }
+
+    public File createTempFile(final String prefix,
+                               final String suffix) throws IOException {
+        File f = File.createTempFile(prefix, suffix, toFileOrNull(tempDir));
         FileChannel fileChannel = FileChannel.open(
                 f.toPath(),
                 StandardOpenOption.READ,
@@ -32,10 +38,10 @@ public class TempFileService {
                 StandardOpenOption.CREATE
         );
         tempFiles.add(new ImmutablePair<>(f, fileChannel));
-        return(f);
+        return f;
     }
-    
-    public void deleteRCallerTempFiles(){
+
+    public void deleteRCallerTempFiles() {
         for (Pair<File, FileChannel> tempFileAndChannel : tempFiles) {
             var fileChannel = tempFileAndChannel.getRight();
             var tempFile = tempFileAndChannel.getLeft();
@@ -65,5 +71,9 @@ public class TempFileService {
         } catch (Exception e) {
             throw new ExecutionException("Can not create a temporary file for storing the R results: " + e.getMessage());
         }
+    }
+
+    private File toFileOrNull(final Path tempDir) {
+        return tempDir == null ? null : tempDir.toFile();
     }
 }

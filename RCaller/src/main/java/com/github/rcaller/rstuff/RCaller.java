@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import static java.lang.String.join;
 import static java.lang.System.currentTimeMillis;
 
-
 public class RCaller {
 
     private static final Logger logger = Logger.getLogger(RCaller.class.getName());
@@ -40,14 +39,13 @@ public class RCaller {
                    RStreamHandler rOutput,
                    RStreamHandler rError,
                    MessageSaver messageSaver,
-                   TempFileService tempFileService,
                    RCallerOptions rCallerOptions) {
         this.rCode = rCode;
         this.parser = parser;
         this.rOutput = rOutput;
         this.rError = rError;
         this.errorMessageSaver = messageSaver;
-        this.tempFileService = tempFileService;
+        this.tempFileService = rCode.getTempFileService();
         this.rCallerOptions = rCallerOptions;
 
         this.rError.addEventHandler(errorMessageSaver);
@@ -60,7 +58,12 @@ public class RCaller {
      */
     public static RCaller create() {
         RCallerOptions rCallerOptions = RCallerOptions.create();
-        return new RCaller(RCode.create(), ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+        return new RCaller(RCode.create(),
+                ROutputParser.create(rCallerOptions),
+                new RStreamHandler(null, "Output"),
+                new RStreamHandler(null, "Error"),
+                new MessageSaver(),
+                rCallerOptions);
     }
 
     /***
@@ -69,8 +72,13 @@ public class RCaller {
      * @param rCallerOptions given startup options
      * @return RCaller object
      */
-    public static RCaller create(RCallerOptions rCallerOptions) {
-        return new RCaller(RCode.create(rCallerOptions), ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+    public static RCaller create(final RCallerOptions rCallerOptions) {
+        return new RCaller(RCode.create(rCallerOptions),
+                ROutputParser.create(rCallerOptions),
+                new RStreamHandler(null, "Output"),
+                new RStreamHandler(null, "Error"),
+                new MessageSaver(),
+                rCallerOptions);
     }
 
     /**
@@ -80,10 +88,15 @@ public class RCaller {
      * @param rCallerOptions given startup object
      * @return RCaller object
      */
-    public static RCaller create(RCode rcode, RCallerOptions rCallerOptions) {
-        return new RCaller(rcode, ROutputParser.create(rCallerOptions), new RStreamHandler(null, "Output"), new RStreamHandler(null, "Error"), new MessageSaver(), new TempFileService(), rCallerOptions);
+    public static RCaller create(final RCode rcode,
+                                 final RCallerOptions rCallerOptions) {
+        return new RCaller(rcode,
+                ROutputParser.create(rCallerOptions),
+                new RStreamHandler(null, "Output"),
+                new RStreamHandler(null, "Error"),
+                new MessageSaver(),
+                rCallerOptions);
     }
-
 
     /**
      * Stops the threads that are emptying the output and error streams of the
@@ -139,7 +152,6 @@ public class RCaller {
      */
     public void deleteTempFiles() {
         tempFileService.deleteRCallerTempFiles();
-        this.rCode.deleteTempFiles();
     }
 
     /**
