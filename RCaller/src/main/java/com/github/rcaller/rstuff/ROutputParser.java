@@ -5,6 +5,7 @@ import com.github.rcaller.exception.ParseException;
 import com.github.rcaller.io.ArrowBridge;
 import com.github.rcaller.io.ROutputParserArrow;
 import com.github.rcaller.io.ROutputParserXML;
+import org.apache.commons.lang3.NotImplementedException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import java.io.*;
@@ -46,7 +47,7 @@ public interface ROutputParser {
      * Returns parsed XML document.
      * @deprecated Do not use if you are not using XML consciously
      * @return parsed XML document
-     * @throw NotImplementedException if Arrow implementation is used
+     * @throws NotImplementedException if Arrow implementation is used
      */
     @Deprecated
     Document getDocument();
@@ -54,7 +55,7 @@ public interface ROutputParser {
     /**
      * Inits parsed XML document.
      * @deprecated Do not use if you are not using XML consciously
-     * @throw NotImplementedException if Arrow implementation is used
+     * @throws NotImplementedException if Arrow implementation is used
      */
     @Deprecated
     void setDocument(Document document);
@@ -63,7 +64,7 @@ public interface ROutputParser {
      * Returns XML file.
      * @deprecated Do not use if you are not using XML consciously. Can be replaced with {@link #getIPCResource}
      * @return XML file
-     * @throw NotImplementedException if Arrow implementation is used
+     * @throws NotImplementedException if Arrow implementation is used
      */
     @Deprecated
     File getXMLFile();
@@ -74,7 +75,7 @@ public interface ROutputParser {
      * Returns raw XML document.
      * @deprecated Do not use if you are not using XML consciously
      * @return raw XML document
-     * @throw NotImplementedException if Arrow implementation is used
+     * @throws NotImplementedException if Arrow implementation is used
      */
     @Deprecated
     String getXMLFileAsString() throws IOException;
@@ -82,7 +83,7 @@ public interface ROutputParser {
     /**
      * Inits XML file.
      * @deprecated Do not use if you are not using XML consciously. Can be replaced with {@link #setIPCResource}
-     * @throw NotImplementedException if Arrow implementation is used
+     * @throws NotImplementedException if Arrow implementation is used
      */
     @Deprecated
     void setXMLFile(File xmlFile);
@@ -101,7 +102,7 @@ public interface ROutputParser {
      * Returns nodes from parsed XML document.
      * @deprecated Do not use if you are not using XML consciously
      * @return nodes from parsed XML document
-     * @throw NotImplementedException if Arrow implementation is used
+     * @throws NotImplementedException if Arrow implementation is used
      */
     @Deprecated
     NodeList getValueNodes(String name);
